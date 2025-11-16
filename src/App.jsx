@@ -193,12 +193,14 @@ function App() {
           {category}
         </button>
       </div>
-      <ul className='flex items-center justify-start flex-wrap gap-2'>
+      <ul className='flex items-start justify-start flex-wrap 
+      
+      gap-2 overflow-y-auto max-h-[calc(100vh-10rem)]'>
         {filteredData.map(item =>
           <li
+            key={item.date + item.name}
             className={`px-4 py-2 text-center font-bold
-               border-4 ${CategoryColors[item.category]}`}
-            key={item.date + item.name}>
+               border-4 ${CategoryColors[item.category.toLowerCase()]}`}>
             {item.name}
           </li>)}
       </ul>

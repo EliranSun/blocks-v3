@@ -55,8 +55,70 @@
         "date": "2025-11-12"
     },
     {
-        "name": "date",
+        "name": "mast",
+        "category": "avoid",
+        "date": "2025-11-11"
+    },
+    {
+        "name": "No Country for Old Men",
+        "category": "creative",
+        "date": "2025-11-10"
+    },
+    {
+        "name": "Laundry",
+        "category": "household",
+        "date": "2025-11-10"
+    },
+    {
+        "name": "mast",
+        "category": "avoid",
+        "date": "2025-11-10"
+    },
+    {
+        "name": "sauna",
+        "category": "health",
+        "date": "2025-11-09"
+    },
+    {
+        "name": "yoga",
+        "category": "health",
+        "date": "2025-11-09"
+    },
+    {
+        "name": "vietnamese pizza",
+        "category": "household",
+        "date": "2025-11-07"
+    },
+    {
+        "name": "laundry",
+        "category": "household",
+        "date": "2025-11-07"
+    },
+    {
+        "name": "mast",
+        "category": "avoid",
+        "date": "2025-11-07"
+    },
+    {
+        "name": "Good day chalk msg",
         "category": "wife",
+        "date": "2025-11-05"
+    },
+    {
+        "name": "Vegan Street Food Festival",
+        "category": "wife",
+        "date": "2025-11-06"
+    },
+    {
+        "name": "date",
+        "location": "La Tigre",
+        "category": "wife",
+        "date": "2025-11-11"
+    },
+    {
+        "name": "Power",
+        "location": "Fit House",
+        "category": "health",
         "date": "2025-11-11"
     },
     {
