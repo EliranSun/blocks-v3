@@ -11,6 +11,17 @@ const Scopes = [
   { name: "day", maxValue: 10, minValue: 12 },
 ];
 
+const CategoryNames = {
+  ALL: "all",
+  CREATIVE: "creative",
+  HEALTH: "health",
+  HOUSEHOLD: "household",
+  FAMILY: "family",
+  FRIENDS: "friends",
+  WIFE: "wife",
+  AVOID: "avoid",
+}
+
 const CategoryColors = {
   creative: "text-orange-500",
   health: "text-green-500",
@@ -28,6 +39,7 @@ const MAX_SCROLL_AMOUNT = 12;
 function App() {
   const [scrollAmount, setScrollAmount] = useState(MIN_SCROLL_AMOUNT);
   const [dateOffset, setDateOffset] = useState(0);
+  const [category, setCategory] = useState(CategoryNames.ALL);
 
   const scope = useMemo(() =>
     Scopes.find(scope =>
@@ -139,8 +151,10 @@ function App() {
     return Data.filter(item => {
       const itemDate = new Date(item.date);
       return comparator(itemDate);
-    }).sort((a, b) => new Date(a.date) - new Date(b.date));
-  }, [scope, currentDate]);
+    })
+      .filter(item => category === CategoryNames.ALL || item.category === category)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+  }, [scope, currentDate, category]);
 
   // Swipe handlers for touch support
   const swipeHandlers = useSwipeable({
@@ -165,8 +179,20 @@ function App() {
   console.log({ scope })
 
   return (
-    <section className="space-y-4 p-8 w-screen h-[80vh] border overflow-hidden" {...swipeHandlers}>
-      <h2>{scrollAmount} {scope?.name.toUpperCase()} - {currentFrame}</h2>
+    <section className="space-y-4 p-8 w-screen h-screen overflow-hidden" {...swipeHandlers}>
+      <div className='flex items-center justify-between'>
+        <h2>{scope?.name.toUpperCase()} - {currentFrame}</h2>
+        <button
+          onClick={() => {
+            const categories = Object.values(CategoryNames);
+            const currentIdx = categories.indexOf(category);
+            const nextIdx = (currentIdx + 1) % categories.length;
+            setCategory(categories[nextIdx]);
+          }}
+        >
+          {category}
+        </button>
+      </div>
       <ul className='flex items-center justify-start flex-wrap gap-2'>
         {filteredData.map(item =>
           <li
