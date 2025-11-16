@@ -38,14 +38,14 @@ function App() {
 
   // Function to handle scroll amount changes (used by both wheel and swipe)
   const handleScrollChange = useMemo(() => {
-    return (direction) => {
+    return (direction, isSwipe = false) => {
       const currentScope = Scopes.find(scope =>
         scope.maxValue <= scrollAmount &&
         scope.minValue >= scrollAmount);
       const currentScopeName = currentScope?.name;
 
       setScrollAmount(prevScroll => {
-        const nextScroll = prevScroll + 1 * Math.sign(direction);
+        const nextScroll = prevScroll + (isSwipe ? 4 : 1) * Math.sign(direction);
         const clampedScroll = Math.max(MIN_SCROLL_AMOUNT, Math.min(MAX_SCROLL_AMOUNT, nextScroll));
         const nextScope = Scopes.find(scope =>
           scope.maxValue <= clampedScroll &&
@@ -144,6 +144,8 @@ function App() {
 
   // Swipe handlers for touch support
   const swipeHandlers = useSwipeable({
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false,
     onSwipedLeft: () => {
       if (!scope?.name) return;
       setDateOffset(prev => prev - 1);
@@ -153,20 +155,18 @@ function App() {
       setDateOffset(prev => prev + 1);
     },
     onSwipedUp: () => {
-      handleScrollChange(-1); // Negative for up (decrease scroll amount)
+      handleScrollChange(-1, true); // Negative for up (decrease scroll amount)
     },
     onSwipedDown: () => {
-      handleScrollChange(1); // Positive for down (increase scroll amount)
+      handleScrollChange(1, true); // Positive for down (increase scroll amount)
     },
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: false,
   });
 
   console.log({ scope })
 
   return (
-    <section className="space-y-4" {...swipeHandlers}>
-      <h2>{scope?.name.toUpperCase()} - {currentFrame}</h2>
+    <section className="space-y-4 p-8 w-screen h-screen border" {...swipeHandlers}>
+      <h2>{scrollAmount} {scope?.name.toUpperCase()} - {currentFrame}</h2>
       <ul className='flex items-center justify-start flex-wrap gap-2'>
         {filteredData.map(item =>
           <li
