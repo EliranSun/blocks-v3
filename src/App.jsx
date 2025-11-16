@@ -165,7 +165,7 @@ function App() {
   console.log({ scope })
 
   return (
-    <section className="space-y-4 p-8 w-screen h-dvh overflow-hidden" {...swipeHandlers}>
+    <section className="space-y-4 p-8 w-screen h-[80vh] border overflow-hidden" {...swipeHandlers}>
       <h2>{scrollAmount} {scope?.name.toUpperCase()} - {currentFrame}</h2>
       <ul className='flex items-center justify-start flex-wrap gap-2'>
         {filteredData.map(item =>
