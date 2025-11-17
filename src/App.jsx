@@ -153,7 +153,7 @@ function App() {
       return comparator(itemDate);
     })
       .filter(item => category === CategoryNames.ALL || item.category === category)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [scope, currentDate, category]);
 
   // Swipe handlers for touch support
