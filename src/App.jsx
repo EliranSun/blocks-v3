@@ -179,9 +179,8 @@ function App() {
   console.log({ scope })
 
   return (
-    <section className="space-y-4 p-8 w-screen h-screen overflow-hidden" {...swipeHandlers}>
-      <div className='flex items-center justify-between'>
-        <h2>{scope?.name.toUpperCase()} - {currentFrame}</h2>
+    <section className="space-y-4 py-8 px-4 w-screen h-screen overflow-hidden" {...swipeHandlers}>
+      <div className='flex items-center gap-4'>
         <button
           onClick={() => {
             const categories = Object.values(CategoryNames);
@@ -192,9 +191,9 @@ function App() {
         >
           {category}
         </button>
+        <h2>{scope?.name.toUpperCase()} - {currentFrame}</h2>
       </div>
       <ul className='flex items-start justify-start flex-wrap 
-      
       gap-2 overflow-y-auto max-h-[calc(100vh-10rem)]'>
         {filteredData.map(item =>
           <li
