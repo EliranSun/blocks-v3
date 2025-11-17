@@ -1,8 +1,131 @@
 [
     {
+        "name": "Maya",
+        "date": "2025-11-17",
+        "category": "friends"
+    },
+    {
+        "name": "Julia",
+        "date": "2025-11-17",
+        "category": "friends"
+    },
+    {
         "name": "Lost S06E14",
         "date": "2025-11-16",
         "category": "creative"
+    },
+    {
+        "name": "First Date",
+        "date": "2021-03-26",
+        "category": "wife",
+        "location": "Secret Beach TLV"
+    },
+    {
+        "name": "Rome",
+        "date": "2021-11-20",
+        "category": "wife",
+        "subcategory": "Trip",
+        "location": "Rome"
+    },
+    {
+        "name": "London",
+        "date": "2022-09-07",
+        "category": "wife",
+        "subcategory": "Trip",
+        "location": "London"
+    },
+    {
+        "name": "Grunt",
+        "date": "2023-05-20",
+        "category": "wife",
+        "subcategory": "Gright",
+        "location": "Home"
+    },
+    {
+        "name": "Japan",
+        "date": "2023-05-24",
+        "category": "wife",
+        "subcategory": "Trip",
+        "location": "Japan"
+    },
+    {
+        "name": "Thailand",
+        "date": "2024-12-29",
+        "category": "wife",
+        "subcategory": "Trip",
+        "location": "Thailand"
+    },
+    {
+        "name": "La Tigre date",
+        "date": "2025-11-11",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "La Tigre, Basel"
+    },
+    {
+        "name": "Vegan food festival date",
+        "date": "2025-11-06",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Vegan Food Festival"
+    },
+    {
+        "name": "Good Day Chalk Message",
+        "date": "2025-11-05",
+        "category": "wife",
+        "subcategory": "Gestures"
+    },
+    {
+        "name": "Gright",
+        "date": "2025-11-05",
+        "category": "wife",
+        "subcategory": "Gright",
+        "location": "Home"
+    },
+    {
+        "name": "Rainbow date",
+        "date": "2025-11-04",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Rainbow, Even Gvirol"
+    },
+    {
+        "name": "Sex",
+        "date": "2025-10-06",
+        "category": "wife",
+        "subcategory": "Sex"
+    },
+    {
+        "name": "Sex",
+        "date": "2025-09-06",
+        "category": "wife",
+        "subcategory": "Sex"
+    },
+    {
+        "name": "Portugal",
+        "date": "2025-08-08",
+        "category": "wife",
+        "subcategory": "Trip",
+        "location": "Portugal"
+    },
+    {
+        "name": "Mother of my children message",
+        "date": "2025-08-04",
+        "category": "wife",
+        "subcategory": "Gestures"
+    },
+    {
+        "name": "Sex",
+        "date": "2025-07-12",
+        "category": "wife",
+        "subcategory": "Sex"
+    },
+    {
+        "name": "Foggy Gright",
+        "date": "2023-05-20",
+        "category": "wife",
+        "subcategory": "Gright",
+        "location": "Home"
     },
     {
         "name": "Plaribus S01E01",
@@ -10,17 +133,17 @@
         "category": "creative"
     },
     {
-        "name": "yoga",
+        "name": "Yoga",
         "date": "2025-11-16",
         "category": "health"
     },
     {
-        "name": "mast",
+        "name": "Mast",
         "date": "2025-11-16",
         "category": "avoid"
     },
     {
-        "name": "Laundry",
+        "name": "Laundry, Full",
         "date": "2025-11-13",
         "category": "household"
     },
@@ -30,32 +153,32 @@
         "category": "creative"
     },
     {
-        "name": "or",
+        "name": "Or",
         "date": "2025-11-14",
         "category": "family"
     },
     {
-        "name": "grandpa",
+        "name": "Grandpa",
         "category": "family",
         "date": "2025-11-15"
     },
     {
-        "name": "or",
+        "name": "Or",
         "category": "family",
         "date": "2025-11-12"
     },
     {
-        "name": "physio",
+        "name": "Physio",
         "category": "health",
         "date": "2025-11-12"
     },
     {
-        "name": "sheets",
+        "name": "Sheets",
         "category": "household",
         "date": "2025-11-12"
     },
     {
-        "name": "mast",
+        "name": "Mast",
         "category": "avoid",
         "date": "2025-11-11"
     },
@@ -65,55 +188,54 @@
         "date": "2025-11-10"
     },
     {
-        "name": "Laundry",
+        "name": "Laundry, wash",
         "category": "household",
         "date": "2025-11-10"
     },
     {
-        "name": "mast",
+        "name": "Mast",
         "category": "avoid",
         "date": "2025-11-10"
     },
     {
-        "name": "sauna",
+        "name": "Sauna",
         "category": "health",
         "date": "2025-11-09"
     },
     {
-        "name": "yoga",
+        "name": "Yoga",
         "category": "health",
         "date": "2025-11-09"
     },
     {
-        "name": "vietnamese pizza",
+        "name": "Vietnamese Pizza",
         "category": "household",
         "date": "2025-11-07"
     },
     {
-        "name": "laundry",
+        "name": "Laundry, wash",
         "category": "household",
         "date": "2025-11-07"
     },
     {
-        "name": "mast",
+        "name": "Mast",
         "category": "avoid",
         "date": "2025-11-07"
+    },
+    {
+        "name": "Laundry, wash + hang",
+        "category": "household",
+        "date": "2025-10-29"
+    },
+    {
+        "name": "Laundry, Fold",
+        "category": "household",
+        "date": "2025-08-23"
     },
     {
         "name": "Good day chalk msg",
         "category": "wife",
         "date": "2025-11-05"
-    },
-    {
-        "name": "Vegan Street Food Festival",
-        "category": "wife",
-        "date": "2025-11-06"
-    },
-    {
-        "name": "date",
-        "location": "La Tigre",
-        "category": "wife",
-        "date": "2025-11-11"
     },
     {
         "name": "Power",
@@ -122,13 +244,368 @@
         "date": "2025-11-11"
     },
     {
-        "name": "julia",
+        "name": "Julia",
         "category": "friends",
         "date": "2025-11-12"
     },
     {
-        "name": "ofir",
+        "name": "Ofir",
         "category": "friends",
         "date": "2025-11-10"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-01-22"
+    },
+    {
+        "name": "Sauna",
+        "category": "health",
+        "date": "2025-02-02"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-02-02"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-02-09"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-02-16"
+    },
+    {
+        "name": "Sauna",
+        "category": "health",
+        "date": "2025-02-16"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-03-02"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-03-16"
+    },
+    {
+        "name": "Sauna",
+        "category": "health",
+        "date": "2025-03-16"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-03-27"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-04-03"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-04-17"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-05-04"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-05-16"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-05-21"
+    },
+    {
+        "name": "Fit House",
+        "category": "health",
+        "date": "2025-05-23"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-06-21"
+    },
+    {
+        "name": "Sauna",
+        "category": "health",
+        "date": "2025-07-07"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-07-11"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-07-18"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-07-13"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-07-19"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-07-20"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-07-24"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-08-01"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-08-31"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-09-01"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-09-07"
+    },
+    {
+        "name": "Nitzan Dojo",
+        "category": "health",
+        "date": "2025-09-09"
+    },
+    {
+        "name": "Fit House",
+        "category": "health",
+        "date": "2025-09-10"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-09-20"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-09-25"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-09-27"
+    },
+    {
+        "name": "Fit House",
+        "category": "health",
+        "date": "2025-10-03"
+    },
+    {
+        "name": "Fit House",
+        "category": "health",
+        "date": "2025-10-05"
+    },
+    {
+        "name": "Cardio",
+        "category": "health",
+        "date": "2025-10-10"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-10-19"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-10-26"
+    },
+    {
+        "name": "Yoga",
+        "category": "health",
+        "date": "2025-11-02"
+    },
+    {
+        "name": "Fit House",
+        "category": "health",
+        "date": "2026-11-04"
+    },
+    {
+        "name": "Physio pita 3m",
+        "category": "health",
+        "date": "2025-11-05"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-09-25"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-09-15"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-09-09"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-08-19"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-07-11"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-07-08"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-07-01"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-06-10"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-05-20"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-05-19"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-05-15"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-05-12"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-05-10"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-05-05"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-04-10"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-02-22"
+    },
+    {
+        "name": "Maya",
+        "category": "friends",
+        "date": "2025-02-10"
+    },
+    {
+        "name": "Rotem",
+        "category": "friends",
+        "date": "2025-11-05"
+    },
+    {
+        "name": "Rotem",
+        "category": "friends",
+        "date": "2025-10-31"
+    },
+    {
+        "name": "Rotem",
+        "category": "friends",
+        "date": "2025-10-30"
+    },
+    {
+        "name": "Rotem",
+        "category": "friends",
+        "date": "2025-07-13"
+    },
+    {
+        "name": "Rotem",
+        "category": "friends",
+        "date": "2025-01-23"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-03-30"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-06-16"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-07-05"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-07-15"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-08-30"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-09-25"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-11-06"
+    },
+    {
+        "name": "Ofir",
+        "category": "friends",
+        "date": "2025-11-07"
     }
 ]

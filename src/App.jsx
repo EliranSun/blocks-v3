@@ -32,6 +32,20 @@ const CategoryColors = {
   avoid: "text-gray-500",
 }
 
+const MonthNotes = {
+  "2025-11": "Ramat Gan + Unemployed",
+  "2025-10": "Bus Bakerem + Move to Ramat Gan",
+  "2025-09": "Wife Birthday Plan",
+  "2025-08": "Portugal",
+  "2025-07": "War + Bar Zakai",
+  "2025-06": "Birthday + Villa + Midbara",
+  "2025-05": "Lokit",
+  "2025-04": "Passover + Sick",
+  "2025-03": "20% CSS week",
+  "2025-02": "",
+  "2025-01": "Thailand",
+}
+
 
 const MIN_SCROLL_AMOUNT = 0;
 const MAX_SCROLL_AMOUNT = 12;
@@ -191,7 +205,7 @@ function App() {
         >
           {category}
         </button>
-        <h2>{scope?.name.toUpperCase()} - {currentFrame}</h2>
+        <h2>{scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}</h2>
       </div>
       <ul className='flex items-start justify-start flex-wrap 
       gap-2 overflow-y-auto max-h-[calc(100vh-10rem)]'>
