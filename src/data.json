@@ -1,6 +1,6 @@
 [
     {
-        "name": "Maya - WhatsApp",
+        "name": "Maya - WA",
         "date": "2025-11-17",
         "category": "friends"
     },
@@ -575,13 +575,18 @@
         "date": "2025-11-05"
     },
     {
-        "name": "Rotem",
+        "name": "Rotem - WA",
         "category": "friends",
         "date": "2025-10-31"
     },
     {
-        "name": "Rotem",
+        "name": "Rotem - Bugonia",
         "category": "friends",
+        "date": "2025-10-30"
+    },
+    {
+        "name": "Bugonia",
+        "category": "creative",
         "date": "2025-10-30"
     },
     {
