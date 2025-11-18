@@ -441,11 +441,17 @@
         "location": ""
     },
     {
-        "name": "Date",
+        "name": "Date - Beach",
         "date": "2025-09-19",
         "category": "wife",
         "subcategory": "Date",
-        "location": ""
+        "location": "Beach"
+    },
+    {
+        "name": "Ramen",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-09-19"
     },
     {
         "name": "Date",
@@ -658,7 +664,82 @@
     {
         "name": "Vietnamese Pizza",
         "category": "household",
+        "subcategory": "Cooking",
         "date": "2025-11-07"
+    },
+    {
+        "name": "Curry + Quinnoa",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-10-17"
+    },
+    {
+        "name": "Pasta & Tofu",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-08-01"
+    },
+    {
+        "name": "Tofu Balls + Ptitim",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-08-27"
+    },
+    {
+        "name": "Red Rice + Fried Peas",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-06-09"
+    },
+    {
+        "name": "Rice + Peas + Shnitzel Tofu",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-09-29"
+    },
+    {
+        "name": "Ramen",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-06-13"
+    },
+    {
+        "name": "Lasagna",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-04-11"
+    },
+    {
+        "name": "Falafel + Hummus",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-08-22"
+    },
+    {
+        "name": "Shaksuka",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-06-08",
+        "location": "Midbara"
+    },
+    {
+        "name": "Ramen",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-05-01"
+    },
+    {
+        "name": "Ramen",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-10-01"
+    },
+    {
+        "name": "Ramen",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-10-07",
+        "location": "Bus Bakerem"
     },
     {
         "name": "Laundry, wash",
@@ -1005,6 +1086,108 @@
         "name": "Bugonia",
         "category": "creative",
         "date": "2025-10-30"
+    },
+    {
+        "name": "Maps of Meaning - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2022-07-01"
+    },
+    {
+        "name": "Maps of Meaning - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-02-23"
+    },
+    {
+        "name": "Hitchhiker - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-02-23"
+    },
+    {
+        "name": "Hitchhiker - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-03-04"
+    },
+    {
+        "name": "Ordinary Men - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-03-04"
+    },
+    {
+        "name": "Ordinary Men - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-04-03"
+    },
+    {
+        "name": "Loneliness - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-04-03"
+    },
+    {
+        "name": "Loneliness - Pause",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-04-23"
+    },
+    {
+        "name": "Loneliness - Resume",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-05-06"
+    },
+    {
+        "name": "Loneliness - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-05-25"
+    },
+    {
+        "name": "9 Months - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-04-23"
+    },
+    {
+        "name": "9 Months - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-05-25"
+    },
+    {
+        "name": "Karamazov - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-06-08"
+    },
+    {
+        "name": "Karamazov - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-09-02"
+    },
+    {
+        "name": "Win Friends - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-09-03"
+    },
+    {
+        "name": "Win Friends - End",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-10-02"
+    },
+    {
+        "name": "The Great Philosophers - Start",
+        "category": "creative",
+        "subcategory": "read",
+        "date": "2025-10-02"
     },
     {
         "name": "Rotem",
