@@ -87,19 +87,6 @@ function App() {
   }, [scrollAmount]);
 
   useEffect(() => {
-    const handleWheel = event => {
-      const direction = event.deltaY;
-      console.log(direction);
-      handleScrollChange(direction);
-    };
-
-    window.addEventListener("wheel", handleWheel);
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, [handleScrollChange]);
-
-  useEffect(() => {
     const handleKeyDown = event => {
       if (!scope?.name) return;
 
@@ -182,33 +169,18 @@ function App() {
       if (!scope?.name) return;
       setDateOffset(prev => prev + 1);
     },
-    onSwipedUp: () => {
-      handleScrollChange(-1, true); // Negative for up (decrease scroll amount)
-    },
-    onSwipedDown: () => {
-      handleScrollChange(1, true); // Positive for down (increase scroll amount)
-    },
   });
 
   console.log({ scope })
 
   return (
-    <section className="space-y-4 py-8 px-4 w-screen h-screen overflow-hidden" {...swipeHandlers}>
-      <div className='flex items-center gap-4'>
-        <button
-          onClick={() => {
-            const categories = Object.values(CategoryNames);
-            const currentIdx = categories.indexOf(category);
-            const nextIdx = (currentIdx + 1) % categories.length;
-            setCategory(categories[nextIdx]);
-          }}
-        >
-          {category}
-        </button>
-        <h2>{scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}</h2>
-      </div>
+    <section className="space-y-4 p-4 w-screen h-screen overflow-hidden" {...swipeHandlers}>
+
+      <h2 className='text-left font-bold merriweather-900'>
+        {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
+      </h2>
       <ul className='flex items-start justify-start flex-wrap 
-      gap-2 overflow-y-auto max-h-[calc(100vh-10rem)]'>
+      gap-2 overflow-y-auto max-h-[calc(100vh-11rem)] space-grotesk-400'>
         {filteredData.map(item =>
           <li
             key={item.date + item.name}
@@ -217,6 +189,29 @@ function App() {
             {item.name}
           </li>)}
       </ul>
+      <div className='flex items-center gap-4'>
+        <button
+          className="w-40"
+          onClick={() => {
+            const categories = Object.values(CategoryNames);
+            const currentIdx = categories.indexOf(category);
+            const nextIdx = (currentIdx + 1) % categories.length;
+            setCategory(categories[nextIdx]);
+          }}
+        >
+          {category.toUpperCase()}
+        </button>
+        <button onClick={() => {
+          handleScrollChange(-1, true);
+        }}>
+          ↑
+        </button>
+        <button onClick={() => {
+          handleScrollChange(1, true);
+        }}>
+          ↓
+        </button>
+      </div>
     </section>
   )
 }
