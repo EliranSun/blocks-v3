@@ -82,6 +82,11 @@
         "date": "2025-11-17",
         "category": "avoid"
     },
+        {
+        "name": "Mast",
+        "date": "2025-11-18",
+        "category": "avoid"
+    },
     {
         "name": "Or - Daily",
         "date": "2025-11-17",
@@ -155,14 +160,103 @@
         "location": "Thailand"
     },
     {
-        "name": "La Tigre date",
+        "name": "La Tigre Date",
         "date": "2025-11-11",
         "category": "wife",
         "subcategory": "Date",
         "location": "La Tigre, Basel"
     },
     {
-        "name": "Vegan food festival date",
+        "name": "Date - Park",
+        "date": "2025-02-15",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Ariel Sharon Park"
+    },
+    {
+        "name": "Date",
+        "date": "2025-03-04",
+        "category": "wife",
+        "subcategory": "Date"
+    },
+    {
+        "name": "Date - 4 Years",
+        "date": "2025-03-28",
+        "category": "wife",
+        "subcategory": "Date"
+    },
+    {
+        "name": "Date - Movie - Stand by Me",
+        "date": "2025-04-02",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Pisga"
+    },
+    {
+        "name": "Date - Movie",
+        "date": "2025-04-16",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Pisga"
+    },
+    {
+        "name": "Date - Trip",
+        "date": "2025-04-25",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Ramot Menashe"
+    },
+    {
+        "name": "Date - Beach",
+        "date": "2025-05-03",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "TLV"
+    },
+    {
+        "name": "Date",
+        "date": "2025-10-17",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Anastasia"
+    },
+    {
+        "name": "Date - Movie - Into the Spider Verse",
+        "date": "2025-05-14",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Pisga"
+    },
+    {
+        "name": "Date - Movie- The Matrix",
+        "date": "2025-05-28",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Pisga"
+    },
+    {
+        "name": "Date",
+        "date": "2025-06-07",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Midbara"
+    },
+    {
+        "name": "Date - Dinner",
+        "date": "2025-02-05",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Anastasia"
+    },
+    {
+        "name": "Date - Picnic",
+        "date": "2025-02-01",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Yarkon"
+    },
+    {
+        "name": "Vegan food festival Date",
         "date": "2025-11-06",
         "category": "wife",
         "subcategory": "Date",
@@ -204,7 +298,75 @@
     },
     {
         "name": "Date",
+        "date": "2025-06-08",
+        "category": "wife",
+        "location": "Midbara"
+    },
+    {
+        "name": "Date - Dinner",
+        "date": "2025-07-01",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Tachtit"
+    },
+    {
+        "name": "Date - Movie - Edward Scissor Hands",
+        "date": "2025-07-09",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Pisga"
+    },
+    {
+        "name": "Date - Beach",
+        "date": "2025-07-15",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Gordon"
+    },
+    {
+        "name": "Date - Movie - Hercules",
+        "date": "2025-08-20",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Pisga"
+    },
+    {
+        "name": "Date",
+        "date": "2025-09-05",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": ""
+    },
+    {
+        "name": "Date",
+        "date": "2025-09-10",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": ""
+    },
+    {
+        "name": "Date",
+        "date": "2025-09-19",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": ""
+    },
+    {
+        "name": "Date",
+        "date": "2025-10-07",
+        "category": "wife",
+        "subcategory": "Date",
+        "location": "Bus Bakerem"
+    },
+    {
+        "name": "Date",
         "date": "2025-10-06",
+        "category": "wife",
+        "location": "Bus Bakerem"
+    },
+    {
+        "name": "Date",
+        "date": "2025-10-08",
         "category": "wife",
         "location": "Bus Bakerem"
     },
