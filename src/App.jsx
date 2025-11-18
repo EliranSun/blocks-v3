@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import Data from "./data.json";
 import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { useSwipeable } from 'react-swipeable';
+import { Search } from './Search';
 import './App.css';
 
 const Scopes = [
@@ -42,7 +43,7 @@ const MonthNotes = {
   "2025-05": "Lokit",
   "2025-04": "Passover + Sick",
   "2025-03": "20% CSS week",
-  "2025-02": "",
+  "2025-02": "First Baby Attempts",
   "2025-01": "Thailand",
 }
 
@@ -54,6 +55,7 @@ function App() {
   const [scrollAmount, setScrollAmount] = useState(MIN_SCROLL_AMOUNT);
   const [dateOffset, setDateOffset] = useState(0);
   const [category, setCategory] = useState(CategoryNames.ALL);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const scope = useMemo(() =>
     Scopes.find(scope =>
@@ -153,9 +155,23 @@ function App() {
       const itemDate = new Date(item.date);
       return comparator(itemDate);
     })
+      .filter(item => {
+        if (searchTerm) {
+          const search = searchTerm.trim();
+          const regex = new RegExp(search, 'i');
+          return (
+            regex.test(item.name) ||
+            regex.test(item.category) ||
+            regex.test(item.subcategory) ||
+            regex.test(item.location)
+          );
+        } else {
+          return true;
+        }
+      })
       .filter(item => category === CategoryNames.ALL || item.category === category)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [scope, currentDate, category]);
+  }, [scope, currentDate, category, searchTerm]);
 
   // Swipe handlers for touch support
   const swipeHandlers = useSwipeable({
@@ -171,46 +187,48 @@ function App() {
     },
   });
 
-  console.log({ scope })
-
   return (
-    <section className="space-y-4 p-4 w-screen h-screen overflow-hidden" {...swipeHandlers}>
-
-      <h2 className='text-left font-bold merriweather-900'>
-        {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
-      </h2>
-      <ul className='flex items-start justify-start flex-wrap 
-      gap-2 overflow-y-auto h-[calc(100vh-11rem)] space-grotesk-400'>
-        {filteredData.map(item =>
-          <li
-            key={item.date + item.name}
-            className={`px-2 py-2 text-center font-bold text-sm
+    <section className="space-y-4 p-4 w-screen h-dvh overflow-hidden flex flex-col justify-between" {...swipeHandlers}>
+      <div className='space-y-4'>
+        <h2 className='text-left font-bold merriweather-900'>
+          {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
+        </h2>
+        <ul className='flex items-start flex-wrap 
+      gap-2 overflow-y-auto space-grotesk-400 max-h-[70vh]'>
+          {filteredData.map(item =>
+            <li
+              key={item.date + item.name}
+              className={`px-2 py-2 text-center font-bold text-sm grow-0
                border-2 ${CategoryColors[item.category.toLowerCase()]}`}>
-            {item.name}
-          </li>)}
-      </ul>
-      <div className='flex items-center gap-4'>
-        <button
-          className="w-40"
-          onClick={() => {
-            const categories = Object.values(CategoryNames);
-            const currentIdx = categories.indexOf(category);
-            const nextIdx = (currentIdx + 1) % categories.length;
-            setCategory(categories[nextIdx]);
-          }}
-        >
-          {category.toUpperCase()}
-        </button>
-        <button onClick={() => {
-          handleScrollChange(-1, true);
-        }}>
-          ↑
-        </button>
-        <button onClick={() => {
-          handleScrollChange(1, true);
-        }}>
-          ↓
-        </button>
+              {item.name}
+            </li>)}
+        </ul>
+      </div>
+      <div className='space-y-4'>
+        <Search value={searchTerm} onInputChange={setSearchTerm} />
+        <div className='flex items-center gap-4'>
+          <button
+            className="w-40"
+            onClick={() => {
+              const categories = Object.values(CategoryNames);
+              const currentIdx = categories.indexOf(category);
+              const nextIdx = (currentIdx + 1) % categories.length;
+              setCategory(categories[nextIdx]);
+            }}
+          >
+            {category.toUpperCase()}
+          </button>
+          <button onClick={() => {
+            handleScrollChange(-1, true);
+          }}>
+            ↑
+          </button>
+          <button onClick={() => {
+            handleScrollChange(1, true);
+          }}>
+            ↓
+          </button>
+        </div>
       </div>
     </section>
   )
