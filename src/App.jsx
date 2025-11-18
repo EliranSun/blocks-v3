@@ -180,7 +180,7 @@ function App() {
         {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
       </h2>
       <ul className='flex items-start justify-start flex-wrap 
-      gap-2 overflow-y-auto max-h-[calc(100vh-12rem)] space-grotesk-400'>
+      gap-2 overflow-y-auto h-[calc(100vh-11rem)] space-grotesk-400'>
         {filteredData.map(item =>
           <li
             key={item.date + item.name}
