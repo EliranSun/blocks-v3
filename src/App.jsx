@@ -190,9 +190,6 @@ function App() {
   return (
     <section className="space-y-4 p-4 w-screen h-dvh overflow-hidden flex flex-col justify-between" {...swipeHandlers}>
       <div className='space-y-4'>
-        <h2 className='text-left font-bold merriweather-900'>
-          {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
-        </h2>
         <ul className='flex items-start flex-wrap 
       gap-2 overflow-y-auto space-grotesk-400 max-h-[70vh]'>
           {filteredData.map(item =>
@@ -205,6 +202,9 @@ function App() {
         </ul>
       </div>
       <div className='space-y-4'>
+        <h2 className='text-left font-bold merriweather-900'>
+          {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
+        </h2>
         <Search value={searchTerm} onInputChange={setSearchTerm} />
         <div className='flex items-center gap-4'>
           <button
