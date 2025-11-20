@@ -195,7 +195,7 @@ function App() {
           {filteredData.map(item =>
             <li
               key={item.date + item.name}
-              className={`px-2 py-2 text-center font-bold text-sm grow-0
+              className={`px-2 py-1 text-center font-bold text-sm grow-0
                border-b-2 ${CategoryColors[item.category.toLowerCase()]}`}>
               {item.name}
             </li>)}
