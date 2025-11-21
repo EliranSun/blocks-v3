@@ -188,10 +188,10 @@ function App() {
   });
 
   return (
-    <section className="space-y-4 p-4 w-screen h-[80vh] overflow-hidden flex flex-col justify-between">
+    <section className="space-y-4 p-4 w-screen overflow-hidden flex flex-col justify-between">
       <div className='space-y-4'>
         <ul className='flex items-start flex-wrap 
-      gap-2 overflow-y-auto space-grotesk-400 max-h-[66vh]'>
+      gap-2 overflow-y-auto space-grotesk-400'>
           {filteredData.map(item =>
             <li
               key={item.date + item.name}
