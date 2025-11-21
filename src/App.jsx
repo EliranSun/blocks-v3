@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import Data from "./data.json";
 import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { Search } from './Search';
@@ -8,45 +8,23 @@ import { BlocksList } from "./BlocksList";
 import { CategoryButtons } from './CategoryButtons';
 import { NavigationButtons } from './NavigationButtons';
 
-const MIN_SCROLL_AMOUNT = 0;
-const MAX_SCROLL_AMOUNT = 12;
-
 function App() {
-  const [scrollAmount, setScrollAmount] = useState(MIN_SCROLL_AMOUNT);
+  const [scopeIndex, setScopeIndex] = useState(2);
   const [dateOffset, setDateOffset] = useState(0);
   const [category, setCategory] = useState(CategoryNames.All.name);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const scope = useMemo(() =>
-    Scopes.find(scope =>
-      scope.maxValue <= scrollAmount &&
-      scope.minValue >= scrollAmount),
-    [scrollAmount]
-  );
+  const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
 
-  // Function to handle scroll amount changes (used by both wheel and swipe)
-  const handleScrollChange = useMemo(() => {
-    return (direction, isSwipe = false) => {
-      const currentScope = Scopes.find(scope =>
-        scope.maxValue <= scrollAmount &&
-        scope.minValue >= scrollAmount);
-      const currentScopeName = currentScope?.name;
-
-      setScrollAmount(prevScroll => {
-        const nextScroll = prevScroll + (isSwipe ? 4 : 1) * Math.sign(direction);
-        const clampedScroll = Math.max(MIN_SCROLL_AMOUNT, Math.min(MAX_SCROLL_AMOUNT, nextScroll));
-        const nextScope = Scopes.find(scope =>
-          scope.maxValue <= clampedScroll &&
-          scope.minValue >= clampedScroll);
-        const nextScopeName = nextScope?.name;
-
-        if (currentScopeName !== nextScopeName) {
-          setDateOffset(0);
-        }
-        return clampedScroll;
-      });
-    };
-  }, [scrollAmount]);
+  const handleScopeChange = useCallback((direction) => {
+    setScopeIndex(prevIndex => {
+      const nextIndex = Math.max(0, Math.min(Scopes.length - 1, prevIndex + direction));
+      if (nextIndex !== prevIndex) {
+        setDateOffset(0);
+      }
+      return nextIndex;
+    });
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = event => {
@@ -164,8 +142,8 @@ function App() {
         <Search value={searchTerm} onInputChange={setSearchTerm} />
         <NavigationButtons
           scope={scope}
-          onNavigateUp={() => handleScrollChange(-1, true)}
-          onNavigateDown={() => handleScrollChange(1, true)}
+          onNavigateUp={() => handleScopeChange(-1)}
+          onNavigateDown={() => handleScopeChange(1)}
           onNavigateLeft={() => setDateOffset(prev => prev + 1)}
           onNavigateRight={() => setDateOffset(prev => prev - 1)} />
       </div>
