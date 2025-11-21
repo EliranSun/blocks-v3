@@ -210,12 +210,13 @@ function App() {
           {Object
           .values(CategoryNames)
           .map(categoryName => 
-          <button
-            className="w-40"
-            onClick={() => setCategory(categoryName)}
-          >
-            {categoryName.toUpperCase()}
-          </button>
+            <button
+              className="w-40"
+              onClick={() => setCategory(categoryName)}
+            >
+              {categoryName.toUpperCase()}
+            </button>
+          )}
           <button onClick={() => {
             handleScrollChange(-1, true);
           }}>
