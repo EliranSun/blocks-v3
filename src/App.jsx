@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import Data from "./data.json";
-import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
+import { format, isSameYear, formatDistanceToNow, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { useSwipeable } from 'react-swipeable';
 import { Search } from './Search';
 import './App.css';
@@ -197,7 +197,7 @@ function App() {
               key={item.date + item.name}
               className={`px-2 py-1 text-center font-bold text-sm grow-0
                border-b-2 ${CategoryColors[item.category.toLowerCase()]}`}>
-              {item.name}
+              {item.name}, {formatDistanceToNow(item.date, { addSuffix: true })}
             </li>)}
         </ul>
       </div>
