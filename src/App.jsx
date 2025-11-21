@@ -201,12 +201,12 @@ function App() {
             </li>)}
         </ul>
       </div>
-      <div className='space-y-4 border-4 rounded-md shadow-xl'>
+      <div className='space-y-4'>
         <h2 className='text-left font-bold merriweather-900'>
           {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
         </h2>
         <Search value={searchTerm} onInputChange={setSearchTerm} />
-        <div className='flex border w-full flex-wrap items-center gap-4'>
+        <div className='flex border w-full flex-wrap items-center gap-2'>
           {Object
           .values(CategoryNames)
           .map(categoryName => 
