@@ -188,7 +188,7 @@ function App() {
   });
 
   return (
-    <section className="space-y-4 p-4 w-screen h-dvh overflow-hidden flex flex-col justify-between" {...swipeHandlers}>
+    <section className="space-y-4 p-4 w-screen h-[90vh] overflow-hidden flex flex-col justify-between" {...swipeHandlers}>
       <div className='space-y-4'>
         <ul className='flex items-start flex-wrap 
       gap-2 overflow-y-auto space-grotesk-400 max-h-[66vh]'>
@@ -206,7 +206,7 @@ function App() {
           {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
         </h2>
         <Search value={searchTerm} onInputChange={setSearchTerm} />
-        <div className='flex items-center gap-4'>
+        <div className='flex w-full flex-wrap items-center gap-4'>
           {Object
           .values(CategoryNames)
           .map(categoryName => 
