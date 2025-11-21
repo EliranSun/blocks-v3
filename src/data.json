@@ -92,8 +92,7 @@
         "date": "2025-11-19",
         "category": "avoid"
     },
-    
-        {
+    {
         "name": "Mast",
         "date": "2025-11-18",
         "category": "avoid"
@@ -185,6 +184,11 @@
         "location": "Frug"
     },
     {
+        "name": "One Piece - E1",
+        "date": "2025-11-21",
+        "category": "creative"
+    },
+    {
         "name": "Lost - End",
         "date": "2025-11-19",
         "category": "creative"
@@ -258,7 +262,7 @@
     {
         "name": "Midbara",
         "date": "2025-06-06",
-        "endDate":  "2025-06-08",
+        "endDate": "2025-06-08",
         "category": "wife",
         "subcategory": "Trip",
         "location": "Midbara"
@@ -472,7 +476,6 @@
         "category": "wife",
         "subcategory": "sex"
     },
-    
     {
         "name": "Sex",
         "date": "2025-06-08",
@@ -638,19 +641,19 @@
         "category": "wife",
         "subcategory": "Sex"
     },
-     {
+    {
         "name": "Sex",
         "date": "2025-05-23",
         "category": "wife",
         "subcategory": "Sex"
     },
-     {
+    {
         "name": "Sex",
         "date": "2025-05-04",
         "category": "wife",
         "subcategory": "Sex"
     },
-     {
+    {
         "name": "Sex",
         "date": "2025-05-03",
         "category": "wife",
