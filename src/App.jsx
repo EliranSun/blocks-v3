@@ -191,7 +191,7 @@ function App() {
     <section className="space-y-4 p-4 w-screen h-dvh overflow-hidden flex flex-col justify-between" {...swipeHandlers}>
       <div className='space-y-4'>
         <ul className='flex items-start flex-wrap 
-      gap-2 overflow-y-auto space-grotesk-400 max-h-[70vh]'>
+      gap-2 overflow-y-auto space-grotesk-400 max-h-[66vh]'>
           {filteredData.map(item =>
             <li
               key={item.date + item.name}
@@ -207,16 +207,14 @@ function App() {
         </h2>
         <Search value={searchTerm} onInputChange={setSearchTerm} />
         <div className='flex items-center gap-4'>
+          {Object
+          .values(CategoryNames)
+          .map(categoryName => 
           <button
             className="w-40"
-            onClick={() => {
-              const categories = Object.values(CategoryNames);
-              const currentIdx = categories.indexOf(category);
-              const nextIdx = (currentIdx + 1) % categories.length;
-              setCategory(categories[nextIdx]);
-            }}
+            onClick={() => setCategory(categoryName)}
           >
-            {category.toUpperCase()}
+            {categoryName.toUpperCase()}
           </button>
           <button onClick={() => {
             handleScrollChange(-1, true);
