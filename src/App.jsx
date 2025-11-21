@@ -188,7 +188,7 @@ function App() {
   });
 
   return (
-    <section className="space-y-4 p-4 w-screen h-[90vh] overflow-hidden flex flex-col justify-between" {...swipeHandlers}>
+    <section className="space-y-4 p-4 w-screen h-[90vh] overflow-hidden flex flex-col justify-between">
       <div className='space-y-4'>
         <ul className='flex items-start flex-wrap 
       gap-2 overflow-y-auto space-grotesk-400 max-h-[66vh]'>
@@ -217,17 +217,31 @@ function App() {
               {categoryName.toUpperCase()}
             </button>
           )}
-          <button onClick={() => {
+        </div>
+        <div className="flex gap-4">
+            <button onClick={() => {
             handleScrollChange(-1, true);
           }}>
-            ↑
+            ⬆️
           </button>
           <button onClick={() => {
             handleScrollChange(1, true);
           }}>
-            ↓
+            ⬇️
           </button>
-        </div>
+             <button onClick={() => {
+            if (!scope?.name) return;
+      setDateOffset(prev => prev + 1);
+          }}>
+            ➡️
+          </button>
+          <button onClick={() => {
+if (!scope?.name) return;
+      setDateOffset(prev => prev - 1);
+          }}>
+            ⬅️
+          </button>
+          </div>
       </div>
     </section>
   )
