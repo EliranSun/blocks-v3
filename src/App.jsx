@@ -197,7 +197,7 @@ function App() {
               key={item.date + item.name}
               className={`px-2 py-1 text-center font-bold text-sm grow-0
                border-b-2 ${CategoryColors[item.category.toLowerCase()]}`}>
-              {item.name}, {formatDistanceToNow(item.date, { addSuffix: false })}
+              {item.name}, {format(item.date, "MMM dd")}
             </li>)}
         </ul>
       </div>
