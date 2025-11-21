@@ -1,52 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
 import Data from "./data.json";
-import { format, isSameYear, formatDistanceToNow, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
-import { useSwipeable } from 'react-swipeable';
+import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { Search } from './Search';
-import './App.css';
-
-const Scopes = [
-  { name: "year", maxValue: 0, minValue: 3 },
-  { name: "month", maxValue: 4, minValue: 6 },
-  { name: "week", maxValue: 7, minValue: 9 },
-  { name: "day", maxValue: 10, minValue: 12 },
-];
-
-const CategoryNames = {
-  ALL: "all",
-  CREATIVE: "creative",
-  HEALTH: "health",
-  HOUSEHOLD: "household",
-  FAMILY: "family",
-  FRIENDS: "friends",
-  WIFE: "wife",
-  AVOID: "avoid",
-}
-
-const CategoryColors = {
-  creative: "text-orange-500",
-  health: "text-green-500",
-  household: "text-yellow-500",
-  family: "text-red-500",
-  friends: "text-blue-500",
-  wife: "text-pink-500",
-  avoid: "text-gray-500",
-}
-
-const MonthNotes = {
-  "2025-11": "Ramat Gan + Unemployed",
-  "2025-10": "Bus Bakerem + Move to Ramat Gan",
-  "2025-09": "Wife Birthday Plan",
-  "2025-08": "Portugal",
-  "2025-07": "War + Bar Zakai",
-  "2025-06": "Birthday + Villa + Midbara",
-  "2025-05": "Lokit",
-  "2025-04": "Passover + Sick",
-  "2025-03": "20% CSS week",
-  "2025-02": "First Baby Attempts",
-  "2025-01": "Thailand",
-}
-
+import { CategoryColors, CategoryNames, MonthNotes, Scopes } from './constants';
+// import { useSwipeable } from 'react-swipeable';
+import { BlocksList } from "./BlocksList";
+import { CategoryButtons } from './CategoryButtons';
+import { NavigationButtons } from './NavigationButtons';
 
 const MIN_SCROLL_AMOUNT = 0;
 const MAX_SCROLL_AMOUNT = 12;
@@ -54,7 +14,7 @@ const MAX_SCROLL_AMOUNT = 12;
 function App() {
   const [scrollAmount, setScrollAmount] = useState(MIN_SCROLL_AMOUNT);
   const [dateOffset, setDateOffset] = useState(0);
-  const [category, setCategory] = useState(CategoryNames.ALL);
+  const [category, setCategory] = useState(CategoryNames.All.name);
   const [searchTerm, setSearchTerm] = useState("");
 
   const scope = useMemo(() =>
@@ -169,79 +129,45 @@ function App() {
           return true;
         }
       })
-      .filter(item => category === CategoryNames.ALL || item.category === category)
+      .filter(item => category === CategoryNames.All.name || item.category === category)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [scope, currentDate, category, searchTerm]);
 
   // Swipe handlers for touch support
-  const swipeHandlers = useSwipeable({
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: false,
-    onSwipedLeft: () => {
-      if (!scope?.name) return;
-      setDateOffset(prev => prev - 1);
-    },
-    onSwipedRight: () => {
-      if (!scope?.name) return;
-      setDateOffset(prev => prev + 1);
-    },
-  });
+  // const swipeHandlers = useSwipeable({
+  //   preventDefaultTouchmoveEvent: true,
+  //   trackMouse: false,
+  //   onSwipedLeft: () => {
+  //     if (!scope?.name) return;
+  //     setDateOffset(prev => prev - 1);
+  //   },
+  //   onSwipedRight: () => {
+  //     if (!scope?.name) return;
+  //     setDateOffset(prev => prev + 1);
+  //   },
+  // });
 
   return (
-    <section className="space-y-4 p-4 w-screen overflow-hidden flex flex-col justify-between">
-      <div className='space-y-4'>
-        <ul className='flex flex-wrap 
-      gap-2 overflow-y-auto h-[50vh] space-grotesk-400'>
-          {filteredData.map(item =>
-            <li
-              key={item.date + item.name}
-              className={`px-2 py-1 text-center font-bold text-sm grow-0
-               border-b-2 ${CategoryColors[item.category.toLowerCase()]}`}>
-              {item.name}, {format(item.date, "MMM dd")}
-            </li>)}
-        </ul>
-      </div>
-      <div className='space-y-4'>
-        <h2 className='text-left font-bold merriweather-900'>
-          {scope?.name.toUpperCase()} - {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
-        </h2>
-        <Search value={searchTerm} onInputChange={setSearchTerm} />
-        <div className='flex border w-full flex-wrap items-center gap-2'>
-          {Object
-          .values(CategoryNames)
-          .map(categoryName => 
-            <button
-              className=""
-              onClick={() => setCategory(categoryName)}
-            >
-              {categoryName.toUpperCase()}
-            </button>
-          )}
+    <section className="w-screen">
+      <div className='px-4 space-y-4'>
+        <h1 className='text-left font-bold text-lg merriweather-900'>
+          {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
+        </h1>
+        <div className="h-[50vh] overflow-y-auto">
+          <BlocksList data={filteredData} />
         </div>
-        <div className="flex gap-4">
-            <button onClick={() => {
-            handleScrollChange(-1, true);
-          }}>
-            ⬆️
-          </button>
-          <button onClick={() => {
-            handleScrollChange(1, true);
-          }}>
-            ⬇️
-          </button>
-             <button onClick={() => {
-            if (!scope?.name) return;
-      setDateOffset(prev => prev + 1);
-          }}>
-            ➡️
-          </button>
-          <button onClick={() => {
-if (!scope?.name) return;
-      setDateOffset(prev => prev - 1);
-          }}>
-            ⬅️
-          </button>
-          </div>
+      </div>
+      <div className='p-4 space-y-4 border-t-2 rounded-xl'>
+        <CategoryButtons
+          selectedCategory={category}
+          onCategoryClick={setCategory} />
+        <Search value={searchTerm} onInputChange={setSearchTerm} />
+        <NavigationButtons
+          scope={scope}
+          onNavigateUp={() => handleScrollChange(-1, true)}
+          onNavigateDown={() => handleScrollChange(1, true)}
+          onNavigateLeft={() => setDateOffset(prev => prev + 1)}
+          onNavigateRight={() => setDateOffset(prev => prev - 1)} />
       </div>
     </section>
   )
