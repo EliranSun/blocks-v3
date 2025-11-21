@@ -11,10 +11,10 @@ export const NavigationButtons = ({
                 Prev {scope.name}
             </button>
             <button onClick={onNavigateUp}>
-                ⬆︎
+                ↑
             </button>
             <button onClick={onNavigateDown}>
-                ⬇
+                ↓
             </button>
             <button onClick={onNavigateLeft}>
                 Next {scope.name}
