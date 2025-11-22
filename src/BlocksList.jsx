@@ -13,7 +13,7 @@ export const BlocksList = ({ data = [] }) => {
                         "font-bold text-sm grow-0": true,
                         [CategoryColors[item.category.toLowerCase()]]: true,
                     })}>
-                    {item.name}; {format(item.date, "MMM dd, E"))}
+                    {item.name}; {format(item.date, "MMM dd, EEE").slice(-2)}
                 </li>)}
         </ul>
     )
