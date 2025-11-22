@@ -698,8 +698,153 @@
         "category": "avoid"
     },
     {
-        "name": "Laundry, Full",
+        "name": "Laundry - Full",
         "date": "2025-11-13",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-03-15",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - wash",
+        "date": "2025-03-24",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-04-02",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-04-04",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-04-05",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - wash",
+        "date": "2025-04-14",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-04-16",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-04-20",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - wash",
+        "date": "2025-04-22",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - wash",
+        "date": "2025-04-23",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-05-02",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-05-07",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-05-09",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-05-15",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-05-17",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-05-29",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-06-02",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-06-09",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-06-13",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Fold",
+        "date": "2025-06-25",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-06-27",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-06-28",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-07-03",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-07-11",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-07-17",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-07-26",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Wash",
+        "date": "2025-07-30",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - Dry",
+        "date": "2025-08-01",
+        "category": "household"
+    },
+    {
+        "name": "Laundry - All",
+        "date": "2025-08-06",
         "category": "household"
     },
     {
@@ -743,7 +888,7 @@
         "date": "2025-11-10"
     },
     {
-        "name": "Laundry, wash",
+        "name": "Laundry - wash",
         "category": "household",
         "date": "2025-11-10"
     },
@@ -843,7 +988,7 @@
         "location": "Bus Bakerem"
     },
     {
-        "name": "Laundry, wash",
+        "name": "Laundry - wash",
         "category": "household",
         "date": "2025-11-07"
     },
@@ -853,12 +998,12 @@
         "date": "2025-11-07"
     },
     {
-        "name": "Laundry, wash + hang",
+        "name": "Laundry - wash + dry",
         "category": "household",
         "date": "2025-10-29"
     },
     {
-        "name": "Laundry, Fold",
+        "name": "Laundry - Fold",
         "category": "household",
         "date": "2025-08-23"
     },
