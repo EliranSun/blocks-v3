@@ -20,6 +20,22 @@
         "category": "friends"
     },
     {
+        "name": "Organize - Unpacking",
+        "category": "household",
+        "subcategory": "organize"
+        "date": "2025-10-31"
+    },
+    {
+        "name": "Dishes",
+        "category": "household",
+        "date": "2025-11-06"
+    },
+    {
+        "name": "Dishes",
+        "category": "household",
+        "date": "2025-11-04"
+    },
+    {
         "name": "Ofek - Happy Bday Video",
         "date": "2025-10-25",
         "category": "family"
@@ -580,6 +596,42 @@
         "date": "2025-09-19"
     },
     {
+        "name": "Towels",
+        "category": "household",
+        "date": "2025-11-02"
+    },
+    {
+        "name": "Floor",
+        "category": "household",
+        "date": "2025-07-18"
+    },
+    {
+        "name": "Veggies",
+        "category": "household",
+        "subcategory": "groceries",
+        "date": "2025-11-07"
+    },
+    {
+        "name": "Towels",
+        "category": "household",
+        "date": "2025-11-07"
+    },
+    {
+        "name": "Towels",
+        "category": "household",
+        "date": "2025-09-13"
+    },
+    {
+        "name": "Towels",
+        "category": "household",
+        "date": "2025-07-11"
+    },
+    {
+        "name": "Towels",
+        "category": "household",
+        "date": "2025-05-02"
+    },
+    {
         "name": "Date",
         "date": "2025-10-07",
         "category": "wife",
@@ -916,6 +968,12 @@
         "name": "Sheets",
         "category": "household",
         "date": "2025-11-12"
+    },
+    {
+        "name": "Clean",
+        "category": "household",
+        "subcategory": "clean",
+        "date": "2025-08-06"
     },
     {
         "name": "Mast",
