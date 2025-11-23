@@ -11,7 +11,7 @@ export const DailyQuotes = () => {
     }, []);
 
     return (
-        <div className="opacity-40 merriweather-500 px-2 text-2xl font-bold italic">
+        <div className="opacity-40 merriweather-500 px-2 font-bold italic">
             <span className="text-2xl pr-2">❝</span>
             {quote}
             <span className="text-2xl pl-2">❞</span>
