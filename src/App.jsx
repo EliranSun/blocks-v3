@@ -66,7 +66,9 @@ function App() {
     };
 
     const comparator = dateComparators[scope.name];
-    if (!comparator) return [];
+
+    if (!comparator)
+      return [];
 
     if (searchTerm) {
       return Data
