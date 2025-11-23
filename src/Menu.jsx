@@ -18,7 +18,7 @@ export const Menu = ({ items = [], selectedItem, onItemClick = () => { }, label 
             </Button>
             {isOpen &&
                 <ul className={classNames(
-                    "absolute bottom-12 rounded-xl",
+                    "absolute bottom-13 rounded-xl",
                     "shadow-2xl bg-white/80 dark:bg-neutral-900/80",
                     "backdrop-blur-md border border-white/20 dark:border-neutral-700/30",
                     "p-4 space-y-2 w-40"
