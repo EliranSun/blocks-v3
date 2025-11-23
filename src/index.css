@@ -70,23 +70,10 @@ body {
 }
 
 button {
-  border-radius: 16px;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
-  border: 1.5px solid #2f2f2f;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
@@ -94,9 +81,9 @@ button:focus-visible {
     background-color: #f9f6f2;
   }
 
-  button {
-    border: 1.5px solid #a1a1a1;
-  }
+  /* button {
+    box-shadow: 0 4px 18px 0 rgba(33, 53, 71, 0.18), 0 1.5px 5px rgba(33, 53, 71, 0.12);
+  } */
 
   :root {
     color: #213547;

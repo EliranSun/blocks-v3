@@ -1,48 +1,22 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import Data from "./data.json";
 import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { Search } from './Search';
-import { CategoryColors, CategoryNames, MonthNotes, Scopes } from './constants';
-// import { useSwipeable } from 'react-swipeable';
+import { CategoryNames, MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
 import { CategoryButtons } from './CategoryButtons';
 import { NavigationButtons } from './NavigationButtons';
 import { DailyQuotes } from './DailyQuotes';
+import { Button } from "./Button";
 
 function App() {
   const [scopeIndex, setScopeIndex] = useState(2);
   const [dateOffset, setDateOffset] = useState(0);
   const [category, setCategory] = useState(CategoryNames.All.name);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
-
-  const handleScopeChange = useCallback((direction) => {
-    setScopeIndex(prevIndex => {
-      const nextIndex = Math.max(0, Math.min(Scopes.length - 1, prevIndex + direction));
-      if (nextIndex !== prevIndex) {
-        setDateOffset(0);
-      }
-      return nextIndex;
-    });
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = event => {
-      if (!scope?.name) return;
-
-      if (event.key === 'ArrowLeft') {
-        setDateOffset(prev => prev - 1);
-      } else if (event.key === 'ArrowRight') {
-        setDateOffset(prev => prev + 1);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [scope]);
 
   const currentDate = useMemo(() => {
     if (!scope?.name) return new Date();
@@ -66,12 +40,16 @@ function App() {
     switch (scope.name) {
       case 'year':
         return format(currentDate, 'yyyy');
+
       case 'month':
         return format(currentDate, 'MMM');
+
       case 'week':
-        return format(currentDate, 'w');
+        return "Week " + format(currentDate, 'w') + "/52";
+
       case 'day':
         return format(currentDate, 'EEE, MMM d');
+
       default:
         return '';
     }
@@ -90,12 +68,9 @@ function App() {
     const comparator = dateComparators[scope.name];
     if (!comparator) return [];
 
-    return Data.filter(item => {
-      const itemDate = new Date(item.date);
-      return comparator(itemDate);
-    })
-      .filter(item => {
-        if (searchTerm) {
+    if (searchTerm) {
+      return Data
+        .filter(item => {
           const search = searchTerm.trim();
           const regex = new RegExp(search, 'i');
           return (
@@ -104,52 +79,55 @@ function App() {
             regex.test(item.subcategory) ||
             regex.test(item.location)
           );
-        } else {
-          return true;
-        }
+        });
+    }
+
+    return Data
+      .filter(item => {
+        const itemDate = new Date(item.date);
+        return comparator(itemDate);
       })
       .filter(item => category === CategoryNames.All.name || item.category === category)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [scope, currentDate, category, searchTerm]);
 
-  // Swipe handlers for touch support
-  // const swipeHandlers = useSwipeable({
-  //   preventDefaultTouchmoveEvent: true,
-  //   trackMouse: false,
-  //   onSwipedLeft: () => {
-  //     if (!scope?.name) return;
-  //     setDateOffset(prev => prev - 1);
-  //   },
-  //   onSwipedRight: () => {
-  //     if (!scope?.name) return;
-  //     setDateOffset(prev => prev + 1);
-  //   },
-  // });
-
   return (
-    <section className="w-screen space-y-4">
-        <div className="h-[60vh] overflow-y-auto space-y-8">
-          <BlocksList data={filteredData} />
-          <DailyQuotes />
+    <section className="p-4 flex flex-col justify-between h-dvh">
+      <div className="h-full overflow-y-auto space-y-8">
+        <div className='flex items-center justify-between'>
+          <Button onClick={() => setDateOffset(prev => prev - 1)}>
+            ←
+          </Button>
+          <h1 className='text-center text-lg merriweather-900'>
+            {currentFrame}
+          </h1>
+          <Button onClick={() => setDateOffset(prev => prev + 1)}>
+            →
+          </Button>
         </div>
-      <div className='m-2 p-4 space-y-4 border border-gray-200 shadow-xl rounded-3xl'>
-        <CategoryButtons
-          selectedCategory={category}
-          onCategoryClick={setCategory} />
-        <Search value={searchTerm} onInputChange={setSearchTerm} />
-        
+        <h2>{MonthNotes[format(currentDate, 'yyyy-MM')]}</h2>
+        <DailyQuotes />
+        <BlocksList data={filteredData} />
       </div>
-            <div className='m-2 p-4 space-y-4 border border-gray-200 shadow-xl rounded-3xl'>
-      <h1 className='text-left font-bold text-lg merriweather-900'>
-          {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
-        </h1>
-        <NavigationButtons
-          scope={scope}
-          onNavigateUp={() => handleScopeChange(-1)}
-          onNavigateDown={() => handleScopeChange(1)}
-          onNavigateLeft={() => setDateOffset(prev => prev + 1)}
-          onNavigateRight={() => setDateOffset(prev => prev - 1)} />
-          </div>
+      <div className='flex items-center justify-center gap-4'>
+        {isSearchOpen ? null :
+          <>
+            <CategoryButtons
+              selectedCategory={category}
+              onCategoryClick={setCategory} />
+            <NavigationButtons
+              scope={scope.name}
+              onScopeChange={scopeName => {
+                setScopeIndex(Scopes.findIndex(({ name }) => name === scopeName))
+                setDateOffset(0);
+              }} />
+          </>}
+        <Search
+          value={searchTerm}
+          onOpen={() => setIsSearchOpen(true)}
+          onClose={() => setIsSearchOpen(false)}
+          onInputChange={setSearchTerm} />
+      </div>
     </section>
   )
 }
