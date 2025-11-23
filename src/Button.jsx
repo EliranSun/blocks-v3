@@ -5,7 +5,7 @@ export const Button = ({ children, className, ...rest }) => {
         <button
             {...rest}
             className={classNames("rounded-full flex items-center justify-center", className, {
-                "size-10 shadow-lg border border-gray-300": true,
+                "size-12 shadow-lg border border-gray-300": true,
             })}>
             {children}
         </button>

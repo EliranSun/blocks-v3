@@ -11,8 +11,8 @@ export const Menu = ({ items = [], selectedItem, onItemClick = () => { }, label 
                 onClick={() => setIsOpen(!isOpen)}
                 className={classNames(
                     "rounded-full flex items-center justify-center", {
-                    "size-10": !label,
-                    "h-10 w-24": label
+                    "size-12": !label,
+                    "h-12 w-24": label
                 })}>
                 {label || "≡"}
             </Button>
