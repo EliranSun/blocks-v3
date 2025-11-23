@@ -43,7 +43,7 @@ function App() {
         return format(currentDate, 'yyyy');
 
       case 'month':
-        return format(currentDate, 'MMM');
+        return format(currentDate, 'MM yyyy');
 
       case 'week':
         return "Week " + format(currentDate, 'w') + "/52";
