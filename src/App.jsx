@@ -149,7 +149,7 @@ function App() {
           onNavigateDown={() => handleScopeChange(1)}
           onNavigateLeft={() => setDateOffset(prev => prev + 1)}
           onNavigateRight={() => setDateOffset(prev => prev - 1)} />
-          <div/>
+          </div>
     </section>
   )
 }
