@@ -133,9 +133,8 @@ function App() {
           {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
         </h1>
         <div className="h-[60vh] overflow-y-auto">
-          <DailyQuotes />
           <BlocksList data={filteredData} />
-          
+          <DailyQuotes />
         </div>
       </div>
       <div className='p-4 space-y-4 border-t-2 rounded-xl'>
