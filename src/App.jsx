@@ -132,7 +132,7 @@ function App() {
         <h1 className='text-left font-bold text-lg merriweather-900'>
           {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
         </h1>
-        <div className="h-[60vh] overflow-y-auto">
+        <div className="h-[60vh] overflow-y-auto space-y-8">
           <BlocksList data={filteredData} />
           <DailyQuotes />
         </div>
