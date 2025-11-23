@@ -137,7 +137,7 @@ function App() {
           <DailyQuotes />
         </div>
       </div>
-      <div className='p-4 space-y-4 border-t-2 rounded-xl'>
+      <div className='m-2 p-4 space-y-4 border rounded-xl'>
         <CategoryButtons
           selectedCategory={category}
           onCategoryClick={setCategory} />
