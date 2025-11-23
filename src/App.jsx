@@ -127,28 +127,29 @@ function App() {
   // });
 
   return (
-    <section className="w-screen">
-      <div className='p-4 space-y-4'>
-        <h1 className='text-left font-bold text-lg merriweather-900'>
-          {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
-        </h1>
+    <section className="w-screen space-y-4">
         <div className="h-[60vh] overflow-y-auto space-y-8">
           <BlocksList data={filteredData} />
           <DailyQuotes />
         </div>
-      </div>
       <div className='m-2 p-4 space-y-4 border border-gray-200 shadow-xl rounded-3xl'>
         <CategoryButtons
           selectedCategory={category}
           onCategoryClick={setCategory} />
         <Search value={searchTerm} onInputChange={setSearchTerm} />
+        
+      </div>
+            <div className='m-2 p-4 space-y-4 border border-gray-200 shadow-xl rounded-3xl'>
+      <h1 className='text-left font-bold text-lg merriweather-900'>
+          {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
+        </h1>
         <NavigationButtons
           scope={scope}
           onNavigateUp={() => handleScopeChange(-1)}
           onNavigateDown={() => handleScopeChange(1)}
           onNavigateLeft={() => setDateOffset(prev => prev + 1)}
           onNavigateRight={() => setDateOffset(prev => prev - 1)} />
-      </div>
+          <div/>
     </section>
   )
 }
