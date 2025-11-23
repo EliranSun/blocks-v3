@@ -8,7 +8,7 @@ export const NavigationButtons = ({
     return (
         <div className="flex gap-2 text-xs justify-center">
             <button onClick={onNavigateRight}>
-                Prev {scope.name}
+                ←
             </button>
             <button onClick={onNavigateUp}>
                 ↑
@@ -17,7 +17,7 @@ export const NavigationButtons = ({
                 ↓
             </button>
             <button onClick={onNavigateLeft}>
-                Next {scope.name}
+                →
             </button>
         </div>
     )
