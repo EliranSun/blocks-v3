@@ -43,13 +43,13 @@ function App() {
         return format(currentDate, 'yyyy');
 
       case 'month':
-        return format(currentDate, 'MM yyyy');
+        return format(currentDate, 'M yyyy');
 
       case 'week':
         return "Week " + format(currentDate, 'w') + "/52";
 
       case 'day':
-        return format(currentDate, 'EEE, MMM d');
+        return format(currentDate, 'EEE, MMM d, yyyy');
 
       default:
         return '';
