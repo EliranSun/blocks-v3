@@ -7,6 +7,7 @@ import { CategoryColors, CategoryNames, MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
 import { CategoryButtons } from './CategoryButtons';
 import { NavigationButtons } from './NavigationButtons';
+import { DailyQuotes } from './DailyQuotes';
 
 function App() {
   const [scopeIndex, setScopeIndex] = useState(2);
@@ -132,7 +133,9 @@ function App() {
           {currentFrame} - {MonthNotes[format(currentDate, 'yyyy-MM')]}
         </h1>
         <div className="h-[60vh] overflow-y-auto">
+          <DailyQuotes />
           <BlocksList data={filteredData} />
+          
         </div>
       </div>
       <div className='p-4 space-y-4 border-t-2 rounded-xl'>
