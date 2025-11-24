@@ -4,7 +4,7 @@ import { Button } from "./Button";
 
 export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick = () => { }, label = "" }) => {
     const [isOpen, setIsOpen] = useState(false);
-const [selectedItem, setSelectedItem] = useState("");
+const [selectedItemLabel, setSelectedItemLabel] = useState("");
 
     return (
         <div className='relative'>
@@ -15,7 +15,7 @@ const [selectedItem, setSelectedItem] = useState("");
                     "size-12": !label,
                     "h-12 w-24": label
                 })}>
-                {showSelectedItem ? selectedItem : (label || "≡")}
+                {showSelectedItem ? selectedItemLabel : (label || "≡")}
             </Button>
             {isOpen &&
                 <ul className={classNames(
@@ -29,7 +29,7 @@ const [selectedItem, setSelectedItem] = useState("");
                             key={name}
                             onClick={() => {
                                 onItemClick(name);
-                                setSelectedItem(`${icon} ${name.toUpperCase()}`);
+                                setSelectedItemLabel(`${icon} ${name.toUpperCase()}`);
                                 setIsOpen(false);
                             }}
                             className={classNames("", {
