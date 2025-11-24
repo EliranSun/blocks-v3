@@ -2,8 +2,9 @@ import classNames from "classnames";
 import { useState } from "react";
 import { Button } from "./Button";
 
-export const Menu = ({ items = [], selectedItem, onItemClick = () => { }, label = "" }) => {
+export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick = () => { }, label = "" }) => {
     const [isOpen, setIsOpen] = useState(false);
+const [selectedItem, setSelectedItem] = useState("");
 
     return (
         <div className='relative'>
@@ -14,7 +15,7 @@ export const Menu = ({ items = [], selectedItem, onItemClick = () => { }, label 
                     "size-12": !label,
                     "h-12 w-24": label
                 })}>
-                {label || "≡"}
+                {showSelectedItem ? selectedItem : (label || "≡")}
             </Button>
             {isOpen &&
                 <ul className={classNames(
@@ -28,6 +29,7 @@ export const Menu = ({ items = [], selectedItem, onItemClick = () => { }, label 
                             key={name}
                             onClick={() => {
                                 onItemClick(name);
+                                setSelectedItem(`${icon} ${name.toUpperCase()});
                                 setIsOpen(false);
                             }}
                             className={classNames("", {
