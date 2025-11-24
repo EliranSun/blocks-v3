@@ -29,7 +29,7 @@ const [selectedItem, setSelectedItem] = useState("");
                             key={name}
                             onClick={() => {
                                 onItemClick(name);
-                                setSelectedItem(`${icon} ${name.toUpperCase()});
+                                setSelectedItem(`${icon} ${name.toUpperCase()}`);
                                 setIsOpen(false);
                             }}
                             className={classNames("", {
