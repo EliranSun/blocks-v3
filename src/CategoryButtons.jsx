@@ -8,6 +8,7 @@ export const CategoryButtons = ({ selectedCategory, onCategoryClick = () => { } 
         <Menu
             items={Categories}
             onItemClick={onCategoryClick}
+            showSelectedItem
             selectedItem={selectedCategory} />
     )
 }
