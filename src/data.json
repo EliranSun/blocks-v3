@@ -595,6 +595,12 @@
         "location": "Beach"
     },
     {
+        "name": "Pasta",
+        "category": "household",
+        "subcategory": "Cooking",
+        "date": "2025-11-24"
+    },
+    {
         "name": "Ramen",
         "category": "household",
         "subcategory": "Cooking",
