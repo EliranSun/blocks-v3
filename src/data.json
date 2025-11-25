@@ -816,6 +816,11 @@
         "category": "household"
     },
     {
+        "name": "Laundry - wash",
+        "date": "2025-11-25",
+        "category": "household"
+    },
+    {
         "name": "Laundry - Fold",
         "date": "2025-04-02",
         "category": "household"
