@@ -8,6 +8,7 @@ import { CategoryButtons } from './CategoryButtons';
 import { NavigationButtons } from './NavigationButtons';
 import { DailyQuotes } from './DailyQuotes';
 import { Button } from "./Button";
+import { useLogsData } from "./useLogsData";
 
 function App() {
   const [scopeIndex, setScopeIndex] = useState(2);
@@ -16,6 +17,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showDate, setShowDate] = useState(false);
+
+  useLogsData();
 
   const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
 
