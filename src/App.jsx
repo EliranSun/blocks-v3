@@ -94,7 +94,10 @@ function App() {
       const itemDate = new Date(item.date);
       return comparator(itemDate);
     })
-      .filter(item => category === CategoryNames.All.name || item.category === category)
+      .filter(item =>
+        category === CategoryNames.All.name ||
+        item.category?.toLowerCase() === category?.toLowerCase()
+      )
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [logs, scope, currentDate, category, searchTerm]);
 
