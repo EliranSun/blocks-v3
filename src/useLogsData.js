@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const API_URL = "https://walak-next-ehwpx9w7q-indian-monkeys.vercel.app/api/logs";
+const API_URL = "https://walak.vercel.app/api/logs?date=2025-11-27";
 
 export const useLogsData = () => {
     useEffect(() => {
