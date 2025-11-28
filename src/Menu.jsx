@@ -4,7 +4,7 @@ import { Button } from "./Button";
 
 export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick = () => { }, label = "" }) => {
     const [isOpen, setIsOpen] = useState(false);
-const [selectedItemLabel, setSelectedItemLabel] = useState("");
+    const [selectedItemLabel, setSelectedItemLabel] = useState("");
 
     return (
         <div className='relative'>

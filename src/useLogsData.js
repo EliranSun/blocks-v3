@@ -1,12 +1,34 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const API_URL = "https://walak.vercel.app/api/logs?date=2025-11-27";
+const API_URL = "https://walak.vercel.app/api/logs";
 
 export const useLogsData = () => {
+    const [logs, setLogs] = useState([]);
+
     useEffect(() => {
         fetch(API_URL)
             .then(res => res.json())
-            .then(results => console.log({ results }))
-            .catch(error => console.error(error));
+            .then(setLogs)
+            .catch(console.error);
     }, []);
+
+    const addLog = useCallback(({ date, name, category, subcategory, location, note, endDate }) => {
+        fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                date,
+                name,
+                category,
+                subcategory,
+                location,
+                note,
+                endDate
+            })
+        })
+            .then(res => res.json())
+            .then(console.log)
+            .catch(console.error);
+    }, []);
+
+    return { logs, addLog };
 }

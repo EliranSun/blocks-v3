@@ -9,6 +9,7 @@ import { NavigationButtons } from './NavigationButtons';
 import { DailyQuotes } from './DailyQuotes';
 import { Button } from "./Button";
 import { useLogsData } from "./useLogsData";
+import { AddLogDialog } from "./AddLog";
 
 function App() {
   const [scopeIndex, setScopeIndex] = useState(2);
@@ -17,8 +18,9 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showDate, setShowDate] = useState(false);
+  // const [selectedLog, setSelectedLog] = useState("");
 
-  useLogsData();
+  const { logs, addLog } = useLogsData();
 
   const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
 
@@ -60,7 +62,8 @@ function App() {
   }, [scope, currentDate]);
 
   const filteredData = useMemo(() => {
-    if (!scope?.name) return [];
+    if (!scope?.name || !logs)
+      return [];
 
     const dateComparators = {
       year: (itemDate) => isSameYear(itemDate, currentDate),
@@ -75,27 +78,25 @@ function App() {
       return [];
 
     if (searchTerm) {
-      return Data
-        .filter(item => {
-          const search = searchTerm.trim();
-          const regex = new RegExp(search, 'i');
-          return (
-            regex.test(item.name) ||
-            regex.test(item.category) ||
-            regex.test(item.subcategory) ||
-            regex.test(item.location)
-          );
-        });
+      return logs.filter(item => {
+        const search = searchTerm.trim();
+        const regex = new RegExp(search, 'i');
+        return (
+          regex.test(item.name) ||
+          regex.test(item.category) ||
+          regex.test(item.subcategory) ||
+          regex.test(item.location)
+        );
+      });
     }
 
-    return Data
-      .filter(item => {
-        const itemDate = new Date(item.date);
-        return comparator(itemDate);
-      })
+    return logs.filter(item => {
+      const itemDate = new Date(item.date);
+      return comparator(itemDate);
+    })
       .filter(item => category === CategoryNames.All.name || item.category === category)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [scope, currentDate, category, searchTerm]);
+  }, [logs, scope, currentDate, category, searchTerm]);
 
   return (
     <section className="p-4 flex flex-col justify-between h-dvh">
@@ -118,14 +119,23 @@ function App() {
       <div className='flex items-center justify-center gap-2 pb-4'>
         {isSearchOpen ? null :
           <>
-            <CategoryButtons
-              selectedCategory={category}
-              onCategoryClick={setCategory} />
             <NavigationButtons
               scope={scope.name}
               onScopeChange={scopeName => {
                 setScopeIndex(Scopes.findIndex(({ name }) => name === scopeName))
                 setDateOffset(0);
+              }} />
+            <CategoryButtons
+              selectedCategory={category}
+              onCategoryClick={setCategory} />
+            <AddLogDialog
+              onSubmit={formData => {
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                  if (value) data[key] = value;
+                }
+                console.log({ data });
+                addLog(data);
               }} />
             <Button onClick={() => setShowDate(!showDate)} aria-label="Toggle date display">
               <svg
@@ -141,6 +151,7 @@ function App() {
                 <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
               </svg>
             </Button>
+
           </>}
         <Search
           value={searchTerm}
