@@ -114,7 +114,7 @@ function App() {
         </div>
         <h2>{MonthNotes[format(currentDate, 'yyyy-MM')]}</h2>
         <DailyQuotes />
-        <BlocksList data={filteredData} showDate={showDate} />
+        <BlocksList currentDate={currentDate} data={filteredData} showDate={showDate} />
       </div>
       <div className='flex items-center justify-center gap-2 pb-4'>
         {isSearchOpen ? null :
