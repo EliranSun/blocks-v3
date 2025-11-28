@@ -12,21 +12,13 @@ export const useLogsData = () => {
             .catch(console.error);
     }, []);
 
-    const addLog = useCallback(({ date, name, category, subcategory, location, note, endDate }) => {
+    const addLog = useCallback(data => {
         fetch(API_URL, {
             method: "POST",
-            body: JSON.stringify({
-                date,
-                name,
-                category,
-                subcategory,
-                location,
-                note,
-                endDate
-            })
+            body: JSON.stringify(data)
         })
-            .then(res => res.json())
-            .then(console.log)
+            .then(res => { if (res.ok) res.json() })
+            .then(() => setLogs(prev => [...prev, data]))
             .catch(console.error);
     }, []);
 
