@@ -85,7 +85,12 @@
     },
     {
         "name": "Play - Who's Lila?",
-        "date": "2025-11-28",
+        "date": "2025-11-26",
+        "category": "creative"
+    },
+    {
+        "name": "Play - Who's Lila?",
+        "date": "2025-11-27",
         "category": "creative"
     },
     {
@@ -154,6 +159,11 @@
         "category": "health"
     },
     {
+        "name": "Abstain 7/21",
+        "date": "2025-11-28T08:10",
+        "category": "health"
+    },
+    {
         "name": "Dopamine Detox I",
         "date": "2025-11-26",
         "category": "health"
@@ -161,6 +171,11 @@
     {
         "name": "Dopamine Detox II",
         "date": "2025-11-27",
+        "category": "health"
+    },
+    {
+        "name": "Dopamine Detox III",
+        "date": "2025-11-28T08:11",
         "category": "health"
     },
     {
@@ -869,6 +884,11 @@
     {
         "name": "Laundry - wash",
         "date": "2025-03-24",
+        "category": "household"
+    },
+    {
+        "name": "Laundry wash",
+        "date": "2025-11-28T09:00",
         "category": "household"
     },
     {
