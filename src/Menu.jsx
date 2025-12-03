@@ -15,7 +15,7 @@ export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick =
                     "size-12": !label,
                     "h-12 w-24": label
                 })}>
-                {showSelectedItem ? selectedItemLabel : (label || "≡")}
+                {showSelectedItem ? selectedItemLabel.slice(0,1) : (label || "≡")}
             </Button>
             {isOpen &&
                 <ul className={classNames(
