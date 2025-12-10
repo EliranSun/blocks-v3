@@ -117,6 +117,11 @@ function App() {
         </div>
         <h2>{MonthNotes[format(currentDate, 'yyyy-MM')]}</h2>
         <DailyQuotes />
+          <Search
+          value={searchTerm}
+          onOpen={() => setIsSearchOpen(true)}
+          onClose={() => setIsSearchOpen(false)}
+          onInputChange={setSearchTerm} />
         <BlocksList currentDate={currentDate} data={filteredData} showDate={showDate} />
       </div>
       <div className='flex items-center justify-center gap-2 pb-4'>
@@ -156,11 +161,7 @@ function App() {
             </Button>
 
           </>}
-        <Search
-          value={searchTerm}
-          onOpen={() => setIsSearchOpen(true)}
-          onClose={() => setIsSearchOpen(false)}
-          onInputChange={setSearchTerm} />
+      
       </div>
     </section>
   )

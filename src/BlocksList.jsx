@@ -71,7 +71,7 @@ export const BlocksList = ({ currentDate, data = [], showDate = false }) => {
                                             <li
                                                 key={item.date + item.name}
                                                 className={classNames({
-                                                    "px-2 pt-1 text-center border-b-2": true,
+                                                    "px-2 pt-1 text-center border-2": true,
                                                     "font-bold text-shadow-2 text-xs text-left": true,
                                                     [CategoryColors[item.category.toLowerCase()]]: true,
                                                 })}
