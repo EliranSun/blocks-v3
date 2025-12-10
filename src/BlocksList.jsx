@@ -97,7 +97,7 @@ export const BlocksList = ({ currentDate, data = [], showDate = false }) => {
                 Week View →
             </button>
             <ul className='flex flex-wrap gap-2'>
-                {data.map(item =>
+                {data.reverse().map(item =>
                     <li
                         key={item.date + item.name}
                         className={classNames({
