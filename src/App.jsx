@@ -102,7 +102,7 @@ function App() {
   }, [logs, scope, currentDate, category, searchTerm]);
 
   return (
-    <section className="p-4 flex flex-col justify-between h-dvh">
+    <section className="p-4 flex flex-col justify-between h-dvh max-w-3xl mx-auto">
       <div className="h-full overflow-y-auto space-y-8">
         <div className='flex items-center justify-between'>
           <Button onClick={() => setDateOffset(prev => prev - 1)}>
@@ -117,7 +117,7 @@ function App() {
         </div>
         <h2>{MonthNotes[format(currentDate, 'yyyy-MM')]}</h2>
         <DailyQuotes />
-          <Search
+        <Search
           value={searchTerm}
           onOpen={() => setIsSearchOpen(true)}
           onClose={() => setIsSearchOpen(false)}
@@ -161,7 +161,7 @@ function App() {
             </Button>
 
           </>}
-      
+
       </div>
     </section>
   )
