@@ -48,10 +48,9 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                     const monthKey = format(month, 'yyyy-MM');
                     const monthItems = yearData.grouped[monthKey] || [];
                     return (
-                        <div key={monthKey} className="flex flex-col border-2 rounded p-2 min-h-[200px] max-h-[300px]">
+                        <div key={monthKey} className="flex flex-col p-2 min-h-[200px] max-h-[300px]">
                             <div className="font-semibold text-xs mb-2 text-center border-b pb-1 shrink-0">
                                 {format(month, 'MMM')}<br />
-                                <span className="text-gray-500">{format(month, 'yyyy')}</span>
                             </div>
                             <ul className="space-y-1 overflow-y-auto flex-1">
                                 {monthItems
