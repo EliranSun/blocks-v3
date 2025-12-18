@@ -52,7 +52,7 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                             <div className="font-semibold text-xs mb-2 text-center border-b pb-1 shrink-0">
                                 {format(month, 'MMM')}<br />
                             </div>
-                            <ul className="space-y-1 overflow-y-auto flex-1">
+                            <ol className="space-y-1 overflow-y-auto flex-1">
                                 {monthItems
                                     .sort((a, b) => {
                                         // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
@@ -78,7 +78,7 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                                         <li
                                             key={item.date + item.name}
                                             className={classNames({
-                                                "px-2 pt-1 text-center border-b-2": true,
+                                                "px-2 pt-1 text-center": true,
                                                 "font-bold text-shadow-2 text-xs text-left": true,
                                                 [CategoryColors[item.category.toLowerCase()]]: true,
                                             })}
@@ -86,7 +86,7 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                                             {[item.name].concat(showDate ? ` - ${format(item.date, "d/MM/yy, EEE")}` : [])}
                                         </li>
                                     ))}
-                            </ul>
+                            </ol>
                         </div>
                     );
                 })}
