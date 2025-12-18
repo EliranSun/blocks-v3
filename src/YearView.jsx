@@ -52,7 +52,7 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                             <div className="font-semibold text-xs mb-2 text-center border-b pb-1 shrink-0">
                                 {format(month, 'MMM')}<br />
                             </div>
-                            <ol className="space-y-1 overflow-y-auto flex-1">
+                            <ol className="space-y-1 list-decimal overflow-y-auto flex-1">
                                 {monthItems
                                     .sort((a, b) => {
                                         // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
