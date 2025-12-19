@@ -5,7 +5,7 @@ export const Button = ({ children, className, ...rest }) => {
         <button
             {...rest}
             className={classNames("rounded-full flex items-center justify-center", className, {
-                "size-12 bg-neutral-600 shrink-0": true,
+                "size-12 dark:bg-neutral-600  bg-neutral-300 shrink-0": true,
             })}>
             {children}
         </button>
@@ -17,7 +17,7 @@ export const RectangleButton = ({ children, type = "button", onClick = () => { }
         <button
             type={type}
             onClick={onClick}
-            className="p-4 rounded bg-black shadow text-sm h-12"
+            className="p-4 rounded dark:bg-black bg-neutral-200 shadow text-sm h-12"
             {...rest}>
             {children}
         </button>
