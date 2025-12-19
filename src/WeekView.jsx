@@ -31,12 +31,6 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
 
     return (
         <div className="space-grotesk-400">
-            <button
-                onClick={onBackToList}
-                className="mb-4 px-3 py-1 text-sm border rounded hover:bg-gray-100"
-            >
-                ← List View
-            </button>
             <div className="flex gap-2 w-full overflow-x-auto">
                 {weekData.weekDays?.map(day => {
                     const dayKey = format(day, 'yyyy-MM-dd');

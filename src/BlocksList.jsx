@@ -4,48 +4,49 @@ import { CategoryColors } from "./constants";
 import classNames from "classnames";
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
+import { Button, RectangleButton } from "./Button";
 
-export const BlocksList = ({ currentDate, data = [], showDate = false }) => {
-    const [view, setView] = useState('list'); // 'list', 'week', or 'year'
-
-    if (view === 'week') {
-        return (
-            <WeekView
-                currentDate={currentDate}
-                data={data}
-                showDate={showDate}
-                onBackToList={() => setView('list')}
-            />
-        );
-    }
-
-    if (view === 'year') {
-        return (
-            <YearView
-                currentDate={currentDate}
-                data={data}
-                showDate={showDate}
-                onBackToList={() => setView('list')}
-            />
-        );
-    }
-
+const CalendarIcon = () => {
     return (
-        <div className="space-grotesk-400">
-            <div className="mb-4 flex gap-2">
-                <button
-                    onClick={() => setView('week')}
-                    className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
-                >
-                    Week View →
-                </button>
-                <button
-                    onClick={() => setView('year')}
-                    className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
-                >
-                    Year View →
-                </button>
-            </div>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2" fill="none" />
+            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" />
+            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" />
+            <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
+        </svg>
+    )
+}
+
+export const BlocksList = ({ currentDate, data = [], view, showDate }) => {
+
+    const renderView = () => {
+        if (view === 'week') {
+            return (
+                <WeekView
+                    currentDate={currentDate}
+                    data={data}
+                    showDate={showDate}
+                />
+            );
+        }
+
+        if (view === 'year') {
+            return (
+                <YearView
+                    currentDate={currentDate}
+                    data={data}
+                    showDate={showDate}
+                />
+            );
+        }
+
+        return (
             <ul className='flex flex-wrap gap-2'>
                 {data.reverse().map(item =>
                     <li
@@ -58,6 +59,12 @@ export const BlocksList = ({ currentDate, data = [], showDate = false }) => {
                         {[item.name].concat(showDate ? ` - ${format(item.date, "d/MM/yy, EEE")}` : [])}
                     </li>)}
             </ul>
+        )
+    }
+
+    return (
+        <div className="space-grotesk-400">
+            {renderView()}
         </div>
     )
 }

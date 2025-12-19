@@ -22,7 +22,7 @@ export const DailyQuotes = () => {
     }, []);
 
     return (
-        <div className="opacity-40 merriweather-500 px-2 italic">
+        <div className="opacity-40 merriweather-500 italic">
             {quote}
         </div>
     )

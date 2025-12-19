@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { Button } from './Button';
 
-export const Search = ({ value, onOpen, onClose, onInputChange = () => { } }) => {
-    const [isOpen, setIsOpen] = useState(false);
+export const Search = ({
+    value,
+    onOpen = () => { },
+    onClose = () => { },
+    autoHide = true,
+    onInputChange = () => { }
+}) => {
+    const [isOpen, setIsOpen] = useState(!autoHide);
 
     const handleToggle = () => {
+        if (!autoHide) return;
+
         setIsOpen(!isOpen);
 
         isOpen ? onClose() : onOpen();
@@ -40,7 +48,7 @@ export const Search = ({ value, onOpen, onClose, onInputChange = () => { } }) =>
                 border text-lg rounded-full
                 transition-all duration-300 ease-in-out
                 overflow-hidden
-                ${isOpen ? 'w-64 px-4 py-2 opacity-100' : 'w-0 px-0 py-2 opacity-0'}
+                ${isOpen ? 'w-full px-4 py-2 opacity-100' : 'w-0 px-0 py-2 opacity-0'}
             `}>
                 <input
                     type="text"

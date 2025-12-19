@@ -37,12 +37,6 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
 
     return (
         <div className="space-grotesk-400">
-            <button
-                onClick={onBackToList}
-                className="mb-4 px-3 py-1 text-sm border rounded hover:bg-gray-100"
-            >
-                ← List View
-            </button>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 w-full">
                 {yearData.yearMonths?.map(month => {
                     const monthKey = format(month, 'yyyy-MM');

@@ -4,8 +4,9 @@ import { Button } from "./Button";
 
 export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick = () => { }, label = "" }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedItemLabel, setSelectedItemLabel] = useState("");
+    const [selectedItemLabel, setSelectedItemLabel] = useState(selectedItem);
 
+    console.log({ selectedItemLabel })
     return (
         <div className='relative'>
             <Button
@@ -15,7 +16,7 @@ export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick =
                     "size-12": !label,
                     "h-12 w-24": label
                 })}>
-                {showSelectedItem ? selectedItemLabel.slice(0,2).trim() : (label || "≡")}
+                {showSelectedItem ? selectedItemLabel.slice(0, 2).trim() : (label || "≡")}
             </Button>
             {isOpen &&
                 <ul className={classNames(
