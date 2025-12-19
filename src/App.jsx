@@ -145,7 +145,7 @@ function App() {
           showDate={showDate}
           view={Views[currentViewIndex]} />
       </div>
-      <div className='flex items-center justify-center gap-2 p-4 
+      <div className='flex items-center justify-center gap-2 p-4 mb-2
       dark:bg-neutral-700 bg-neutral-200 rounded-full shadow-xl'>
         <CategoryButtons
           selectedCategory={category}
