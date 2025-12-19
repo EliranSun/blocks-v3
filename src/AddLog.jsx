@@ -27,18 +27,25 @@ const TextInput = ({ name, placeholder, required }) => {
 };
 
 const DateInput = ({ name, defaultValue, required }) => {
+    // Adjust defaultValue to UTC+3 if provided (expecting ISO string, e.g., "2024-06-13T15:00")
+    let localValue = defaultValue;
+    if (defaultValue) {
+        // Parse the date string and add 3 hours (UTC+3)
+        const date = new Date(defaultValue);
+        date.setHours(date.getHours() + 4);
+        localValue = date.toISOString().slice(0, 16);
+    }
+
     return (
         <input
             className="border-b-2 w-full h-12 px-2"
             type="datetime-local"
             name={name}
-            defaultValue={defaultValue}
+            defaultValue={localValue}
             required={required}
         />
     );
 };
-
-
 
 export const AddLogDialog = ({ onSubmit }) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
