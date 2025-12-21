@@ -42,7 +42,7 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
                                 <br />
                                 <span className="text-gray-500">{format(day, 'd/MM')}</span>
                             </div>
-                            <ul className="space-y-1">
+                            <ul className="grid grid-cols-7 space-y-1">
                                 {dayItems
                                     .sort((a, b) => {
                                         // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
@@ -62,7 +62,7 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
                                         <li
                                             key={item.date + item.name}
                                             className={classNames({
-                                                "px-2 pt-1 text-center border-2": true,
+                                                "px-2 pt-1 text-center": true,
                                                 "font-bold text-shadow-2 text-xs text-left": true,
                                                 [CategoryBgColors[item.category.toLowerCase()]]: true,
                                             })}
