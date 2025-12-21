@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
-import { CategoryColors } from "./constants";
+import { CategoryColors, CategoryBgColors } from "./constants";
 import classNames from "classnames";
 
 export const WeekView = ({ currentDate, data = [], showDate = false, onBackToList }) => {
@@ -64,7 +64,7 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
                                             className={classNames({
                                                 "px-2 pt-1 text-center border-2": true,
                                                 "font-bold text-shadow-2 text-xs text-left": true,
-                                                [CategoryColors[item.category.toLowerCase()]]: true,
+                                                [CategoryBgColors[item.category.toLowerCase()]]: true,
                                             })}
                                         >
                                             {[item.name].concat(showDate ? ` - ${format(item.date, "d/MM/yy, EEE")}` : [])}
