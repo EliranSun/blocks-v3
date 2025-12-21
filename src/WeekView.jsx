@@ -62,7 +62,7 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
                                         <li
                                             key={item.date + item.name}
                                             className={classNames({
-                                                "px-2 pt-1 text-center": true,
+                                                "px-2 pt-1 break-words text-center": true,
                                                 "font-bold text-shadow-2 text-xs text-left": true,
                                                 [CategoryBgColors[item.category.toLowerCase()]]: true,
                                             })}
