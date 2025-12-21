@@ -31,7 +31,7 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
 
     return (
         <div className="space-grotesk-400">
-            <div className="flex gap-2 w-full overflow-x-auto">
+            <div className="grid grid-cols-7  gap-1 w-full overflow-x-auto">
                 {weekData.weekDays?.map(day => {
                     const dayKey = format(day, 'yyyy-MM-dd');
                     const dayItems = weekData.grouped[dayKey] || [];
@@ -42,7 +42,7 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
                                 <br />
                                 <span className="text-gray-500">{format(day, 'd/MM')}</span>
                             </div>
-                            <ul className="grid grid-cols-7 space-y-1">
+                            <ul className="space-y-1">
                                 {dayItems
                                     .sort((a, b) => {
                                         // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
