@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Space+Grotesk:wght@300..700&display=swap');
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -14,6 +15,15 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.open-sans-400 {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
 }
 
 .merriweather-500 {
@@ -92,5 +102,107 @@ button {
 
   a:hover {
     color: #747bff;
+  }
+}
+
+.card-profile {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 0;
+  right: 0;
+  width: 450px;
+  box-shadow: 0 0 10px #cecece;
+  border: 2px solid #d5d5d5;
+  border-radius: 16px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 32px 32px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.card-profile h1 {
+  font-size: 2rem;
+}
+
+.card-profile h2 {
+  font-size: 1rem;
+}
+
+.card-profile-image {
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 100%;
+}
+
+.card-profile-image img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-stats {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+  grid-gap: 12px;
+  box-shadow: inset 0 1px rgb(214, 214, 214);
+  padding: 16px;
+}
+
+@media screen and (max-width: 600px) {
+  .card-profile {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .card-profile-image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+  }
+
+  .card-stats {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .card-profile {
+    display: grid;
+    grid-template-columns: 3fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .card-profile-image {
+    grid-row: 2;
+    grid-column: 1;
+  }
+
+  .card-title {
+    grid-row: 2;
+    grid-column: 2;
+  }
+
+  .card-description {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row: 1;
+  }
+
+  .card-stars {
+    display: none;
+  }
+
+  .card-profile-image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
   }
 }
