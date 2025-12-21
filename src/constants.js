@@ -27,6 +27,16 @@ export const CategoryColors = {
     avoid: "text-gray-500",
 };
 
+export const CategoryBgColors = {
+creative: "bg-orange-500",
+    health: "bg-green-500",
+    household: "bg-yellow-500",
+    family: "bg-red-500",
+    friends: "bg-blue-500",
+    wife: "bg-pink-500",
+    avoid: "bg-gray-500",
+};
+
 export const MonthNotes = {
     "2025-12": "Job Hunt",
     "2025-11": "Ramat Gan + Unemployed",
