@@ -19,7 +19,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const [showDate, setShowDate] = useState(false);
-
+  const [showColorOnly, setShowColorOnly] = useState(false);
+  
   const { logs, addLog } = useLogsData();
 
   const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
@@ -129,10 +130,13 @@ function App() {
               });
             }}
           >
-            {Views[currentViewIndex].slice(0, 1).toUpperCase()}
+            📃
           </RectangleButton>
           <RectangleButton onClick={() => setShowDate(!showDate)}>
-            T
+            📆
+          </RectangleButton>
+          <RectangleButton onClick={() => setShowColorOnly(!showColorOnly)}>
+            🦄
           </RectangleButton>
         </div>
         <Search
@@ -143,6 +147,7 @@ function App() {
           currentDate={currentDate}
           data={filteredData}
           showDate={showDate}
+          colorOnly={showColorOnly}
           view={Views[currentViewIndex]} />
       </div>
       <div className='flex items-center justify-center gap-2 p-4 mb-2
