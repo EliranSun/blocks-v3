@@ -17,7 +17,7 @@ function App() {
   const [dateOffset, setDateOffset] = useState(0);
   const [category, setCategory] = useState(CategoryNames.All.name);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentViewIndex, setCurrentViewIndex] = useState(0);
+  const [currentViewIndex, setCurrentViewIndex] = useState(Views.indexOf("week") || 0);
   const [showDate, setShowDate] = useState(false);
   const [showColorOnly, setShowColorOnly] = useState(false);
   
