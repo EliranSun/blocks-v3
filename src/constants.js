@@ -11,7 +11,7 @@ export const Categories = {
     Wife: { name: "wife", icon: "❤️", subcategories: ["date", "trip", "gestures", "sex"] },
     Creative: { name: "creative", icon: "🎨", subcategories: ["play", "read", "code", "watch"] },
     Health: { name: "health", icon: "🧘‍♂️", subcategories: [] },
-    Household: { name: "household", icon: "🏠", subcategories: ["dishes", "organize", "clean", "towels"] },
+    Household: { name: "household", icon: "🏠", subcategories: [] },
     Family: { name: "family", icon: "☀️", subcategories: ["WhatsApp", "call", "meet", "date"] },
     Friends: { name: "friends", icon: "🌳", subcategories: ["WhatsApp", "call", "meet", "date"] },
     Avoid: { name: "avoid", icon: "🚫", subcategories: [] },
@@ -28,7 +28,7 @@ export const CategoryColors = {
 };
 
 export const CategoryBgColors = {
-creative: "bg-orange-500",
+    creative: "bg-orange-500",
     health: "bg-green-500",
     household: "bg-yellow-500",
     family: "bg-red-500",
