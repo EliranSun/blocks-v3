@@ -1,12 +1,12 @@
-import { CategoryNames } from "./constants";
+import { Categories } from "./constants";
 import { Menu } from "./Menu";
 
-const Categories = Object.values(CategoryNames);
+const CategoryItems = Object.values(Categories);
 
 export const CategoryButtons = ({ selectedCategory, onCategoryClick = () => { } }) => {
     return (
         <Menu
-            items={Categories}
+            items={CategoryItems}
             onItemClick={onCategoryClick}
             showSelectedItem
             selectedItem={selectedCategory} />

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, RectangleButton } from "./Button";
 import { Popover } from "./Popover";
+import { Categories } from "./constants";
 
 const PlusIcon = () => {
     return (
@@ -47,8 +48,11 @@ const DateInput = ({ name, defaultValue, required }) => {
     );
 };
 
+
 export const AddLogDialog = ({ onSubmit }) => {
+    const categoryArray = Object.values(Categories);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(categoryArray[0]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -61,6 +65,7 @@ export const AddLogDialog = ({ onSubmit }) => {
         }
 
         const formData = new FormData(form);
+
         onSubmit(formData);
         setIsPopoverOpen(false);
         form.reset();
@@ -71,7 +76,36 @@ export const AddLogDialog = ({ onSubmit }) => {
             <Popover isOpen={isPopoverOpen}>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <TextInput name="name" placeholder="name" required />
-                    <TextInput name="category" placeholder="category" required />
+                    {/* <TextInput name="category" placeholder="category" required /> */}
+                    <select
+                        required
+                        className="border-2 py-4"
+                        name="category"
+                        value={selectedCategory.name}
+                        onChange={e => {
+                            const found = categoryArray.find(c => c.name === e.target.value);
+                            setSelectedCategory(found || categoryArray[0]);
+                        }}
+                    >
+                        {categoryArray.map(category =>
+                            <option
+                                key={category.name}
+                                value={category.name}
+                                className="bg-neutral-900"
+                            >
+                                {category.name}
+                            </option>
+                        )}
+                    </select>
+                    <select required className="border-2 py-4" name="subcategory">
+                        {selectedCategory.subcategories.map(subcategory =>
+                            <option
+                                key={subcategory}
+                                className="bg-neutral-900 text-white">
+                                {subcategory}
+                            </option>)}
+                    </select>
+                    {/* <TextInput name="subcategory" placeholder="subcategory" /> */}
                     <div>
                         <label htmlFor="date" className="text-xs">Start Date</label>
                         <DateInput
@@ -84,7 +118,6 @@ export const AddLogDialog = ({ onSubmit }) => {
                         <label htmlFor="endDate" className="text-xs">End Date</label>
                         <DateInput name="endDate" />
                     </div>
-                    <TextInput name="subcategory" placeholder="subcategory" />
                     <TextInput name="location" placeholder="location" />
                     <TextInput name="note" placeholder="note" />
                     <div className="flex gap-4">

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { Search } from './Search';
-import { CategoryNames, MonthNotes, Scopes } from './constants';
+import { Categories, MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
 import { CategoryButtons } from './CategoryButtons';
 import { NavigationButtons } from './NavigationButtons';
@@ -15,7 +15,7 @@ const Views = ["list", "week", "year"];
 function App() {
   const [scopeIndex, setScopeIndex] = useState(2);
   const [dateOffset, setDateOffset] = useState(0);
-  const [category, setCategory] = useState(CategoryNames.All.name);
+  const [category, setCategory] = useState(Categories.All.name);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentViewIndex, setCurrentViewIndex] = useState(Views.indexOf("week") || 0);
   const [showDate, setShowDate] = useState(false);
@@ -96,7 +96,7 @@ function App() {
       return comparator(itemDate);
     })
       .filter(item =>
-        category === CategoryNames.All.name ||
+        category === Categories.All.name ||
         item.category?.toLowerCase() === category?.toLowerCase()
       )
       .sort((a, b) => new Date(b.date) - new Date(a.date));

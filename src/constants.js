@@ -6,15 +6,15 @@ export const Scopes = [
     { name: "day", maxValue: 10, minValue: 12 },
 ];
 
-export const CategoryNames = {
-    All: { name: "all", icon: "🌐" },
-    Wife: { name: "wife", icon: "❤️" },
-    Creative: { name: "creative", icon: "🎨" },
-    Health: { name: "health", icon: "🧘‍♂️" },
-    Household: { name: "household", icon: "🏠" },
-    Family: { name: "family", icon: "☀️" },
-    Friends: { name: "friends", icon: "🌳" },
-    Avoid: { name: "avoid", icon: "🚫" },
+export const Categories = {
+    All: { name: "all", icon: "🌐", subcategories: [] },
+    Wife: { name: "wife", icon: "❤️", subcategories: ["date", "trip", "gestures", "sex"] },
+    Creative: { name: "creative", icon: "🎨", subcategories: ["play", "read", "code", "watch"] },
+    Health: { name: "health", icon: "🧘‍♂️", subcategories: [] },
+    Household: { name: "household", icon: "🏠", subcategories: ["dishes", "organize", "clean", "towels"] },
+    Family: { name: "family", icon: "☀️", subcategories: ["WhatsApp", "call", "meet", "date"] },
+    Friends: { name: "friends", icon: "🌳", subcategories: ["WhatsApp", "call", "meet", "date"] },
+    Avoid: { name: "avoid", icon: "🚫", subcategories: [] },
 };
 
 export const CategoryColors = {
