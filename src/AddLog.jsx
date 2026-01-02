@@ -97,10 +97,17 @@ export const AddLogDialog = ({ onSubmit }) => {
                             </option>
                         )}
                     </select>
-                    <select required className="border-2 py-4" name="subcategory">
+                    <select 
+                        className="border-2 py-4" 
+                        defaultValue=""
+                        name="subcategory">
+<option value="">
+    No subcategory
+  </option>
                         {selectedCategory.subcategories.map(subcategory =>
                             <option
                                 key={subcategory}
+                                      value={subcategory}
                                 className="bg-neutral-900 text-white">
                                 {subcategory}
                             </option>)}
