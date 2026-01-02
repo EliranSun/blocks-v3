@@ -10,7 +10,7 @@ export const Categories = {
     All: { name: "all", icon: "🌐", subcategories: [] },
     Wife: { name: "wife", icon: "❤️", subcategories: ["date", "trip", "gestures", "sex"] },
     Creative: { name: "creative", icon: "🎨", subcategories: ["play", "read", "code", "watch"] },
-    Health: { name: "health", icon: "🧘‍♂️", subcategories: [] },
+    Health: { name: "health", icon: "🧘‍♂️", subcategories: ["fat", "weight"] },
     Household: { name: "household", icon: "🏠", subcategories: [] },
     Family: { name: "family", icon: "☀️", subcategories: ["WhatsApp", "call", "meet", "date"] },
     Friends: { name: "friends", icon: "🌳", subcategories: ["WhatsApp", "call", "meet", "date"] },
