@@ -10,6 +10,7 @@ export const Categories = {
     All: { name: "all", icon: "🌐", subcategories: [] },
     Wife: { name: "wife", icon: "❤️", subcategories: ["date", "trip", "gestures", "sex"] },
     Creative: { name: "creative", icon: "🎨", subcategories: ["play", "read", "code", "watch"] },
+        Testosterone: { name: "Testosterone", icon: "⚡️", subcategories: [] },
     Health: { name: "health", icon: "🧘‍♂️", subcategories: ["fat", "weight"] },
     Household: { name: "household", icon: "🏠", subcategories: [] },
     Family: { name: "family", icon: "☀️", subcategories: ["WhatsApp", "call", "meet", "date"] },
@@ -20,6 +21,7 @@ export const Categories = {
 export const CategoryColors = {
     creative: "text-orange-500",
     health: "text-green-500",
+    testosterone: "text-gray-500"
     household: "text-yellow-500",
     family: "text-red-500",
     friends: "text-blue-500",
@@ -30,6 +32,7 @@ export const CategoryColors = {
 export const CategoryBgColors = {
     creative: "bg-orange-500",
     health: "bg-green-500",
+    testosterone: "bg-gray-500"
     household: "bg-yellow-500",
     family: "bg-red-500",
     friends: "bg-blue-500",
@@ -38,6 +41,7 @@ export const CategoryBgColors = {
 };
 
 export const MonthNotes = {
+        "2026-01": "Dad to Lokit?!",
     "2025-12": "Job Hunt",
     "2025-11": "Ramat Gan + Unemployed",
     "2025-10": "Bus Bakerem + Move to Ramat Gan",
