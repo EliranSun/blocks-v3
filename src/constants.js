@@ -32,7 +32,7 @@ export const CategoryColors = {
 export const CategoryBgColors = {
     creative: "bg-orange-500",
     health: "bg-green-500",
-    testosterone: "bg-gray-500"
+    testosterone: "bg-gray-500",
     household: "bg-yellow-500",
     family: "bg-red-500",
     friends: "bg-blue-500",
