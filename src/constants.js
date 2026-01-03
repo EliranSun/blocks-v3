@@ -21,7 +21,7 @@ export const Categories = {
 export const CategoryColors = {
     creative: "text-orange-500",
     health: "text-green-500",
-    testosterone: "text-gray-500"
+    testosterone: "text-gray-500",
     household: "text-yellow-500",
     family: "text-red-500",
     friends: "text-blue-500",
