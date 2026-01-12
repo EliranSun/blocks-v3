@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { format, startOfYear, eachMonthOfInterval, isSameMonth } from "date-fns";
-import { CategoryColors } from "./constants";
-import classNames from "classnames";
+import { Block } from "./Block";
 
-export const YearView = ({ currentDate, data = [], showDate = false, onBackToList }) => {
+export const YearView = ({ currentDate, data = [], showDate = false, onBackToList, onBlockClick }) => {
     // Group items by month for year view
     const yearData = useMemo(() => {
         if (!currentDate) return {};
@@ -69,16 +68,13 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                                         return getTime(a.date) - getTime(b.date);
                                     })
                                     .map(item => (
-                                        <li
+                                        <Block
                                             key={item.date + item.name}
-                                            className={classNames({
-                                                "px-2 pt-1 text-center": true,
-                                                "font-bold text-shadow-2 text-xs text-left": true,
-                                                [CategoryColors[item.category.toLowerCase()]]: true,
-                                            })}
-                                        >
-                                            {[item.name].concat(showDate ? ` - ${format(item.date, "d/MM/yy, EEE")}` : [])}
-                                        </li>
+                                            item={item}
+                                            showDate={showDate}
+                                            variant="year"
+                                            onClick={onBlockClick}
+                                        />
                                     ))}
                             </ol>
                         </div>

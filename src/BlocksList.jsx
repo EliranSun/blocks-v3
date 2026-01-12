@@ -1,10 +1,6 @@
-import { useState } from "react";
-import { format } from "date-fns";
-import { CategoryColors } from "./constants";
-import classNames from "classnames";
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
-import { Button, RectangleButton } from "./Button";
+import { Block } from "./Block";
 
 const CalendarIcon = () => {
     return (
@@ -23,7 +19,7 @@ const CalendarIcon = () => {
     )
 }
 
-export const BlocksList = ({ currentDate, data = [], view, showDate }) => {
+export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClick }) => {
 
     const renderView = () => {
         if (view === 'week') {
@@ -32,6 +28,7 @@ export const BlocksList = ({ currentDate, data = [], view, showDate }) => {
                     currentDate={currentDate}
                     data={data}
                     showDate={showDate}
+                    onBlockClick={onBlockClick}
                 />
             );
         }
@@ -42,6 +39,7 @@ export const BlocksList = ({ currentDate, data = [], view, showDate }) => {
                     currentDate={currentDate}
                     data={data}
                     showDate={showDate}
+                    onBlockClick={onBlockClick}
                 />
             );
         }
@@ -49,15 +47,14 @@ export const BlocksList = ({ currentDate, data = [], view, showDate }) => {
         return (
             <ul className='flex flex-wrap gap-2'>
                 {data.reverse().map(item =>
-                    <li
+                    <Block
                         key={item.date + item.name}
-                        className={classNames({
-                            "px-2 pt-1 text-center border-b-2": true,
-                            "font-bold text-sm grow-0 text-left": true,
-                            [CategoryColors[item.category.toLowerCase()]]: true,
-                        })}>
-                        {[item.name].concat(showDate ? ` - ${format(item.date, "d/MM/yy, EEE")}` : [])}
-                    </li>)}
+                        item={item}
+                        showDate={showDate}
+                        variant="list"
+                        onClick={onBlockClick}
+                    />
+                )}
             </ul>
         )
     }

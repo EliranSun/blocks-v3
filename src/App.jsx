@@ -8,7 +8,7 @@ import { NavigationButtons } from './NavigationButtons';
 import { DailyQuotes } from './DailyQuotes';
 import { Button, RectangleButton } from "./Button";
 import { useLogsData } from "./useLogsData";
-import { AddLogDialog } from "./AddLog";
+import { LogDialog } from "./LogDialog";
 
 const Views = ["list", "week", "year"];
 
@@ -20,8 +20,25 @@ function App() {
   const [currentViewIndex, setCurrentViewIndex] = useState(Views.indexOf("week") || 0);
   const [showDate, setShowDate] = useState(false);
   const [showColorOnly, setShowColorOnly] = useState(false);
-  
-  const { logs, addLog } = useLogsData();
+
+  const { logs, addLog, editLog, deleteLog } = useLogsData();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
+
+  const handleBlockClick = (item) => {
+    setSelectedLog(item);
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setSelectedLog(null);
+  };
+
+  const handleOpenAddDialog = () => {
+    setSelectedLog(null);
+    setIsDialogOpen(true);
+  };
 
   const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
 
@@ -148,7 +165,8 @@ function App() {
           data={filteredData}
           showDate={showDate}
           colorOnly={showColorOnly}
-          view={Views[currentViewIndex]} />
+          view={Views[currentViewIndex]}
+          onBlockClick={handleBlockClick} />
       </div>
       <div className='flex items-center justify-center gap-2 p-4 mb-2
       dark:bg-neutral-700 bg-neutral-200 rounded-full shadow-xl'>
@@ -161,15 +179,15 @@ function App() {
             setScopeIndex(Scopes.findIndex(({ name }) => name === scopeName))
             setDateOffset(0);
           }} />
-        <AddLogDialog
-          onSubmit={formData => {
-            const data = {};
-            for (let [key, value] of formData.entries()) {
-              if (value) data[key] = value;
-            }
-            // HTML5 validation ensures name and date are present
-            addLog(data);
-          }} />
+        <LogDialog
+          log={selectedLog}
+          isOpen={isDialogOpen}
+          onOpen={handleOpenAddDialog}
+          onClose={handleDialogClose}
+          onAdd={addLog}
+          onEdit={editLog}
+          onDelete={deleteLog}
+        />
         <Button onClick={() => setDateOffset(prev => prev - 1)}>
           ←
         </Button>

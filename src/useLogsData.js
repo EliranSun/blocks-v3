@@ -22,5 +22,24 @@ export const useLogsData = () => {
             .catch(console.error);
     }, []);
 
-    return { logs, addLog };
+    const editLog = useCallback((id, data) => {
+        fetch(API_URL, {
+            method: "PUT",
+            body: JSON.stringify({ id, ...data })
+        })
+            .then(res => { if (res.ok) res.json() })
+            .then(() => setLogs(prev => prev.map(log => log._id === id ? { ...log, ...data } : log)))
+            .catch(console.error);
+    }, []);
+
+    const deleteLog = useCallback(id => {
+        fetch(`${API_URL}?id=${encodeURIComponent(id)}`, {
+            method: "DELETE"
+        })
+            .then(res => { if (res.ok) res.json() })
+            .then(() => setLogs(prev => prev.filter(log => log._id !== id)))
+            .catch(console.error);
+    }, []);
+
+    return { logs, addLog, editLog, deleteLog };
 }

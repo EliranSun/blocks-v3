@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, RectangleButton } from "./Button";
 import { Popover } from "./Popover";
 import { Categories } from "./constants";
@@ -18,13 +18,14 @@ const PlusIcon = () => {
     )
 }
 
-const TextInput = ({ name, placeholder, required }) => {
+const TextInput = ({ name, placeholder, required, defaultValue }) => {
     return <input
         className="border-b-2 w-full h-12 px-2 text-xl"
         type="text"
         name={name}
         placeholder={placeholder}
-        required={required} />
+        defaultValue={defaultValue}
+        required={required} />;
 };
 
 const DateInput = ({ name, defaultValue, required }) => {
@@ -49,10 +50,25 @@ const DateInput = ({ name, defaultValue, required }) => {
 };
 
 
-export const AddLogDialog = ({ onSubmit }) => {
+export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelete }) => {
     const categoryArray = Object.values(Categories);
-    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState(categoryArray[0]);
+    const isEditMode = Boolean(log?._id);
+
+    console.log({ log });
+
+    const getInitialCategory = () => {
+        if (log?.category) {
+            const found = categoryArray.find(c => c.name.toLowerCase() === log.category.toLowerCase());
+            return found || categoryArray[0];
+        }
+        return categoryArray[0];
+    };
+
+    const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
+
+    useEffect(() => {
+        setSelectedCategory(getInitialCategory());
+    }, [log]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -65,18 +81,37 @@ export const AddLogDialog = ({ onSubmit }) => {
         }
 
         const formData = new FormData(form);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (value) data[key] = value;
+        }
 
-        onSubmit(formData);
-        setIsPopoverOpen(false);
+        if (isEditMode) {
+            onEdit(log._id, data);
+        } else {
+            onAdd(data);
+        }
+        onClose();
         form.reset();
+    };
+
+    const handleDelete = () => {
+        if (isEditMode && onDelete) {
+            onDelete(log._id);
+            onClose();
+        }
     };
 
     return (
         <div>
-            <Popover isOpen={isPopoverOpen}>
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <TextInput name="name" placeholder="name" required />
-                    {/* <TextInput name="category" placeholder="category" required /> */}
+            <Popover isOpen={isOpen}>
+                <form key={log?._id || 'new'} className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                    <TextInput
+                        name="name"
+                        placeholder="name"
+                        defaultValue={log?.name || ''}
+                        required
+                    />
                     <select
                         required
                         className="border-2 py-4"
@@ -97,48 +132,52 @@ export const AddLogDialog = ({ onSubmit }) => {
                             </option>
                         )}
                     </select>
-                    <select 
-                        className="border-2 py-4" 
-                        defaultValue=""
+                    <select
+                        className="border-2 py-4"
+                        defaultValue={log?.subcategory || ''}
                         name="subcategory">
-<option value="">
-    No subcategory
-  </option>
+                        <option value="">
+                            No subcategory
+                        </option>
                         {selectedCategory.subcategories.map(subcategory =>
                             <option
                                 key={subcategory}
-                                      value={subcategory}
+                                value={subcategory}
                                 className="bg-neutral-900 text-white">
                                 {subcategory}
                             </option>)}
                     </select>
-                    {/* <TextInput name="subcategory" placeholder="subcategory" /> */}
                     <div>
                         <label htmlFor="date" className="text-xs">Start Date</label>
                         <DateInput
                             name="date"
-                            defaultValue={new Date().toISOString().slice(0, 16)}
+                            defaultValue={log?.date || new Date().toISOString().slice(0, 16)}
                             required
                         />
                     </div>
                     <div>
                         <label htmlFor="endDate" className="text-xs">End Date</label>
-                        <DateInput name="endDate" />
+                        <DateInput name="endDate" defaultValue={log?.endDate} />
                     </div>
-                    <TextInput name="location" placeholder="location" />
-                    <TextInput name="note" placeholder="note" />
+                    <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} />
+                    <TextInput name="note" placeholder="note" defaultValue={log?.note || ''} />
                     <div className="flex gap-4">
                         <RectangleButton type="submit">
-                            ADD
+                            {isEditMode ? 'SAVE' : 'ADD'}
                         </RectangleButton>
-                        <RectangleButton type="button" onClick={() => setIsPopoverOpen(false)}>
+                        {isEditMode && (
+                            <RectangleButton type="button" onClick={handleDelete}>
+                                DELETE
+                            </RectangleButton>
+                        )}
+                        <RectangleButton type="button" onClick={onClose}>
                             CLOSE
                         </RectangleButton>
                     </div>
                 </form>
             </Popover>
             <Button
-                onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+                onClick={() => onOpen?.()}
                 aria-label="Toggle add log dialog">
                 <PlusIcon />
             </Button>

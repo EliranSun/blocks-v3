@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
-import { CategoryColors, CategoryBgColors } from "./constants";
-import classNames from "classnames";
+import { Block } from "./Block";
 
-export const WeekView = ({ currentDate, data = [], showDate = false, onBackToList }) => {
+export const WeekView = ({ currentDate, data = [], showDate = false, onBackToList, onBlockClick }) => {
     // Group items by day for week view
     const weekData = useMemo(() => {
         if (!currentDate) return {};
@@ -59,16 +58,13 @@ export const WeekView = ({ currentDate, data = [], showDate = false, onBackToLis
                                         return getTime(a.date) - getTime(b.date);
                                     })
                                     .map(item => (
-                                        <li
+                                        <Block
                                             key={item.date + item.name}
-                                            className={classNames({
-                                                "px-1 py-2 break-words text-center": true,
-                                                "font-bold text-shadow-2 text-xs text-left": true,
-                                                [CategoryBgColors[item.category.toLowerCase()]]: true,
-                                            })}
-                                        >
-                                            {[item.name].concat(showDate ? ` - ${format(item.date, "d/MM/yy, EEE")}` : [])}
-                                        </li>
+                                            item={item}
+                                            showDate={showDate}
+                                            variant="week"
+                                            onClick={onBlockClick}
+                                        />
                                     ))}
                             </ul>
                         </div>
