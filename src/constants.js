@@ -42,7 +42,7 @@ export const CategoryBgColors = {
 
 export const MonthNotes = {
         "2026-01": "Dad to Lokit?!",
-    "2025-12": "Job Hunt",
+    "2025-12": "Job Hunt + GameIS Petition",
     "2025-11": "Ramat Gan + Unemployed",
     "2025-10": "Bus Bakerem + Move to Ramat Gan",
     "2025-09": "Wife Birthday Plan",
