@@ -10,11 +10,11 @@ export const Block = ({ item, showDate = false, variant = "list", onClick }) => 
         },
         year: {
             base: "px-2 pt-1 text-center font-bold text-shadow-2 text-xs text-left",
-            useBackground: false,
+            useBackground: true,
         },
         list: {
             base: "px-2 pt-1 text-center border-b-2 font-bold text-sm grow-0 text-left",
-            useBackground: false,
+            useBackground: true,
         },
     };
 
