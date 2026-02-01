@@ -8,7 +8,7 @@ export const Scopes = [
 
 export const Categories = {
     All: { name: "all", icon: "🌐", subcategories: [] },
-    Mood: { name: "mood", icon: "😶", subcategories: ["great", "good", "ok", "bad", "awful] },
+    Mood: { name: "mood", icon: "😶", subcategories: ["great", "good", "ok", "bad", "awful"] },
     Wife: { name: "wife", icon: "❤️", subcategories: ["date", "trip", "gestures", "sex"] },
     Creative: { name: "creative", icon: "🎨", subcategories: ["play", "read", "code", "watch"] },
     // Testosterone: { name: "Testosterone", icon: "⚡️", subcategories: [] },
