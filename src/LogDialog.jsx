@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, RectangleButton } from "./Button";
 import { Popover } from "./Popover";
 import { Categories } from "./constants";
+import classNames from "classnames";
 
 const PlusIcon = () => {
     return (
@@ -49,25 +50,27 @@ const DateInput = ({ name, defaultValue, required }) => {
     );
 };
 
+const categoryArray = Object.values(Categories);
+
+const getInitialCategory = (log) => {
+    if (log?.category) {
+        const found = categoryArray.find(c => c.name.toLowerCase() === log.category.toLowerCase());
+        return found || categoryArray[0];
+    }
+    return categoryArray[0];
+};
 
 export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelete }) => {
-    const categoryArray = Object.values(Categories);
+    const initData = getInitialCategory(log);
+    const [selectedCategory, setSelectedCategory] = useState(initData);
+    const [blockName, setBlockName] = useState(log?.name.toLowerCase());
     const isEditMode = Boolean(log?._id);
 
-    console.log({ log });
-
-    const getInitialCategory = () => {
-        if (log?.category) {
-            const found = categoryArray.find(c => c.name.toLowerCase() === log.category.toLowerCase());
-            return found || categoryArray[0];
-        }
-        return categoryArray[0];
-    };
-
-    const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
+    // const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
 
     useEffect(() => {
-        setSelectedCategory(getInitialCategory());
+        setBlockName(log ? log.name.toLowerCase() : "");
+        setSelectedCategory(getInitialCategory(log));
     }, [log]);
 
     const handleSubmit = (e) => {
@@ -102,17 +105,71 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
         }
     };
 
+    console.log({ selectedCategory, blockName, log });
+
     return (
-        <div>
+        <div className="">
+            {isOpen && <div className="fixed w-screen h-screen bg-black z-10 top-0 left-0 opacity-90" />}
             <Popover isOpen={isOpen}>
                 <form key={log?._id || 'new'} className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <TextInput
+                    <fieldset className="flex flex-wrap gap-2">
+                        <legend>Categories</legend>
+                        {Object.entries(Categories).map(([categoryName, category]) => {
+                            const isSelected = categoryName.toLowerCase() === selectedCategory.name.toLowerCase();
+                            return (
+                                <div
+                                    key={categoryName}
+                                    className={classNames(
+                                        isSelected ? "bg-black outline-2" : "",
+                                        category.bgColor,
+                                        "p-2",
+                                    )}>
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        className={classNames("hidden")}
+                                        id={categoryName}
+                                        value={categoryName}
+                                        onChange={() => setSelectedCategory(category)}
+                                        checked={isSelected} />
+                                    <label for={categoryName}>{categoryName}</label>
+                                </div>
+                            );
+                        })}
+                    </fieldset>
+                    <fieldset className="flex flex-wrap gap-2">
+                        <legend>Blocks</legend>
+                        {selectedCategory.blocks.map(block => (
+                            <div
+                                key={block}
+                                className={classNames(
+                                    selectedCategory.bgColor,
+                                    blockName === block ? "bg-black outline-2" : "",
+                                    "p-2"
+                                )}>
+                                <input
+                                    type="radio"
+                                    name="name"
+                                    className="hidden"
+                                    id={block}
+                                    value={block}
+                                    onChange={() => setBlockName(block)}
+                                />
+                                <label for={block}>{block}</label>
+                            </div>
+                        ))}
+                    </fieldset>
+
+                    <TextInput name="note" placeholder="note" defaultValue={log?.note || ''} />
+                    <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} />
+
+                    {/* <TextInput
                         name="name"
                         placeholder="name"
                         defaultValue={log?.name || ''}
                         required
-                    />
-                    <select
+                    /> */}
+                    {/* <select
                         required
                         className="border-2 py-4"
                         name="category"
@@ -131,22 +188,20 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                                 {category.name}
                             </option>
                         )}
-                    </select>
-                    <select
-                        className="border-2 py-4"
-                        defaultValue={log?.subcategory || ''}
-                        name="subcategory">
-                        <option value="">
-                            No subcategory
-                        </option>
+                    </select> */}
+                    {/* <fieldset className={selectedCategory.subcategories ? "border-2 py-4" : "hidden"}>
                         {selectedCategory.subcategories.map(subcategory =>
-                            <option
+                            <div
                                 key={subcategory}
-                                value={subcategory}
                                 className="bg-neutral-900 text-white">
-                                {subcategory}
-                            </option>)}
-                    </select>
+                                <input
+                                    type="radio"
+                                    name="subcategory"
+                                    id={subcategory}
+                                    value={subcategory} />
+                                <label for={subcategory}>{subcategory}</label>
+                            </div>)}
+                    </fieldset> */}
                     <div>
                         <label htmlFor="date" className="text-xs">Start Date</label>
                         <DateInput
@@ -159,8 +214,6 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                         <label htmlFor="endDate" className="text-xs">End Date</label>
                         <DateInput name="endDate" defaultValue={log?.endDate} />
                     </div>
-                    <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} />
-                    <TextInput name="note" placeholder="note" defaultValue={log?.note || ''} />
                     <div className="flex gap-4">
                         <RectangleButton type="submit">
                             {isEditMode ? 'SAVE' : 'ADD'}
@@ -176,11 +229,12 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                     </div>
                 </form>
             </Popover>
-            <Button
+            <RectangleButton
                 onClick={() => onOpen?.()}
+                className="bg-blue-500 dark:bg-blue-700"
                 aria-label="Toggle add log dialog">
-                <PlusIcon />
-            </Button>
+                Add block
+            </RectangleButton>
         </div>
     )
 }

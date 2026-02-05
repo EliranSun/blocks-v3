@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { CategoryColors, CategoryBgColors } from "./constants";
 import classNames from "classnames";
 
-export const Block = ({ item, showDate = false, variant = "list", onClick }) => {
+export const Block = ({ item, showDate = false, showNote = false, variant = "list", onClick }) => {
     const variantClasses = {
         week: {
             base: "px-1 py-2 break-words text-center font-bold text-shadow-2 text-xs text-left",
@@ -29,6 +29,7 @@ export const Block = ({ item, showDate = false, variant = "list", onClick }) => 
             onClick={() => onClick?.(item)}
         >
             {item.name}{showDate && ` - ${format(item.date, "d/MM/yy, EEE")}`}
+            {showNote && item.note ? ` - ${item.note}` : ""}
         </li>
     );
 };

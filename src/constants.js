@@ -6,16 +6,152 @@ export const Scopes = [
     { name: "day", maxValue: 10, minValue: 12 },
 ];
 
+export const Blocks = {
+    // wife
+    DATE: "date",
+    TRIP: "trip",
+    GESTURES: "gestures",
+    SEX: "sex",
+
+    // creative
+    PLAY: "play",
+    READ: "read",
+    CODE: "code",
+    WATCH: "watch",
+    DRAW: "draw",
+
+    // health
+    // FAT: "fat",
+    // WEIGHT: "weight",
+    PHYSIO: "physio",
+    YOGA: "yoga",
+    POWER: "power",
+    CARDIO: "cardio",
+
+    // family
+    DAD: "dad",
+    MOM: "mom",
+    GRANDMA: "grandma",
+    GRANDPA: "grandpa",
+    OR: "or",
+    SAHAR: "sahar",
+    SHACHAR: "shachar",
+    OFEK: "ofek",
+    YAHEL: "yahel",
+
+    // friends
+    MAYA: "maya",
+    ODELIA: "odelia",
+    NATI: "nati",
+    OFIR: "ofir",
+    DAVID: "david",
+    JULIA: "julia",
+    ROTEM: "rotem",
+
+    // household
+    LAUNDRY: "laundry",
+    COOK: "cook",
+    ORGANIZE: "organize",
+    CLEAN: "clean",
+    TOWELS: "towels",
+    SHEETS: "sheets",
+
+    // avoid
+    DOOM_SCROLL: "doom scroll"
+}
+
 export const Categories = {
-    All: { name: "all", icon: "🌐", subcategories: [] },
-    Wife: { name: "wife", icon: "❤️", subcategories: ["date", "trip", "gestures", "sex"] },
-    Creative: { name: "creative", icon: "🎨", subcategories: ["play", "read", "code", "watch"] },
-        Testosterone: { name: "Testosterone", icon: "⚡️", subcategories: [] },
-    Health: { name: "health", icon: "🧘‍♂️", subcategories: ["fat", "weight"] },
-    Household: { name: "household", icon: "🏠", subcategories: [] },
-    Family: { name: "family", icon: "☀️", subcategories: ["WhatsApp", "call", "meet", "date"] },
-    Friends: { name: "friends", icon: "🌳", subcategories: ["WhatsApp", "call", "meet", "date"] },
-    Avoid: { name: "avoid", icon: "🚫", subcategories: [] },
+    Wife: {
+        name: "wife",
+        icon: "❤️",
+        bgColor: "bg-violet-600",
+        subcategories: [],
+        blocks: [
+            Blocks.DATE,
+            Blocks.TRIP,
+            Blocks.GESTURES,
+            Blocks.SEX
+        ],
+    },
+    Creative: {
+        name: "creative",
+        icon: "🎨",
+        bgColor: "bg-amber-400",
+        subcategories: [],
+        blocks: [
+            Blocks.PLAY,
+            Blocks.READ,
+            Blocks.CODE,
+            Blocks.WATCH,
+            Blocks.DRAW
+        ],
+    },
+    Health: {
+        name: "health",
+        icon: "🧘‍♂️",
+        bgColor: "bg-lime-500",
+        subcategories: [],
+        blocks: [
+            Blocks.PHYSIO,
+            Blocks.YOGA,
+            Blocks.POWER,
+            Blocks.CARDIO,
+        ],
+    },
+    Household: {
+        name: "household",
+        icon: "🏠",
+        bgColor: "bg-orange-700",
+        subcategories: [],
+        blocks: [
+            Blocks.LAUNDRY,
+            Blocks.COOK,
+            Blocks.ORGANIZE,
+            Blocks.CLEAN,
+            Blocks.SHEETS,
+            Blocks.TOWELS,
+        ],
+    },
+    Family: {
+        name: "family",
+        icon: "☀️",
+        bgColor: "bg-rose-600",
+        subcategories: ["WhatsApp", "call", "meet", "date"],
+        blocks: [
+            Blocks.DAD,
+            Blocks.MOM,
+            Blocks.GRANDMA,
+            Blocks.GRANDPA,
+            Blocks.OR,
+            Blocks.SAHAR,
+            Blocks.SHACHAR,
+            Blocks.OFEK,
+            Blocks.YAHEL,
+        ],
+    },
+    Friends: {
+        name: "friends",
+        icon: "🌳",
+        bgColor: "bg-sky-500",
+        subcategories: ["WhatsApp", "call", "meet", "date"],
+        blocks: [
+            Blocks.MAYA,
+            Blocks.ODELIA,
+            Blocks.NATI,
+            Blocks.OFIR,
+            Blocks.DAVID,
+            Blocks.JULIA,
+            Blocks.ROTEM,
+        ],
+    },
+    Avoid: {
+        name: "avoid",
+        icon: "🚫",
+        bgColor: "bg-zinc-500",
+        blocks: [Blocks.DOOM_SCROLL],
+        subcategories: []
+    },
+    // Testosterone: { name: "Testosterone", icon: "⚡️", subcategories: [] },
 };
 
 export const CategoryColors = {
@@ -41,7 +177,7 @@ export const CategoryBgColors = {
 };
 
 export const MonthNotes = {
-        "2026-01": "Dad to Noga 🥰",
+    "2026-01": "Dad to Noga 🥰",
     "2025-12": "Job Hunt + GameIS Petition",
     "2025-11": "Ramat Gan + Unemployed",
     "2025-10": "Bus Bakerem + Move to Ramat Gan",

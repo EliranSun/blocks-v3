@@ -4,20 +4,18 @@ export const Button = ({ children, className, ...rest }) => {
     return (
         <button
             {...rest}
-            className={classNames("rounded-full flex items-center justify-center", className, {
-                "size-12 dark:bg-neutral-600  bg-neutral-300 shrink-0": true,
-            })}>
+            className={classNames("rounded flex items-center justify-center size-12 dark:bg-black bg-neutral-300 shrink-0", className)}>
             {children}
         </button>
     )
 }
 
-export const RectangleButton = ({ children, type = "button", onClick = () => { }, ...rest }) => {
+export const RectangleButton = ({ children, type = "button", onClick = () => { }, className, ...rest }) => {
     return (
         <button
             type={type}
             onClick={onClick}
-            className="p-4 rounded dark:bg-black bg-neutral-200 shadow text-sm h-12"
+            className={classNames("p-4 rounded dark:bg-black bg-neutral-200 shadow text-sm h-12 w-full text-left", className)}
             {...rest}>
             {children}
         </button>

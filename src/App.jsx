@@ -9,21 +9,23 @@ import { DailyQuotes } from './DailyQuotes';
 import { Button, RectangleButton } from "./Button";
 import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
+import { BlocksDataView } from './BlocksDataView';
 
 const Views = ["list", "week", "year"];
 
 function App() {
+  const [page, setPage] = useState("");
   const [scopeIndex, setScopeIndex] = useState(2);
   const [dateOffset, setDateOffset] = useState(0);
-  const [category, setCategory] = useState(Categories.All.name);
+  const [category, setCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentViewIndex, setCurrentViewIndex] = useState(Views.indexOf("week") || 0);
   const [showDate, setShowDate] = useState(false);
   const [showColorOnly, setShowColorOnly] = useState(false);
-
-  const { logs, addLog, editLog, deleteLog } = useLogsData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
+  const [showNote, setShowNote] = useState(false);
+  const { logs, addLog, editLog, deleteLog } = useLogsData();
 
   const handleBlockClick = (item) => {
     setSelectedLog(item);
@@ -113,7 +115,7 @@ function App() {
       return comparator(itemDate);
     })
       .filter(item =>
-        category === Categories.All.name ||
+        !category ||
         item.category?.toLowerCase() === category?.toLowerCase()
       )
       .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -125,18 +127,31 @@ function App() {
   };
 
   return (
-    <section className="p-4 flex flex-col justify-between h-dvh max-w-3xl mx-auto">
-      <div className="h-full overflow-y-auto space-y-4 pb-16">
-        <div className='flex gap-2 items-start'>
-          <div className='spacy-y-4 w-full'>
-            <h1 className='text-2xl merriweather-900'>
-              {currentFrame}
-            </h1>
-            <h2 className='text-gray-400'>
-              {MonthNotes[format(currentDate, 'yyyy-MM')]}
-            </h2>
+    <section className="p-4 flex flex-col justify-between h-dvh max-w-4xl mx-auto">
+      <div className="h-full space-y-4 flex md:flex-row gap-4">
+        <div className='flex md:flex-col gap-2 items-start md:w-1/3 bg-neutral-700 rounded shadow-lg p-4'>
+          <div className='flex justify-between w-full'>
+            <div className='spacy-y-4'>
+              <h1 className='text-2xl merriweather-900'>
+                {currentFrame}
+              </h1>
+              <h2 className='text-gray-400'>
+                {MonthNotes[format(currentDate, 'yyyy-MM')]}
+              </h2>
+            </div>
+            <div className='flex gap-2'>
+              <Button onClick={() => setDateOffset(prev => prev - 1)}>
+                ←
+              </Button>
+              <Button onClick={() => setDateOffset(prev => prev + 1)}>
+                →
+              </Button>
+            </div>
           </div>
-          {/* <DailyQuotes /> */}
+          <Search
+            value={searchTerm}
+            autoHide={false}
+            onInputChange={setSearchTerm} />
           <RectangleButton
             onClick={() => {
               setCurrentViewIndex(prev => {
@@ -147,28 +162,58 @@ function App() {
               });
             }}
           >
-            📃
+            📅 {Views[currentViewIndex]} view
           </RectangleButton>
           <RectangleButton onClick={() => setShowDate(!showDate)}>
-            📆
+            📆 {showDate ? "Hide" : "Show"} dates
+          </RectangleButton>
+          <RectangleButton onClick={() => setShowNote(!showNote)}>
+            📃 {showNote ? "Hide" : "Show"} note
           </RectangleButton>
           <RectangleButton onClick={() => setShowColorOnly(!showColorOnly)}>
-            🦄
+            🦄 Hide text
           </RectangleButton>
+          <RectangleButton onClick={() => { }}>
+            🔃 Sort - new to old
+          </RectangleButton>
+
+          <div className='border w-full border-neutral-900 my-4' />
+          <RectangleButton onClick={() => setPage("")}>
+            Blocks
+          </RectangleButton>
+          <RectangleButton onClick={() => setPage("blocksData")}>
+            Data
+          </RectangleButton>
+          <RectangleButton onClick={() => { }}>
+            Well Being?
+          </RectangleButton>
+          <div className='border w-full border-neutral-900 my-4' />
+          <LogDialog
+            log={selectedLog}
+            isOpen={isDialogOpen}
+            onOpen={handleOpenAddDialog}
+            onClose={handleDialogClose}
+            onAdd={addLog}
+            onEdit={editLog}
+            onDelete={deleteLog}
+          />
         </div>
-        <Search
-          value={searchTerm}
-          autoHide={false}
-          onInputChange={setSearchTerm} />
-        <BlocksList
-          currentDate={currentDate}
-          data={filteredData}
-          showDate={showDate}
-          colorOnly={showColorOnly}
-          view={Views[currentViewIndex]}
-          onBlockClick={handleBlockClick} />
+        <div className='md:w-2/3 overflow-y-auto'>
+          {page === "blocksData" ?
+            <BlocksDataView data={filteredData} />
+            : (
+              <BlocksList
+                currentDate={currentDate}
+                data={filteredData}
+                showDate={showDate}
+                showNote={showNote}
+                colorOnly={showColorOnly}
+                view={Views[currentViewIndex]}
+                onBlockClick={handleBlockClick} />
+            )}
+        </div>
       </div>
-      <div className='flex items-center justify-center gap-2 p-4 mb-2
+      {/* <div className='flex items-center justify-center gap-2 p-4 mb-2
       dark:bg-neutral-700 bg-neutral-200 rounded-full shadow-xl'>
         <CategoryButtons
           selectedCategory={category}
@@ -179,22 +224,7 @@ function App() {
             setScopeIndex(Scopes.findIndex(({ name }) => name === scopeName))
             setDateOffset(0);
           }} />
-        <LogDialog
-          log={selectedLog}
-          isOpen={isDialogOpen}
-          onOpen={handleOpenAddDialog}
-          onClose={handleDialogClose}
-          onAdd={addLog}
-          onEdit={editLog}
-          onDelete={deleteLog}
-        />
-        <Button onClick={() => setDateOffset(prev => prev - 1)}>
-          ←
-        </Button>
-        <Button onClick={() => setDateOffset(prev => prev + 1)}>
-          →
-        </Button>
-      </div>
+      </div> */}
     </section>
   )
 }

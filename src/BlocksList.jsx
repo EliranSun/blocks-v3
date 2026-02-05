@@ -19,7 +19,7 @@ const CalendarIcon = () => {
     )
 }
 
-export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClick }) => {
+export const BlocksList = ({ currentDate, data = [], view, showDate, showNote, onBlockClick }) => {
 
     const renderView = () => {
         if (view === 'week') {
@@ -28,6 +28,7 @@ export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClic
                     currentDate={currentDate}
                     data={data}
                     showDate={showDate}
+                    showNote={showNote}
                     onBlockClick={onBlockClick}
                 />
             );
