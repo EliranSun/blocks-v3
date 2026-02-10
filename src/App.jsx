@@ -112,13 +112,14 @@ function App() {
             onDelete={deleteLog}
           />
           <div className={classNames(
-            "fixed bottom-0 inset-x-0 flex justify-between gap-2 bg-neutral-700 rounded",
-            "shadow-lg px-4 py-2 mx-2",
+            "fixed bottom-5 inset-x-0 flex justify-between gap-2",
+            "bg-neutral-200 dark:bg-neutral-700 rounded-full",
+            "shadow-lg px-4 py-2 max-w-2xl w-full mx-auto",
           )}>
             <div className='flex gap-4'>
               <button
                 className={classNames('underline', {
-                  "text-amber-400": page === ""
+                  "dark:text-amber-400 text-amber-600": page === ""
                 })}
                 onClick={() => {
                   setPage("");
@@ -127,7 +128,7 @@ function App() {
               </button>
               <button
                 className={classNames('underline', {
-                  "text-amber-400": page !== ""
+                  "dark:text-amber-400 text-amber-600": page !== ""
                 })}
                 onClick={() => {
                   setPage("blocksData");
@@ -137,7 +138,7 @@ function App() {
             </div>
             <RectangleButton
               onClick={() => setIsDialogOpen(true)}
-              className="bg-blue-500 dark:bg-blue-700"
+              className="bg-blue-500 dark:bg-blue-700 text-white rounded-full px-2"
               aria-label="Toggle add log dialog">
               Add block
             </RectangleButton>
