@@ -96,8 +96,15 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
         } else {
             onAdd(data);
         }
-        onClose();
+
+        // Reset React state so controlled radio buttons are cleared
+        // (form.reset() only clears uncontrolled inputs, not React state)
+        setSelectedCategory(categoryArray[0]);
+        setBlockName("");
+        setSubcategory('');
+
         form.reset();
+        onClose();
     };
 
     const handleDelete = () => {

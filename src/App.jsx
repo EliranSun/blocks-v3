@@ -137,7 +137,7 @@ function App() {
               </button>
             </div>
             <RectangleButton
-              onClick={() => setIsDialogOpen(true)}
+              onClick={handleOpenAddDialog}
               className="bg-blue-500 dark:bg-blue-700 text-white rounded-full px-2"
               aria-label="Toggle add log dialog">
               Add block

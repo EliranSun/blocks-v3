@@ -15,9 +15,13 @@ export const useLogsData = () => {
     const addLog = useCallback(data => {
         fetch(API_URL, {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         })
-            .then(res => { if (res.ok) res.json() })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to add log");
+                return res.json();
+            })
             .then(() => setLogs(prev => [...prev, data]))
             .catch(console.error);
     }, []);
@@ -25,9 +29,13 @@ export const useLogsData = () => {
     const editLog = useCallback((id, data) => {
         fetch(API_URL, {
             method: "PUT",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id, ...data })
         })
-            .then(res => { if (res.ok) res.json() })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to edit log");
+                return res.json();
+            })
             .then(() => setLogs(prev => prev.map(log => log._id === id ? { ...log, ...data } : log)))
             .catch(console.error);
     }, []);
