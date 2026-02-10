@@ -15,7 +15,7 @@ export const RectangleButton = ({ children, type = "button", onClick = () => { }
         <button
             type={type}
             onClick={onClick}
-            className={classNames("p-4 rounded dark:bg-black bg-neutral-200 shadow text-sm h-12 w-full text-left", className)}
+            className={classNames("p-2 rounded dark:bg-black bg-neutral-200 shadow text-sm h-10 text-left", className)}
             {...rest}>
             {children}
         </button>

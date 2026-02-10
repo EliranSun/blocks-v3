@@ -105,8 +105,6 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
         }
     };
 
-    console.log({ selectedCategory, blockName, log });
-
     return (
         <div className="">
             {isOpen && <div className="fixed w-screen h-screen bg-black z-10 top-0 left-0 opacity-90" />}
@@ -132,7 +130,9 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                                         value={categoryName}
                                         onChange={() => setSelectedCategory(category)}
                                         checked={isSelected} />
-                                    <label for={categoryName}>{categoryName}</label>
+                                    <label htmlFor={categoryName}>
+                                        {categoryName}
+                                    </label>
                                 </div>
                             );
                         })}
@@ -155,7 +155,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                                     value={block}
                                     onChange={() => setBlockName(block)}
                                 />
-                                <label for={block}>{block}</label>
+                                <label htmlFor={block}>{block}</label>
                             </div>
                         ))}
                     </fieldset>

@@ -20,15 +20,15 @@ export const Block = ({ item, showDate = false, showNote = false, variant = "lis
 
     const config = variantClasses[variant] || variantClasses.list;
     const colorClass = config.useBackground
-        ? CategoryBgColors[item.category.toLowerCase()]
-        : CategoryColors[item.category.toLowerCase()];
+        ? CategoryBgColors[item.category?.toLowerCase()]
+        : CategoryColors[item.category?.toLowerCase()];
 
     return (
         <li
             className={classNames(config.base, colorClass, onClick && "cursor-pointer hover:opacity-80")}
             onClick={() => onClick?.(item)}
         >
-            {item.name}{showDate && ` - ${format(item.date, "d/MM/yy, EEE")}`}
+            {item.name}{showDate && ` - ${format(item.date, "d MMM yy, EEE")}`}
             {showNote && item.note ? ` - ${item.note}` : ""}
         </li>
     );
