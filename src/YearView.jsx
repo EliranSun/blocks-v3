@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { format, startOfYear, eachMonthOfInterval, isSameMonth } from "date-fns";
 import { Block } from "./Block";
 
-export const YearView = ({ currentDate, data = [], showDate = false, onBackToList, onBlockClick }) => {
+export const YearView = ({ currentDate, data = [], showDate = false, showNote = false, onBackToList, onBlockClick }) => {
     // Group items by month for year view
     const yearData = useMemo(() => {
         if (!currentDate) return {};
@@ -71,6 +71,7 @@ export const YearView = ({ currentDate, data = [], showDate = false, onBackToLis
                                         <Block
                                             key={item.date + item.name}
                                             item={item}
+                                            showNote={showNote}
                                             showDate={showDate}
                                             variant="year"
                                             onClick={onBlockClick}

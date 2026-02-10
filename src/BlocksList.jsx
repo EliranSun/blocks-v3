@@ -1,6 +1,12 @@
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
 import { Block } from "./Block";
+import { useMemo, useState } from "react";
+import { Search } from './Search';
+import { RectangleButton, Button } from "./Button";
+import { format } from "date-fns";
+import { MonthNotes } from './constants';
+
 
 const CalendarIcon = () => {
     return (
@@ -19,15 +25,49 @@ const CalendarIcon = () => {
     )
 }
 
-export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClick }) => {
+export const BlocksList = ({
+    view,
+    onViewChange,
+    currentDate,
+    onNextDate,
+    onPrevDate,
+    data = [],
+    onBlockClick,
+    title,
+}) => {
+    const [showDate, setShowDate] = useState(false);
+    const [showColorOnly, setShowColorOnly] = useState(false);
+    const [showNote, setShowNote] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredData = useMemo(() => {
+        if (searchTerm) {
+            return data.filter(item => {
+                const search = searchTerm.trim();
+                const regex = new RegExp(search, 'i');
+                return (
+                    regex.test(item.name) ||
+                    regex.test(item.category) ||
+                    regex.test(item.subcategory) ||
+                    regex.test(item.location) ||
+                    regex.test(item.note)
+                );
+            });
+        }
+
+        return data;
+    }, [data, searchTerm]);
+
+    console.log({ data, filteredData });
 
     const renderView = () => {
         if (view === 'week') {
             return (
                 <WeekView
                     currentDate={currentDate}
-                    data={data}
+                    data={filteredData}
                     showDate={showDate}
+                    showNote={showNote}
                     onBlockClick={onBlockClick}
                 />
             );
@@ -37,7 +77,8 @@ export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClic
             return (
                 <YearView
                     currentDate={currentDate}
-                    data={data}
+                    data={filteredData}
+                    showNote={showNote}
                     showDate={showDate}
                     onBlockClick={onBlockClick}
                 />
@@ -46,12 +87,13 @@ export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClic
 
         return (
             <ul className='flex flex-wrap gap-2'>
-                {data.reverse().map(item =>
+                {filteredData.reverse().map(item =>
                     <Block
                         key={item.date + item.name}
-                        item={item}
-                        showDate={showDate}
                         variant="list"
+                        item={item}
+                        showNote={showNote}
+                        showDate={showDate}
                         onClick={onBlockClick}
                     />
                 )}
@@ -60,8 +102,74 @@ export const BlocksList = ({ currentDate, data = [], view, showDate, onBlockClic
     }
 
     return (
-        <div className="space-grotesk-400">
-            {renderView()}
+        <div className="space-y-2">
+            <div className='flex gap-4 items-center w-full'>
+                <div className='flex gap-2'>
+                    <Button onClick={onPrevDate}>
+                        ←
+                    </Button>
+                    <Button onClick={onNextDate}>
+                        →
+                    </Button>
+                </div>
+                <div className='spacy-y-4'>
+                    <h1 className='text-2xl merriweather-900'>
+                        {title}
+                    </h1>
+                    <h2 className='text-gray-400 text-xs'>
+                        {MonthNotes[format(currentDate, 'yyyy-MM')]}
+                    </h2>
+                </div>
+            </div>
+            <Search
+                value={searchTerm}
+                autoHide={false}
+                onInputChange={input => {
+                    setSearchTerm(input);
+                    if (input.length > 0) onViewChange("list");
+                }} />
+            <div className="flex gap-1">
+                <div className="p-1 bg-black rounded">
+                    <RectangleButton
+                        onClick={() => {
+                            onViewChange("list");
+                        }}
+                    >
+                        📃
+                    </RectangleButton>
+                    <RectangleButton
+                        onClick={() => {
+                            onViewChange("year");
+                        }}
+                    >
+                        📅
+                    </RectangleButton>
+                    <RectangleButton
+                        onClick={() => {
+                            onViewChange("week");
+                        }}
+                    >
+                        7️⃣
+                    </RectangleButton>
+                </div>
+                <div className="p-1 bg-black rounded">
+                    <RectangleButton onClick={() => setShowDate(!showDate)}>
+                        📆
+                    </RectangleButton>
+                    <RectangleButton onClick={() => setShowNote(!showNote)}>
+                        📒
+                    </RectangleButton>
+                    <RectangleButton onClick={() => setShowColorOnly(!showColorOnly)}>
+                        🦄
+                    </RectangleButton>
+                    <RectangleButton onClick={() => { }}>
+                        🔃
+                    </RectangleButton>
+                </div>
+            </div>
+            <div className="space-grotesk-400">
+                {renderView()}
+            </div>
         </div>
     )
 }

@@ -16,6 +16,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.merriweather-400 {
+  font-family: "Merriweather", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-variation-settings:
+    "wdth" 100;
+}
+
 .merriweather-500 {
   font-family: "Merriweather", serif;
   font-optical-sizing: auto;
@@ -30,6 +38,13 @@
   font-weight: 900;
   font-variation-settings:
     "wdth" 100;
+}
+
+.space-grotesk-600 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
 }
 
 .space-grotesk-400 {

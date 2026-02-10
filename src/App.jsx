@@ -1,29 +1,26 @@
 import { useState, useMemo } from 'react';
-import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addDays, addWeeks, addMonths, addYears } from 'date-fns';
-import { Search } from './Search';
-import { Categories, MonthNotes, Scopes } from './constants';
+import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears } from 'date-fns';
+// import { MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
-import { CategoryButtons } from './CategoryButtons';
-import { NavigationButtons } from './NavigationButtons';
-import { DailyQuotes } from './DailyQuotes';
-import { Button, RectangleButton } from "./Button";
+// import { CategoryButtons } from './CategoryButtons';
+// import { NavigationButtons } from './NavigationButtons';
+// import { DailyQuotes } from './DailyQuotes';
+import { RectangleButton } from "./Button";
 import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
+import { BlocksDataView } from './BlocksDataView';
+import classNames from 'classnames';
 
-const Views = ["list", "week", "year"];
+const Views = ["week", "list", "year"];
 
 function App() {
-  const [scopeIndex, setScopeIndex] = useState(2);
+  const [page, setPage] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
-  const [category, setCategory] = useState(Categories.All.name);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentViewIndex, setCurrentViewIndex] = useState(Views.indexOf("week") || 0);
-  const [showDate, setShowDate] = useState(false);
-  const [showColorOnly, setShowColorOnly] = useState(false);
-
-  const { logs, addLog, editLog, deleteLog } = useLogsData();
+  const [category, setCategory] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
+  const { logs, addLog, editLog, deleteLog } = useLogsData();
+  const [viewName, setViewName] = useState(Views[0]);
 
   const handleBlockClick = (item) => {
     setSelectedLog(item);
@@ -40,28 +37,24 @@ function App() {
     setIsDialogOpen(true);
   };
 
-  const scope = useMemo(() => Scopes[scopeIndex], [scopeIndex]);
-
   const currentDate = useMemo(() => {
-    if (!scope?.name) return new Date();
     const now = new Date();
-    switch (scope.name) {
+
+    switch (viewName) {
       case 'year':
         return addYears(now, dateOffset);
-      case 'month':
-        return addMonths(now, dateOffset);
+
       case 'week':
         return addWeeks(now, dateOffset);
-      case 'day':
-        return addDays(now, dateOffset);
+
+      case 'list':
       default:
         return now;
     }
-  }, [scope, dateOffset]);
+  }, [viewName, dateOffset]);
 
-  const currentFrame = useMemo(() => {
-    if (!scope?.name) return '';
-    switch (scope.name) {
+  const title = useMemo(() => {
+    switch (viewName) {
       case 'year':
         return format(currentDate, 'yyyy');
 
@@ -74,13 +67,14 @@ function App() {
       case 'day':
         return format(currentDate, 'EEE, MMM d, yyyy');
 
+      case 'list':
       default:
         return '';
     }
-  }, [scope, currentDate]);
+  }, [viewName, currentDate]);
 
   const filteredData = useMemo(() => {
-    if (!scope?.name || !logs)
+    if (!logs)
       return [];
 
     const dateComparators = {
@@ -88,87 +82,83 @@ function App() {
       month: (itemDate) => isSameMonth(itemDate, currentDate),
       week: (itemDate) => isSameWeek(itemDate, currentDate),
       day: (itemDate) => isSameDay(itemDate, currentDate),
+      list: () => true
     };
 
-    const comparator = dateComparators[scope.name];
+    const comparator = dateComparators[viewName];
 
     if (!comparator)
       return [];
 
-    if (searchTerm) {
-      return logs.filter(item => {
-        const search = searchTerm.trim();
-        const regex = new RegExp(search, 'i');
-        return (
-          regex.test(item.name) ||
-          regex.test(item.category) ||
-          regex.test(item.subcategory) ||
-          regex.test(item.location)
-        );
-      });
-    }
-
-    return logs.filter(item => {
-      const itemDate = new Date(item.date);
-      return comparator(itemDate);
-    })
+    return logs.filter(item => comparator(new Date(item.date)))
       .filter(item =>
-        category === Categories.All.name ||
+        !category ||
         item.category?.toLowerCase() === category?.toLowerCase()
       )
       .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [logs, scope, currentDate, category, searchTerm]);
-
-  const changeScope = (scopeName) => {
-    setScopeIndex(Scopes.findIndex(({ name }) => name.toLocaleLowerCase() === scopeName.toLocaleLowerCase()))
-    setDateOffset(0);
-  };
+  }, [logs, viewName, currentDate, category]);
 
   return (
-    <section className="p-4 flex flex-col justify-between h-dvh max-w-3xl mx-auto">
-      <div className="h-full overflow-y-auto space-y-4 pb-16">
-        <div className='flex gap-2 items-start'>
-          <div className='spacy-y-4 w-full'>
-            <h1 className='text-2xl merriweather-900'>
-              {currentFrame}
-            </h1>
-            <h2 className='text-gray-400'>
-              {MonthNotes[format(currentDate, 'yyyy-MM')]}
-            </h2>
+    <>
+      <section className="p-4 flex flex-col justify-between h-dvh max-w-4xl mx-auto">
+        <div className="h-full space-y-4 flex-col md:flex-row gap-4">
+          <LogDialog
+            log={selectedLog}
+            isOpen={isDialogOpen}
+            onOpen={handleOpenAddDialog}
+            onClose={handleDialogClose}
+            onAdd={addLog}
+            onEdit={editLog}
+            onDelete={deleteLog}
+          />
+          <div className={classNames(
+            "fixed bottom-0 inset-x-0 flex justify-between gap-2 bg-neutral-700 rounded",
+            "shadow-lg px-4 py-2 mx-2",
+          )}>
+            <div className='flex gap-4'>
+              <button
+                className={classNames('underline', {
+                  "text-amber-400": page === ""
+                })}
+                onClick={() => {
+                  setPage("");
+                }}>
+                Blocks
+              </button>
+              <button
+                className={classNames('underline', {
+                  "text-amber-400": page !== ""
+                })}
+                onClick={() => {
+                  setPage("blocksData");
+                }}>
+                Data
+              </button>
+            </div>
+            <RectangleButton
+              onClick={() => setIsDialogOpen(true)}
+              className="bg-blue-500 dark:bg-blue-700"
+              aria-label="Toggle add log dialog">
+              Add block
+            </RectangleButton>
           </div>
-          {/* <DailyQuotes /> */}
-          <RectangleButton
-            onClick={() => {
-              setCurrentViewIndex(prev => {
-                const nextIndex = (prev + 1) % Views.length;
-                const nextView = Views[nextIndex];
-                nextView !== "list" && changeScope(nextView);
-                return nextIndex;
-              });
-            }}
-          >
-            📃
-          </RectangleButton>
-          <RectangleButton onClick={() => setShowDate(!showDate)}>
-            📆
-          </RectangleButton>
-          <RectangleButton onClick={() => setShowColorOnly(!showColorOnly)}>
-            🦄
-          </RectangleButton>
+          <div className='w-full md:w-2/3 mx-auto overflow-y-auto'>
+            {page === "blocksData" ?
+              <BlocksDataView data={logs} />
+              : (
+                <BlocksList
+                  view={viewName}
+                  title={title}
+                  onViewChange={setViewName}
+                  onNextDate={() => setDateOffset(prev => prev + 1)}
+                  onPrevDate={() => setDateOffset(prev => prev - 1)}
+                  currentDate={currentDate}
+                  data={filteredData}
+                  onBlockClick={handleBlockClick} />
+              )}
+          </div>
         </div>
-        <Search
-          value={searchTerm}
-          autoHide={false}
-          onInputChange={setSearchTerm} />
-        <BlocksList
-          currentDate={currentDate}
-          data={filteredData}
-          showDate={showDate}
-          colorOnly={showColorOnly}
-          view={Views[currentViewIndex]}
-          onBlockClick={handleBlockClick} />
-      </div>
-      <div className='flex items-center justify-center gap-2 p-4 mb-2
+        {/* <div className='flex items-center justify-center gap-2 p-4 mb-2
       dark:bg-neutral-700 bg-neutral-200 rounded-full shadow-xl'>
         <CategoryButtons
           selectedCategory={category}
@@ -179,23 +169,9 @@ function App() {
             setScopeIndex(Scopes.findIndex(({ name }) => name === scopeName))
             setDateOffset(0);
           }} />
-        <LogDialog
-          log={selectedLog}
-          isOpen={isDialogOpen}
-          onOpen={handleOpenAddDialog}
-          onClose={handleDialogClose}
-          onAdd={addLog}
-          onEdit={editLog}
-          onDelete={deleteLog}
-        />
-        <Button onClick={() => setDateOffset(prev => prev - 1)}>
-          ←
-        </Button>
-        <Button onClick={() => setDateOffset(prev => prev + 1)}>
-          →
-        </Button>
-      </div>
-    </section>
+      </div> */}
+      </section>
+    </>
   )
 }
 

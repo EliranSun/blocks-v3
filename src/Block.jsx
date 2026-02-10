@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { CategoryColors, CategoryBgColors } from "./constants";
 import classNames from "classnames";
 
-export const Block = ({ item, showDate = false, variant = "list", onClick }) => {
+export const Block = ({ item, showDate = false, showNote = false, variant = "list", onClick }) => {
     const variantClasses = {
         week: {
             base: "px-1 py-2 break-words text-center font-bold text-shadow-2 text-xs text-left",
@@ -20,15 +20,16 @@ export const Block = ({ item, showDate = false, variant = "list", onClick }) => 
 
     const config = variantClasses[variant] || variantClasses.list;
     const colorClass = config.useBackground
-        ? CategoryBgColors[item.category.toLowerCase()]
-        : CategoryColors[item.category.toLowerCase()];
+        ? CategoryBgColors[item.category?.toLowerCase()]
+        : CategoryColors[item.category?.toLowerCase()];
 
     return (
         <li
             className={classNames(config.base, colorClass, onClick && "cursor-pointer hover:opacity-80")}
             onClick={() => onClick?.(item)}
         >
-            {item.name}{showDate && ` - ${format(item.date, "d/MM/yy, EEE")}`}
+            {item.name}{showDate && ` - ${format(item.date, "d MMM yy, EEE")}`}
+            {showNote && item.note ? ` - ${item.note}` : ""}
         </li>
     );
 };

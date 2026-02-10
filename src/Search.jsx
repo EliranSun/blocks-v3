@@ -23,7 +23,7 @@ export const Search = ({
     };
 
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex flex-row-reverse items-center gap-2 bg-black rounded">
             <Button
                 onClick={handleToggle}
                 aria-label="Toggle search"
@@ -45,7 +45,7 @@ export const Search = ({
             </Button>
             <div className={`
                 relative flex items-center
-                border text-lg rounded-full
+                text-lg
                 transition-all duration-300 ease-in-out
                 overflow-hidden
                 ${isOpen ? 'w-full px-4 py-2 opacity-100' : 'w-0 px-0 py-2 opacity-0'}
