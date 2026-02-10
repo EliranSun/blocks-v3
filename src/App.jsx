@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react';
 import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears } from 'date-fns';
-import { MonthNotes, Scopes } from './constants';
+// import { MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
 // import { CategoryButtons } from './CategoryButtons';
 // import { NavigationButtons } from './NavigationButtons';
 // import { DailyQuotes } from './DailyQuotes';
-// import { Button, RectangleButton } from "./Button";
+import { RectangleButton } from "./Button";
 import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
 import { BlocksDataView } from './BlocksDataView';
@@ -102,6 +102,15 @@ function App() {
     <>
       <section className="p-4 flex flex-col justify-between h-dvh max-w-4xl mx-auto">
         <div className="h-full space-y-4 flex-col md:flex-row gap-4">
+          <LogDialog
+            log={selectedLog}
+            isOpen={isDialogOpen}
+            onOpen={handleOpenAddDialog}
+            onClose={handleDialogClose}
+            onAdd={addLog}
+            onEdit={editLog}
+            onDelete={deleteLog}
+          />
           <div className={classNames(
             "fixed bottom-0 inset-x-0 flex justify-between gap-2 bg-neutral-700 rounded",
             "shadow-lg px-4 py-2 mx-2",
@@ -126,15 +135,12 @@ function App() {
                 Data
               </button>
             </div>
-            <LogDialog
-              log={selectedLog}
-              isOpen={isDialogOpen}
-              onOpen={handleOpenAddDialog}
-              onClose={handleDialogClose}
-              onAdd={addLog}
-              onEdit={editLog}
-              onDelete={deleteLog}
-            />
+            <RectangleButton
+              onClick={() => setIsDialogOpen(true)}
+              className="bg-blue-500 dark:bg-blue-700"
+              aria-label="Toggle add log dialog">
+              Add block
+            </RectangleButton>
           </div>
           <div className='w-full md:w-2/3 mx-auto overflow-y-auto'>
             {page === "blocksData" ?

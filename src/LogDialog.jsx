@@ -106,70 +106,68 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
     };
 
     return (
-        <div className="">
-            {isOpen && <div className="fixed w-screen h-screen bg-black z-10 top-0 left-0 opacity-90" />}
-            <Popover isOpen={isOpen}>
-                <form key={log?._id || 'new'} className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <fieldset className="flex flex-wrap gap-2">
-                        <legend>Categories</legend>
-                        {Object.entries(Categories).map(([categoryName, category]) => {
-                            const isSelected = categoryName.toLowerCase() === selectedCategory.name.toLowerCase();
-                            return (
-                                <div
-                                    key={categoryName}
-                                    className={classNames(
-                                        isSelected ? "bg-black outline-2" : "",
-                                        category.bgColor,
-                                        "p-2",
-                                    )}>
-                                    <input
-                                        type="radio"
-                                        name="category"
-                                        className={classNames("hidden")}
-                                        id={categoryName}
-                                        value={categoryName}
-                                        onChange={() => setSelectedCategory(category)}
-                                        checked={isSelected} />
-                                    <label htmlFor={categoryName}>
-                                        {categoryName}
-                                    </label>
-                                </div>
-                            );
-                        })}
-                    </fieldset>
-                    <fieldset className="flex flex-wrap gap-2">
-                        <legend>Blocks</legend>
-                        {selectedCategory.blocks.map(block => (
+        <Popover isOpen={isOpen}>
+            <form key={log?._id || 'new'} className="flex flex-col gap-4 merriweather-400" onSubmit={handleSubmit}>
+                <fieldset className="flex flex-wrap gap-2 space-y-2">
+                    <legend>Categories</legend>
+                    {Object.entries(Categories).map(([categoryName, category]) => {
+                        const isSelected = categoryName.toLowerCase() === selectedCategory.name.toLowerCase();
+                        return (
                             <div
-                                key={block}
+                                key={categoryName}
                                 className={classNames(
-                                    selectedCategory.bgColor,
-                                    blockName === block ? "bg-black outline-2" : "",
-                                    "p-2"
+                                    isSelected ? "bg-black outline-2" : "",
+                                    category.bgColor,
+                                    "p-2 rounded-lg",
                                 )}>
                                 <input
                                     type="radio"
-                                    name="name"
-                                    className="hidden"
-                                    id={block}
-                                    value={block}
-                                    onChange={() => setBlockName(block)}
-                                />
-                                <label htmlFor={block}>{block}</label>
+                                    name="category"
+                                    className={classNames("hidden")}
+                                    id={categoryName}
+                                    value={categoryName}
+                                    onChange={() => setSelectedCategory(category)}
+                                    checked={isSelected} />
+                                <label htmlFor={categoryName}>
+                                    {categoryName}
+                                </label>
                             </div>
-                        ))}
-                    </fieldset>
+                        );
+                    })}
+                </fieldset>
+                <fieldset className="flex flex-wrap gap-2 space-y-2">
+                    <legend>Blocks</legend>
+                    {selectedCategory.blocks.map(block => (
+                        <div
+                            key={block}
+                            className={classNames(
+                                selectedCategory.bgColor,
+                                blockName === block ? "bg-black outline-2" : "",
+                                "p-2 rounded-lg"
+                            )}>
+                            <input
+                                type="radio"
+                                name="name"
+                                className="hidden"
+                                id={block}
+                                value={block}
+                                onChange={() => setBlockName(block)}
+                            />
+                            <label htmlFor={block}>{block}</label>
+                        </div>
+                    ))}
+                </fieldset>
 
-                    <TextInput name="note" placeholder="note" defaultValue={log?.note || ''} />
-                    <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} />
+                <TextInput name="note" placeholder="note" defaultValue={log?.note || ''} />
+                <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} />
 
-                    {/* <TextInput
+                {/* <TextInput
                         name="name"
                         placeholder="name"
                         defaultValue={log?.name || ''}
                         required
                     /> */}
-                    {/* <select
+                {/* <select
                         required
                         className="border-2 py-4"
                         name="category"
@@ -189,7 +187,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                             </option>
                         )}
                     </select> */}
-                    {/* <fieldset className={selectedCategory.subcategories ? "border-2 py-4" : "hidden"}>
+                {/* <fieldset className={selectedCategory.subcategories ? "border-2 py-4" : "hidden"}>
                         {selectedCategory.subcategories.map(subcategory =>
                             <div
                                 key={subcategory}
@@ -202,39 +200,32 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                                 <label for={subcategory}>{subcategory}</label>
                             </div>)}
                     </fieldset> */}
-                    <div>
-                        <label htmlFor="date" className="text-xs">Start Date</label>
-                        <DateInput
-                            name="date"
-                            defaultValue={log?.date || new Date().toISOString().slice(0, 16)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="endDate" className="text-xs">End Date</label>
-                        <DateInput name="endDate" defaultValue={log?.endDate} />
-                    </div>
-                    <div className="flex gap-4">
-                        <RectangleButton type="submit">
-                            {isEditMode ? 'SAVE' : 'ADD'}
+                <div>
+                    <label htmlFor="date" className="text-xs">Start Date</label>
+                    <DateInput
+                        name="date"
+                        defaultValue={log?.date || new Date().toISOString().slice(0, 16)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="endDate" className="text-xs">End Date</label>
+                    <DateInput name="endDate" defaultValue={log?.endDate} />
+                </div>
+                <div className="flex gap-4 w-full">
+                    <RectangleButton type="submit" className="grow h-12">
+                        {isEditMode ? 'SAVE' : 'ADD'}
+                    </RectangleButton>
+                    {isEditMode && (
+                        <RectangleButton type="button" className="grow h-12" onClick={handleDelete}>
+                            DELETE
                         </RectangleButton>
-                        {isEditMode && (
-                            <RectangleButton type="button" onClick={handleDelete}>
-                                DELETE
-                            </RectangleButton>
-                        )}
-                        <RectangleButton type="button" onClick={onClose}>
-                            CLOSE
-                        </RectangleButton>
-                    </div>
-                </form>
-            </Popover>
-            <RectangleButton
-                onClick={() => onOpen?.()}
-                className="bg-blue-500 dark:bg-blue-700"
-                aria-label="Toggle add log dialog">
-                Add block
-            </RectangleButton>
-        </div>
+                    )}
+                    <RectangleButton type="button" className="grow h-12" onClick={onClose}>
+                        CLOSE
+                    </RectangleButton>
+                </div>
+            </form>
+        </Popover>
     )
 }
