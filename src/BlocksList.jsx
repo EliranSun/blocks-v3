@@ -129,7 +129,7 @@ export const BlocksList = ({
                     if (input.length > 0) onViewChange("list");
                 }} />
             <div className="flex gap-1">
-                <div className="p-1 bg-black rounded">
+                <div className="p-1 space-x-1 dark:bg-black bg-neutral-200 rounded">
                     <RectangleButton
                         onClick={() => {
                             onViewChange("list");
@@ -152,7 +152,7 @@ export const BlocksList = ({
                         7️⃣
                     </RectangleButton>
                 </div>
-                <div className="p-1 bg-black rounded">
+                <div className="p-1 space-x-1 dark:bg-black bg-neutral-200 rounded">
                     <RectangleButton onClick={() => setShowDate(!showDate)}>
                         📆
                     </RectangleButton>
