@@ -143,7 +143,7 @@ function App() {
               Add block
             </RectangleButton>
           </div>
-          <div className='w-full md:w-2/3 mx-auto overflow-y-auto'>
+          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto'>
             {page === "blocksData" ?
               <BlocksDataView data={logs} />
               : (

@@ -64,6 +64,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
     const initData = getInitialCategory(log);
     const [selectedCategory, setSelectedCategory] = useState(initData);
     const [blockName, setBlockName] = useState(log?.name.toLowerCase());
+    const [subcategory, setSubcategory] = useState(log?.subcategory || '');
     const isEditMode = Boolean(log?._id);
 
     // const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
@@ -71,6 +72,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
     useEffect(() => {
         setBlockName(log ? log.name.toLowerCase() : "");
         setSelectedCategory(getInitialCategory(log));
+        setSubcategory(log?.subcategory || '');
     }, [log]);
 
     const handleSubmit = (e) => {
@@ -126,7 +128,10 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                                     className={classNames("hidden")}
                                     id={categoryName}
                                     value={categoryName}
-                                    onChange={() => setSelectedCategory(category)}
+                                    onChange={() => {
+                                        setSelectedCategory(category);
+                                        setSubcategory('');
+                                    }}
                                     checked={isSelected} />
                                 <label htmlFor={categoryName}>
                                     {categoryName}
@@ -157,9 +162,34 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                         </div>
                     ))}
                 </fieldset>
+                {selectedCategory.subcategories?.length > 0 && (
+                    <fieldset className="flex flex-wrap gap-2 space-y-2">
+                        <legend>Type</legend>
+                        {selectedCategory.subcategories.map(sub => (
+                            <div
+                                key={sub}
+                                className={classNames(
+                                    selectedCategory.bgColor,
+                                    subcategory === sub ? "bg-black outline-2" : "",
+                                    "p-2 rounded-lg"
+                                )}>
+                                <input
+                                    type="radio"
+                                    name="subcategory"
+                                    className="hidden"
+                                    id={sub}
+                                    value={sub}
+                                    onChange={() => setSubcategory(sub)}
+                                    checked={subcategory === sub}
+                                />
+                                <label htmlFor={sub}>{sub}</label>
+                            </div>
+                        ))}
+                    </fieldset>
+                )}
 
                 <TextInput name="note" placeholder="note" defaultValue={log?.note || ''} />
-                <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} />
+                {/* <TextInput name="location" placeholder="location" defaultValue={log?.location || ''} /> */}
 
                 {/* <TextInput
                         name="name"
@@ -208,10 +238,10 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                         required
                     />
                 </div>
-                <div>
+                {/* <div>
                     <label htmlFor="endDate" className="text-xs">End Date</label>
                     <DateInput name="endDate" defaultValue={log?.endDate} />
-                </div>
+                </div> */}
                 <div className="flex gap-4 w-full">
                     <RectangleButton type="submit" className="grow h-12">
                         {isEditMode ? 'SAVE' : 'ADD'}

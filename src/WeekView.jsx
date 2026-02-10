@@ -2,7 +2,10 @@ import { useMemo } from "react";
 import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
 import { Block } from "./Block";
 
-export const WeekView = ({ currentDate, data = [], showDate = false, showNote, onBlockClick }) => {
+export const WeekView = ({ currentDate,
+    data = [],
+    blockProps = {},
+    onBlockClick }) => {
     // Group items by day for week view
     const weekData = useMemo(() => {
         if (!currentDate) return {};
@@ -61,9 +64,8 @@ export const WeekView = ({ currentDate, data = [], showDate = false, showNote, o
                                         <Block
                                             key={item.date + item.name}
                                             item={item}
-                                            showDate={showDate}
-                                            showNote={showNote}
                                             variant="week"
+                                            {...blockProps}
                                             onClick={onBlockClick}
                                         />
                                     ))}

@@ -10,12 +10,21 @@ export const Button = ({ children, className, ...rest }) => {
     )
 }
 
-export const RectangleButton = ({ children, type = "button", onClick = () => { }, className, ...rest }) => {
+export const RectangleButton = ({
+    children,
+    type = "button",
+    onClick = () => { },
+    className,
+    isActive,
+    ...rest
+}) => {
     return (
         <button
             type={type}
             onClick={onClick}
-            className={classNames("p-2 rounded shadow text-sm h-10 text-left", className)}
+            className={classNames("p-2 rounded shadow text-sm h-10 text-left", className, {
+                "bg-black": isActive,
+            })}
             {...rest}>
             {children}
         </button>

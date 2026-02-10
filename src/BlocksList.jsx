@@ -6,6 +6,7 @@ import { Search } from './Search';
 import { RectangleButton, Button } from "./Button";
 import { format } from "date-fns";
 import { MonthNotes } from './constants';
+import classNames from "classnames";
 
 
 const CalendarIcon = () => {
@@ -38,6 +39,7 @@ export const BlocksList = ({
     const [showDate, setShowDate] = useState(false);
     const [showColorOnly, setShowColorOnly] = useState(false);
     const [showNote, setShowNote] = useState(false);
+    const [showSubcategory, setShowSubcategory] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredData = useMemo(() => {
@@ -60,41 +62,44 @@ export const BlocksList = ({
 
     console.log({ data, filteredData });
 
+    const blockAlterProps = {
+        showDate: showDate,
+        showNote: showNote,
+        showColorOnly: showColorOnly,
+        showSubcategory: showSubcategory,
+    };
+
+    const sharedProps = {
+        blockProps: blockAlterProps,
+        currentDate: currentDate,
+        data: filteredData,
+        onBlockClick: onBlockClick,
+    };
+
     const renderView = () => {
         if (view === 'week') {
             return (
-                <WeekView
-                    currentDate={currentDate}
-                    data={filteredData}
-                    showDate={showDate}
-                    showNote={showNote}
-                    onBlockClick={onBlockClick}
-                />
+                <WeekView {...sharedProps} />
             );
         }
 
         if (view === 'year') {
             return (
-                <YearView
-                    currentDate={currentDate}
-                    data={filteredData}
-                    showNote={showNote}
-                    showDate={showDate}
-                    onBlockClick={onBlockClick}
-                />
+                <YearView {...sharedProps} />
             );
         }
 
         return (
-            <ul className='flex flex-wrap gap-2'>
+            <ul className={classNames('flex flex-wrap', {
+                "gap-2": !showColorOnly
+            })}>
                 {filteredData.reverse().map(item =>
                     <Block
-                        key={item.date + item.name}
                         variant="list"
+                        key={item.date + item.name}
                         item={item}
-                        showNote={showNote}
-                        showDate={showDate}
                         onClick={onBlockClick}
+                        {...blockAlterProps}
                     />
                 )}
             </ul>
@@ -131,6 +136,7 @@ export const BlocksList = ({
             <div className="flex gap-1">
                 <div className="p-1 space-x-1 dark:bg-black bg-neutral-200 rounded">
                     <RectangleButton
+                        isActive={view === "list"}
                         onClick={() => {
                             onViewChange("list");
                         }}
@@ -138,6 +144,7 @@ export const BlocksList = ({
                         📃
                     </RectangleButton>
                     <RectangleButton
+                        isActive={view === "year"}
                         onClick={() => {
                             onViewChange("year");
                         }}
@@ -145,6 +152,7 @@ export const BlocksList = ({
                         📅
                     </RectangleButton>
                     <RectangleButton
+                        isActive={view === "week"}
                         onClick={() => {
                             onViewChange("week");
                         }}
@@ -153,14 +161,25 @@ export const BlocksList = ({
                     </RectangleButton>
                 </div>
                 <div className="p-1 space-x-1 dark:bg-black bg-neutral-200 rounded">
-                    <RectangleButton onClick={() => setShowDate(!showDate)}>
+                    <RectangleButton
+                        isActive={showDate}
+                        onClick={() => setShowDate(!showDate)}>
                         📆
                     </RectangleButton>
-                    <RectangleButton onClick={() => setShowNote(!showNote)}>
+                    <RectangleButton
+                        isActive={showNote}
+                        onClick={() => setShowNote(!showNote)}>
                         📒
                     </RectangleButton>
-                    <RectangleButton onClick={() => setShowColorOnly(!showColorOnly)}>
+                    <RectangleButton
+                        isActive={showColorOnly}
+                        onClick={() => setShowColorOnly(!showColorOnly)}>
                         🦄
+                    </RectangleButton>
+                    <RectangleButton
+                        isActive={showSubcategory}
+                        onClick={() => setShowSubcategory(!showSubcategory)}>
+                        📁
                     </RectangleButton>
                     <RectangleButton onClick={() => { }}>
                         🔃
