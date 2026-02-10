@@ -114,7 +114,7 @@ function App() {
           <div className={classNames(
             "fixed bottom-5 inset-x-0 flex justify-between gap-2",
             "bg-neutral-200 dark:bg-neutral-700 rounded-full",
-            "shadow-lg px-4 py-2 max-w-2xl w-full mx-auto",
+            "shadow-lg px-4 py-2 max-w-2xl md:w-full mx-2 md:mx-auto",
           )}>
             <div className='flex gap-4'>
               <button
