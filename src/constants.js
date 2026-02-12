@@ -57,6 +57,7 @@ export const Blocks = {
     CLEAN: "clean",
     TOWELS: "towels",
     SHEETS: "sheets",
+    PLANTS: "plants",
 
     // avoid
     DOOM_SCROLL: "doom scroll",
@@ -141,6 +142,7 @@ export const Categories = {
             Blocks.CLEAN,
             Blocks.SHEETS,
             Blocks.TOWELS,
+            Blocks.PLANTS,
         ],
     },
     Family: {
