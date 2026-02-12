@@ -61,6 +61,7 @@ export const Blocks = {
     // avoid
     DOOM_SCROLL: "doom scroll",
     SICK: "sick",
+    PORN: "porn",
 
     // Mood
     GREAT: "😀",
@@ -181,7 +182,7 @@ export const Categories = {
         icon: "🚫",
         bgColor: "bg-zinc-500",
         color: "text-zinc-500",
-        blocks: [Blocks.DOOM_SCROLL, Blocks.SICK],
+        blocks: [Blocks.DOOM_SCROLL, Blocks.SICK, Blocks.PORN],
         subcategories: []
     },
     // Testosterone: { name: "Testosterone", icon: "⚡️", subcategories: [] },
