@@ -29,6 +29,7 @@ export const Blocks = {
     YOGA: "yoga",
     POWER: "power",
     CARDIO: "cardio",
+    THERAPY: "therapy",
 
     // family
     DAD: "dad",
@@ -129,6 +130,7 @@ export const Categories = {
             Blocks.YOGA,
             Blocks.POWER,
             Blocks.CARDIO,
+            Blocks.THERAPY,
         ],
     },
     Household: {
