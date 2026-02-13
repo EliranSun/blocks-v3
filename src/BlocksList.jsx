@@ -133,8 +133,8 @@ export const BlocksList = ({
                     setSearchTerm(input);
                     if (input.length > 0) onViewChange("list");
                 }} />
-            <div className="flex gap-1">
-                <div className="p-1 space-x-1 dark:bg-black bg-neutral-200 rounded">
+            <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-1 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
                         isActive={view === "list"}
                         onClick={() => {
@@ -160,7 +160,7 @@ export const BlocksList = ({
                         7️⃣
                     </RectangleButton>
                 </div>
-                <div className="p-1 space-x-1 dark:bg-black bg-neutral-200 rounded">
+                <div className="flex gap-1 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
                         isActive={showDate}
                         onClick={() => setShowDate(!showDate)}>

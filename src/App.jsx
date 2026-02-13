@@ -137,8 +137,9 @@ function App() {
               </button>
             </div>
             <RectangleButton
+              isActive
               onClick={handleOpenAddDialog}
-              className="bg-blue-500 dark:bg-blue-700 text-white rounded-full px-2"
+              className="rounded-full px-4"
               aria-label="Toggle add log dialog">
               Add block
             </RectangleButton>
