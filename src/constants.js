@@ -23,8 +23,8 @@ export const Blocks = {
     CSS: "css",
 
     // health
-    // FAT: "fat",
-    // WEIGHT: "weight",
+    FAT: "fat",
+    WEIGHT: "weight",
     PHYSIO: "physio",
     YOGA: "yoga",
     POWER: "power",
@@ -123,6 +123,8 @@ export const Categories = {
         color: "text-lime-500",
         subcategories: [],
         blocks: [
+            Blocks.WEIGHT,
+            Blocks.FAT,
             Blocks.PHYSIO,
             Blocks.YOGA,
             Blocks.POWER,
