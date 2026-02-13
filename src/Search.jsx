@@ -23,7 +23,7 @@ export const Search = ({
     };
 
     return (
-        <div className="flex flex-row-reverse items-center gap-2 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+        <div className="flex flex-row-reverse items-center gap-2 border border-neutral-200 dark:border-neutral-700 rounded-none">
             <Button
                 onClick={handleToggle}
                 aria-label="Toggle search"
