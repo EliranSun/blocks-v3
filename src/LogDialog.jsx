@@ -118,7 +118,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
         <Popover isOpen={isOpen}>
             <form key={log?._id || 'new'} className="flex flex-col gap-5 overflow-y-auto h-full" onSubmit={handleSubmit}>
                 <h2 className="text-2xl font-bold space-grotesk-600 tracking-tight">
-                    What happened?
+                    {isEditMode ? 'Edit Block' : 'Add Block'}
                 </h2>
 
                 <fieldset>
