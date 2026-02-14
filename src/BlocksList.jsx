@@ -209,22 +209,28 @@ export const BlocksList = ({
                         />
                     ))}
                 </ToolbarPopover>
-                <ToolbarPopover
-                    label={<span className="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                        </svg>
-                        {[showDate, showNote, showColorOnly, showSubcategory].filter(Boolean).length > 0 && (
-                            <span className="text-xs">{[showDate, showNote, showColorOnly, showSubcategory].filter(Boolean).length}</span>
-                        )}
-                    </span>}
-                    isActive={[showDate, showNote, showColorOnly, showSubcategory].some(Boolean)}
-                >
-                    <PopoverItem icon="📆" label="Dates" isActive={showDate} onClick={() => setShowDate(!showDate)} />
-                    <PopoverItem icon="📒" label="Notes" isActive={showNote} onClick={() => setShowNote(!showNote)} />
-                    <PopoverItem icon="🦄" label="Color only" isActive={showColorOnly} onClick={() => setShowColorOnly(!showColorOnly)} />
-                    <PopoverItem icon="📁" label="Subcategory" isActive={showSubcategory} onClick={() => setShowSubcategory(!showSubcategory)} />
-                </ToolbarPopover>
+                <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
+                    <RectangleButton
+                        isActive={showDate}
+                        onClick={() => setShowDate(!showDate)}>
+                        📆
+                    </RectangleButton>
+                    <RectangleButton
+                        isActive={showNote}
+                        onClick={() => setShowNote(!showNote)}>
+                        📒
+                    </RectangleButton>
+                    <RectangleButton
+                        isActive={showColorOnly}
+                        onClick={() => setShowColorOnly(!showColorOnly)}>
+                        🦄
+                    </RectangleButton>
+                    <RectangleButton
+                        isActive={showSubcategory}
+                        onClick={() => setShowSubcategory(!showSubcategory)}>
+                        📁
+                    </RectangleButton>
+                </div>
             </div>
             <div className="space-grotesk-400">
                 {renderView()}
