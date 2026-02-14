@@ -1,30 +1,94 @@
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
 import { Block } from "./Block";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from './Search';
 import { RectangleButton, Button } from "./Button";
 import { format } from "date-fns";
-import { MonthNotes } from './constants';
+import { Categories, MonthNotes } from './constants';
 import classNames from "classnames";
 
+const categoryList = Object.values(Categories);
 
-const CalendarIcon = () => {
+const DisplayOptionsPopover = ({ showDate, setShowDate, showNote, setShowNote, showColorOnly, setShowColorOnly, showSubcategory, setShowSubcategory }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const popoverRef = useRef(null);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleClickOutside = (e) => {
+            if (popoverRef.current && !popoverRef.current.contains(e.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isOpen]);
+
+    const activeCount = [showDate, showNote, showColorOnly, showSubcategory].filter(Boolean).length;
+
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 transition-transform duration-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2" fill="none" />
-            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" />
-            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" />
-            <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
-        </svg>
-    )
-}
+        <div className="relative" ref={popoverRef}>
+            <RectangleButton
+                isActive={isOpen || activeCount > 0}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <span className="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    {activeCount > 0 && (
+                        <span className="text-xs">{activeCount}</span>
+                    )}
+                </span>
+            </RectangleButton>
+            {isOpen && (
+                <div className={classNames(
+                    "absolute top-full left-0 mt-1 z-40",
+                    "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
+                    "shadow-lg p-2 space-y-1 w-44"
+                )}>
+                    <button
+                        onClick={() => setShowDate(!showDate)}
+                        className={classNames(
+                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
+                            showDate ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        )}
+                    >
+                        <span>📆</span> <span>Dates</span>
+                    </button>
+                    <button
+                        onClick={() => setShowNote(!showNote)}
+                        className={classNames(
+                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
+                            showNote ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        )}
+                    >
+                        <span>📒</span> <span>Notes</span>
+                    </button>
+                    <button
+                        onClick={() => setShowColorOnly(!showColorOnly)}
+                        className={classNames(
+                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
+                            showColorOnly ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        )}
+                    >
+                        <span>🦄</span> <span>Color only</span>
+                    </button>
+                    <button
+                        onClick={() => setShowSubcategory(!showSubcategory)}
+                        className={classNames(
+                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
+                            showSubcategory ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        )}
+                    >
+                        <span>📁</span> <span>Subcategory</span>
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
 
 export const BlocksList = ({
     view,
@@ -35,6 +99,8 @@ export const BlocksList = ({
     data = [],
     onBlockClick,
     title,
+    category,
+    onCategoryChange,
 }) => {
     const [showDate, setShowDate] = useState(false);
     const [showColorOnly, setShowColorOnly] = useState(false);
@@ -59,8 +125,6 @@ export const BlocksList = ({
 
         return data;
     }, [data, searchTerm]);
-
-    console.log({ data, filteredData });
 
     const blockAlterProps = {
         showDate: showDate,
@@ -133,58 +197,65 @@ export const BlocksList = ({
                     setSearchTerm(input);
                     if (input.length > 0) onViewChange("list");
                 }} />
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap items-start">
                 <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
                         isActive={view === "list"}
-                        onClick={() => {
-                            onViewChange("list");
-                        }}
+                        onClick={() => onViewChange("list")}
                     >
                         📃
                     </RectangleButton>
                     <RectangleButton
                         isActive={view === "year"}
-                        onClick={() => {
-                            onViewChange("year");
-                        }}
+                        onClick={() => onViewChange("year")}
                     >
                         📅
                     </RectangleButton>
                     <RectangleButton
                         isActive={view === "week"}
-                        onClick={() => {
-                            onViewChange("week");
-                        }}
+                        onClick={() => onViewChange("week")}
                     >
                         7️⃣
                     </RectangleButton>
                 </div>
                 <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
-                        isActive={showDate}
-                        onClick={() => setShowDate(!showDate)}>
-                        📆
+                        isActive={!category}
+                        onClick={() => onCategoryChange(null)}
+                    >
+                        All
                     </RectangleButton>
-                    <RectangleButton
-                        isActive={showNote}
-                        onClick={() => setShowNote(!showNote)}>
-                        📒
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={showColorOnly}
-                        onClick={() => setShowColorOnly(!showColorOnly)}>
-                        🦄
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={showSubcategory}
-                        onClick={() => setShowSubcategory(!showSubcategory)}>
-                        📁
-                    </RectangleButton>
-                    <RectangleButton onClick={() => { }}>
-                        🔃
-                    </RectangleButton>
+                    {categoryList.map(({ name, icon, color }) => (
+                        <button
+                            key={name}
+                            title={name}
+                            onClick={() => onCategoryChange(category === name ? null : name)}
+                            className={classNames(
+                                "px-1.5 py-1.5 text-sm transition-colors rounded-none",
+                                category === name
+                                    ? "bg-neutral-800 shadow-md ring-2 ring-neutral-600"
+                                    : "hover:bg-neutral-200 dark:hover:bg-neutral-700/60",
+                            )}
+                        >
+                            <span className={classNames(
+                                "text-base",
+                                category && category !== name && "opacity-30"
+                            )}>
+                                {icon}
+                            </span>
+                        </button>
+                    ))}
                 </div>
+                <DisplayOptionsPopover
+                    showDate={showDate}
+                    setShowDate={setShowDate}
+                    showNote={showNote}
+                    setShowNote={setShowNote}
+                    showColorOnly={showColorOnly}
+                    setShowColorOnly={setShowColorOnly}
+                    showSubcategory={showSubcategory}
+                    setShowSubcategory={setShowSubcategory}
+                />
             </div>
             <div className="space-grotesk-400">
                 {renderView()}
