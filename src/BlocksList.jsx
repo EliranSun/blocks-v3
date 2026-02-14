@@ -33,17 +33,30 @@ const ToolbarPopover = ({ label, isActive, children }) => {
 
     return (
         <div className="relative" ref={popoverRef}>
-            <RectangleButton
-                isActive={isOpen || isActive}
+            <button
                 onClick={() => setIsOpen(!isOpen)}
+                className={classNames(
+                    "px-3 py-1.5 text-sm font-semibold transition-colors",
+                    "border border-neutral-300 dark:border-neutral-600 rounded-md",
+                    "flex items-center gap-1.5",
+                    isOpen || isActive
+                        ? "bg-neutral-800 text-white border-neutral-600"
+                        : "bg-white text-neutral-700 hover:bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700",
+                )}
             >
                 {label}
-            </RectangleButton>
+                <span className={classNames(
+                    "text-[10px] transition-transform",
+                    isOpen && "rotate-180"
+                )}>
+                    ▾
+                </span>
+            </button>
             {isOpen && (
                 <div className={classNames(
                     "absolute top-full left-0 mt-1 z-40",
                     "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
-                    "shadow-lg p-2 space-y-1 min-w-40"
+                    "shadow-lg rounded-md p-2 space-y-1 min-w-40"
                 )}>
                     {children}
                 </div>
@@ -56,7 +69,7 @@ const PopoverItem = ({ icon, label, isActive, onClick }) => (
     <button
         onClick={onClick}
         className={classNames(
-            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
+            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded-md",
             isActive ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
         )}
     >
@@ -171,45 +184,48 @@ export const BlocksList = ({
                     setSearchTerm(input);
                     if (input.length > 0) onViewChange("list");
                 }} />
-            <div className="flex gap-2 items-start">
-                <ToolbarPopover
-                    label={viewOptions.find(v => v.key === view)?.icon || "📃"}
-                    isActive={false}
-                >
-                    {viewOptions.map(({ key, icon, label }) => (
+            <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center">
+                    <ToolbarPopover
+                        label={viewOptions.find(v => v.key === view)?.icon || "📃"}
+                        isActive={false}
+                    >
+                        {viewOptions.map(({ key, icon, label }) => (
+                            <PopoverItem
+                                key={key}
+                                icon={icon}
+                                label={label}
+                                isActive={view === key}
+                                onClick={() => onViewChange(key)}
+                            />
+                        ))}
+                    </ToolbarPopover>
+                    <ToolbarPopover
+                        label={category
+                            ? categoryList.find(c => c.name === category)?.icon
+                            : "All"
+                        }
+                        isActive={!!category}
+                    >
                         <PopoverItem
-                            key={key}
-                            icon={icon}
-                            label={label}
-                            isActive={view === key}
-                            onClick={() => onViewChange(key)}
+                            icon="*"
+                            label="All"
+                            isActive={!category}
+                            onClick={() => onCategoryChange(null)}
                         />
-                    ))}
-                </ToolbarPopover>
-                <ToolbarPopover
-                    label={category
-                        ? categoryList.find(c => c.name === category)?.icon
-                        : "All"
-                    }
-                    isActive={!!category}
-                >
-                    <PopoverItem
-                        icon="*"
-                        label="All"
-                        isActive={!category}
-                        onClick={() => onCategoryChange(null)}
-                    />
-                    {categoryList.map(({ name, icon }) => (
-                        <PopoverItem
-                            key={name}
-                            icon={icon}
-                            label={name.charAt(0).toUpperCase() + name.slice(1)}
-                            isActive={category === name}
-                            onClick={() => onCategoryChange(category === name ? null : name)}
-                        />
-                    ))}
-                </ToolbarPopover>
-                <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
+                        {categoryList.map(({ name, icon }) => (
+                            <PopoverItem
+                                key={name}
+                                icon={icon}
+                                label={name.charAt(0).toUpperCase() + name.slice(1)}
+                                isActive={category === name}
+                                onClick={() => onCategoryChange(category === name ? null : name)}
+                            />
+                        ))}
+                    </ToolbarPopover>
+                </div>
+                <div className="w-px h-6 bg-neutral-300 dark:bg-neutral-600 mx-1" />
+                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
                         isActive={showDate}
                         onClick={() => setShowDate(!showDate)}>
