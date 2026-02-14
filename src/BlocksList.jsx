@@ -7,6 +7,7 @@ import { RectangleButton, Button } from "./Button";
 import { format } from "date-fns";
 import { Categories, MonthNotes } from './constants';
 import classNames from "classnames";
+import { motion, AnimatePresence } from "framer-motion";
 
 const categoryList = Object.values(Categories);
 
@@ -15,6 +16,45 @@ const viewOptions = [
     { key: "year", icon: "📅", label: "Year" },
     { key: "week", icon: "7️⃣", label: "Week" },
 ];
+
+const dropdownVariants = {
+    hidden: {
+        opacity: 0,
+        scale: 0.92,
+        y: -4,
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            damping: 22,
+            stiffness: 400,
+            staggerChildren: 0.03,
+        },
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.95,
+        y: -4,
+        transition: { duration: 0.12 },
+    },
+};
+
+const dropdownItemVariants = {
+    hidden: { opacity: 0, x: -6 },
+    visible: { opacity: 1, x: 0 },
+};
+
+const listContainerVariants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.025,
+        },
+    },
+};
 
 const ToolbarPopover = ({ label, isActive, children }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +73,10 @@ const ToolbarPopover = ({ label, isActive, children }) => {
 
     return (
         <div className="relative" ref={popoverRef}>
-            <button
+            <motion.button
+                whileTap={{ scale: 0.93 }}
+                whileHover={{ scale: 1.04 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15 }}
                 onClick={() => setIsOpen(!isOpen)}
                 className={classNames(
                     "px-3 py-1.5 text-sm font-semibold transition-colors",
@@ -45,36 +88,49 @@ const ToolbarPopover = ({ label, isActive, children }) => {
                 )}
             >
                 {label}
-                <span className={classNames(
-                    "text-[10px] transition-transform",
-                    isOpen && "rotate-180"
-                )}>
+                <motion.span
+                    className="text-[10px]"
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
                     ▾
-                </span>
-            </button>
-            {isOpen && (
-                <div className={classNames(
-                    "absolute top-full left-0 mt-1 z-40",
-                    "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
-                    "shadow-lg rounded-md p-2 space-y-1 min-w-40"
-                )}>
-                    {children}
-                </div>
-            )}
+                </motion.span>
+            </motion.button>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        variants={dropdownVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className={classNames(
+                            "absolute top-full left-0 mt-1 z-40",
+                            "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
+                            "shadow-lg rounded-md p-2 space-y-1 min-w-40"
+                        )}
+                    >
+                        {children}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
 
 const PopoverItem = ({ icon, label, isActive, onClick }) => (
-    <button
+    <motion.button
+        variants={dropdownItemVariants}
+        whileHover={{ x: 3, backgroundColor: "rgba(128,128,128,0.08)" }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
         onClick={onClick}
         className={classNames(
             "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded-md",
-            isActive ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+            isActive ? "bg-neutral-200 dark:bg-neutral-600" : ""
         )}
     >
         <span>{icon}</span> <span>{label}</span>
-    </button>
+    </motion.button>
 );
 
 export const BlocksList = ({
@@ -141,9 +197,15 @@ export const BlocksList = ({
         }
 
         return (
-            <ul className={classNames('flex flex-wrap', {
-                "gap-2": !showColorOnly
-            })}>
+            <motion.ul
+                className={classNames('flex flex-wrap', {
+                    "gap-2": !showColorOnly
+                })}
+                variants={listContainerVariants}
+                initial="hidden"
+                animate="visible"
+                key={`list-${filteredData.length}-${searchTerm}`}
+            >
                 {filteredData.reverse().map(item =>
                     <Block
                         variant="list"
@@ -153,7 +215,7 @@ export const BlocksList = ({
                         {...blockAlterProps}
                     />
                 )}
-            </ul>
+            </motion.ul>
         )
     }
 
@@ -169,9 +231,15 @@ export const BlocksList = ({
                     </Button>
                 </div>
                 <div className='spacy-y-4'>
-                    <h1 className='text-2xl merriweather-900'>
+                    <motion.h1
+                        className='text-2xl merriweather-900'
+                        key={title}
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                    >
                         {title}
-                    </h1>
+                    </motion.h1>
                     <h2 className='text-gray-400 text-xs'>
                         {MonthNotes[format(currentDate, 'yyyy-MM')]}
                     </h2>
@@ -248,9 +316,18 @@ export const BlocksList = ({
                     </RectangleButton>
                 </div>
             </div>
-            <div className="space-grotesk-400">
-                {renderView()}
-            </div>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={view}
+                    className="space-grotesk-400"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                    {renderView()}
+                </motion.div>
+            </AnimatePresence>
         </div>
     )
 }

@@ -1,6 +1,21 @@
 import { format } from "date-fns";
 import { CategoryColors, CategoryBgColors } from "./constants";
 import classNames from "classnames";
+import { motion } from "framer-motion";
+
+export const blockItemVariants = {
+    hidden: { opacity: 0, y: 8, scale: 0.97 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            damping: 20,
+            stiffness: 300,
+        },
+    },
+};
 
 export const Block = ({
     item,
@@ -32,11 +47,15 @@ export const Block = ({
         : CategoryColors[item.category?.toLowerCase()];
 
     return (
-        <li
+        <motion.li
+            variants={blockItemVariants}
+            whileHover={onClick ? { scale: 1.03, y: -2 } : undefined}
+            whileTap={onClick ? { scale: 0.97 } : undefined}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className={classNames(
                 config.base,
                 colorClass,
-                onClick && "cursor-pointer hover:opacity-80",
+                onClick && "cursor-pointer",
                 showColorOnly && "text-[0px] h-2 border-none"
             )}
             onClick={() => onClick?.(item)}
@@ -45,6 +64,6 @@ export const Block = ({
             {showDate && ` - ${format(item.date, "d MMM yy, EEE")}`}
             {showSubcategory && item.subcategory ? ` - ${item.subcategory}` : ""}
             {showNote && item.note ? ` - ${item.note}` : ""}
-        </li>
+        </motion.li>
     );
 };

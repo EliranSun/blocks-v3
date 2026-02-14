@@ -1,8 +1,12 @@
 import classNames from "classnames";
+import { motion } from "framer-motion";
 
 export const Button = ({ children, className, ...rest }) => {
     return (
-        <button
+        <motion.button
+            whileTap={{ scale: 0.88 }}
+            whileHover={{ scale: 1.08 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
             {...rest}
             className={classNames(
                 "rounded-none flex items-center justify-center size-10",
@@ -12,7 +16,7 @@ export const Button = ({ children, className, ...rest }) => {
                 className
             )}>
             {children}
-        </button>
+        </motion.button>
     )
 }
 
@@ -25,7 +29,10 @@ export const RectangleButton = ({
     ...rest
 }) => {
     return (
-        <button
+        <motion.button
+            whileTap={{ scale: 0.92 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
             type={type}
             onClick={onClick}
             className={classNames(
@@ -37,6 +44,6 @@ export const RectangleButton = ({
             )}
             {...rest}>
             {children}
-        </button>
+        </motion.button>
     )
 }

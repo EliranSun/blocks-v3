@@ -1,6 +1,30 @@
 import { useMemo } from "react";
 import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
 import { Block } from "./Block";
+import { motion } from "framer-motion";
+
+const dayColumnVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: (i) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            delay: i * 0.05,
+            type: "spring",
+            damping: 20,
+            stiffness: 300,
+        },
+    }),
+};
+
+const blockListVariants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.03,
+        },
+    },
+};
 
 export const WeekView = ({ currentDate,
     data = [],
@@ -34,17 +58,29 @@ export const WeekView = ({ currentDate,
     return (
         <div className="space-grotesk-400">
             <div className="grid grid-cols-7  gap-1 w-full overflow-x-auto">
-                {weekData.weekDays?.map(day => {
+                {weekData.weekDays?.map((day, index) => {
                     const dayKey = format(day, 'yyyy-MM-dd');
                     const dayItems = weekData.grouped[dayKey] || [];
                     return (
-                        <div key={dayKey} className="flex-1">
+                        <motion.div
+                            key={dayKey}
+                            className="flex-1"
+                            custom={index}
+                            variants={dayColumnVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
                             <div className="font-semibold text-xs mb-2 text-center border-b pb-1">
                                 {format(day, 'EEE')}
                                 <br />
                                 <span className="text-gray-500">{format(day, 'd/MM')}</span>
                             </div>
-                            <ul className="space-y-1">
+                            <motion.ul
+                                className="space-y-1"
+                                variants={blockListVariants}
+                                initial="hidden"
+                                animate="visible"
+                            >
                                 {dayItems
                                     .sort((a, b) => {
                                         // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
@@ -69,12 +105,11 @@ export const WeekView = ({ currentDate,
                                             onClick={onBlockClick}
                                         />
                                     ))}
-                            </ul>
-                        </div>
+                            </motion.ul>
+                        </motion.div>
                     );
                 })}
             </div>
         </div>
     );
 };
-
