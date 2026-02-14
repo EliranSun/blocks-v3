@@ -10,7 +10,13 @@ import classNames from "classnames";
 
 const categoryList = Object.values(Categories);
 
-const DisplayOptionsPopover = ({ showDate, setShowDate, showNote, setShowNote, showColorOnly, setShowColorOnly, showSubcategory, setShowSubcategory }) => {
+const viewOptions = [
+    { key: "list", icon: "📃", label: "List" },
+    { key: "year", icon: "📅", label: "Year" },
+    { key: "week", icon: "7️⃣", label: "Week" },
+];
+
+const ToolbarPopover = ({ label, isActive, children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const popoverRef = useRef(null);
 
@@ -25,70 +31,38 @@ const DisplayOptionsPopover = ({ showDate, setShowDate, showNote, setShowNote, s
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isOpen]);
 
-    const activeCount = [showDate, showNote, showColorOnly, showSubcategory].filter(Boolean).length;
-
     return (
         <div className="relative" ref={popoverRef}>
             <RectangleButton
-                isActive={isOpen || activeCount > 0}
+                isActive={isOpen || isActive}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
-                    {activeCount > 0 && (
-                        <span className="text-xs">{activeCount}</span>
-                    )}
-                </span>
+                {label}
             </RectangleButton>
             {isOpen && (
                 <div className={classNames(
                     "absolute top-full left-0 mt-1 z-40",
                     "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
-                    "shadow-lg p-2 space-y-1 w-44"
+                    "shadow-lg p-2 space-y-1 min-w-40"
                 )}>
-                    <button
-                        onClick={() => setShowDate(!showDate)}
-                        className={classNames(
-                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
-                            showDate ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        )}
-                    >
-                        <span>📆</span> <span>Dates</span>
-                    </button>
-                    <button
-                        onClick={() => setShowNote(!showNote)}
-                        className={classNames(
-                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
-                            showNote ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        )}
-                    >
-                        <span>📒</span> <span>Notes</span>
-                    </button>
-                    <button
-                        onClick={() => setShowColorOnly(!showColorOnly)}
-                        className={classNames(
-                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
-                            showColorOnly ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        )}
-                    >
-                        <span>🦄</span> <span>Color only</span>
-                    </button>
-                    <button
-                        onClick={() => setShowSubcategory(!showSubcategory)}
-                        className={classNames(
-                            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
-                            showSubcategory ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        )}
-                    >
-                        <span>📁</span> <span>Subcategory</span>
-                    </button>
+                    {children}
                 </div>
             )}
         </div>
     );
 };
+
+const PopoverItem = ({ icon, label, isActive, onClick }) => (
+    <button
+        onClick={onClick}
+        className={classNames(
+            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded",
+            isActive ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+        )}
+    >
+        <span>{icon}</span> <span>{label}</span>
+    </button>
+);
 
 export const BlocksList = ({
     view,
@@ -197,65 +171,60 @@ export const BlocksList = ({
                     setSearchTerm(input);
                     if (input.length > 0) onViewChange("list");
                 }} />
-            <div className="flex gap-2 flex-wrap items-start">
-                <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
-                    <RectangleButton
-                        isActive={view === "list"}
-                        onClick={() => onViewChange("list")}
-                    >
-                        📃
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={view === "year"}
-                        onClick={() => onViewChange("year")}
-                    >
-                        📅
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={view === "week"}
-                        onClick={() => onViewChange("week")}
-                    >
-                        7️⃣
-                    </RectangleButton>
-                </div>
-                <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
-                    <RectangleButton
+            <div className="flex gap-2 items-start">
+                <ToolbarPopover
+                    label={viewOptions.find(v => v.key === view)?.icon || "📃"}
+                    isActive={false}
+                >
+                    {viewOptions.map(({ key, icon, label }) => (
+                        <PopoverItem
+                            key={key}
+                            icon={icon}
+                            label={label}
+                            isActive={view === key}
+                            onClick={() => onViewChange(key)}
+                        />
+                    ))}
+                </ToolbarPopover>
+                <ToolbarPopover
+                    label={category
+                        ? categoryList.find(c => c.name === category)?.icon
+                        : "All"
+                    }
+                    isActive={!!category}
+                >
+                    <PopoverItem
+                        icon="*"
+                        label="All"
                         isActive={!category}
                         onClick={() => onCategoryChange(null)}
-                    >
-                        All
-                    </RectangleButton>
-                    {categoryList.map(({ name, icon, color }) => (
-                        <button
+                    />
+                    {categoryList.map(({ name, icon }) => (
+                        <PopoverItem
                             key={name}
-                            title={name}
+                            icon={icon}
+                            label={name.charAt(0).toUpperCase() + name.slice(1)}
+                            isActive={category === name}
                             onClick={() => onCategoryChange(category === name ? null : name)}
-                            className={classNames(
-                                "px-1.5 py-1.5 text-sm transition-colors rounded-none",
-                                category === name
-                                    ? "bg-neutral-800 shadow-md ring-2 ring-neutral-600"
-                                    : "hover:bg-neutral-200 dark:hover:bg-neutral-700/60",
-                            )}
-                        >
-                            <span className={classNames(
-                                "text-base",
-                                category && category !== name && "opacity-30"
-                            )}>
-                                {icon}
-                            </span>
-                        </button>
+                        />
                     ))}
-                </div>
-                <DisplayOptionsPopover
-                    showDate={showDate}
-                    setShowDate={setShowDate}
-                    showNote={showNote}
-                    setShowNote={setShowNote}
-                    showColorOnly={showColorOnly}
-                    setShowColorOnly={setShowColorOnly}
-                    showSubcategory={showSubcategory}
-                    setShowSubcategory={setShowSubcategory}
-                />
+                </ToolbarPopover>
+                <ToolbarPopover
+                    label={<span className="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                        {[showDate, showNote, showColorOnly, showSubcategory].filter(Boolean).length > 0 && (
+                            <span className="text-xs">{[showDate, showNote, showColorOnly, showSubcategory].filter(Boolean).length}</span>
+                        )}
+                    </span>}
+                    isActive={[showDate, showNote, showColorOnly, showSubcategory].some(Boolean)}
+                >
+                    <PopoverItem icon="📆" label="Dates" isActive={showDate} onClick={() => setShowDate(!showDate)} />
+                    <PopoverItem icon="📒" label="Notes" isActive={showNote} onClick={() => setShowNote(!showNote)} />
+                    <PopoverItem icon="🦄" label="Color only" isActive={showColorOnly} onClick={() => setShowColorOnly(!showColorOnly)} />
+                    <PopoverItem icon="📁" label="Subcategory" isActive={showSubcategory} onClick={() => setShowSubcategory(!showSubcategory)} />
+                </ToolbarPopover>
             </div>
             <div className="space-grotesk-400">
                 {renderView()}
