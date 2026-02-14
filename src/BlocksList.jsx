@@ -1,30 +1,81 @@
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
 import { Block } from "./Block";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from './Search';
 import { RectangleButton, Button } from "./Button";
 import { format } from "date-fns";
-import { MonthNotes } from './constants';
+import { Categories, MonthNotes } from './constants';
 import classNames from "classnames";
 
+const categoryList = Object.values(Categories);
 
-const CalendarIcon = () => {
+const viewOptions = [
+    { key: "list", icon: "📃", label: "List" },
+    { key: "year", icon: "📅", label: "Year" },
+    { key: "week", icon: "7️⃣", label: "Week" },
+];
+
+const ToolbarPopover = ({ label, isActive, children }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const popoverRef = useRef(null);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleClickOutside = (e) => {
+            if (popoverRef.current && !popoverRef.current.contains(e.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isOpen]);
+
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 transition-transform duration-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2" fill="none" />
-            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" />
-            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" />
-            <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
-        </svg>
-    )
-}
+        <div className="relative" ref={popoverRef}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className={classNames(
+                    "px-3 py-1.5 text-sm font-semibold transition-colors",
+                    "border border-neutral-300 dark:border-neutral-600 rounded-md",
+                    "flex items-center gap-1.5",
+                    isOpen || isActive
+                        ? "bg-neutral-800 text-white border-neutral-600"
+                        : "bg-white text-neutral-700 hover:bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700",
+                )}
+            >
+                {label}
+                <span className={classNames(
+                    "text-[10px] transition-transform",
+                    isOpen && "rotate-180"
+                )}>
+                    ▾
+                </span>
+            </button>
+            {isOpen && (
+                <div className={classNames(
+                    "absolute top-full left-0 mt-1 z-40",
+                    "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
+                    "shadow-lg rounded-md p-2 space-y-1 min-w-40"
+                )}>
+                    {children}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const PopoverItem = ({ icon, label, isActive, onClick }) => (
+    <button
+        onClick={onClick}
+        className={classNames(
+            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded-md",
+            isActive ? "bg-neutral-200 dark:bg-neutral-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+        )}
+    >
+        <span>{icon}</span> <span>{label}</span>
+    </button>
+);
 
 export const BlocksList = ({
     view,
@@ -35,6 +86,8 @@ export const BlocksList = ({
     data = [],
     onBlockClick,
     title,
+    category,
+    onCategoryChange,
 }) => {
     const [showDate, setShowDate] = useState(false);
     const [showColorOnly, setShowColorOnly] = useState(false);
@@ -59,8 +112,6 @@ export const BlocksList = ({
 
         return data;
     }, [data, searchTerm]);
-
-    console.log({ data, filteredData });
 
     const blockAlterProps = {
         showDate: showDate,
@@ -133,34 +184,48 @@ export const BlocksList = ({
                     setSearchTerm(input);
                     if (input.length > 0) onViewChange("list");
                 }} />
-            <div className="flex gap-2 flex-wrap">
-                <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
-                    <RectangleButton
-                        isActive={view === "list"}
-                        onClick={() => {
-                            onViewChange("list");
-                        }}
+            <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center">
+                    <ToolbarPopover
+                        label={viewOptions.find(v => v.key === view)?.icon || "📃"}
+                        isActive={false}
                     >
-                        📃
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={view === "year"}
-                        onClick={() => {
-                            onViewChange("year");
-                        }}
+                        {viewOptions.map(({ key, icon, label }) => (
+                            <PopoverItem
+                                key={key}
+                                icon={icon}
+                                label={label}
+                                isActive={view === key}
+                                onClick={() => onViewChange(key)}
+                            />
+                        ))}
+                    </ToolbarPopover>
+                    <ToolbarPopover
+                        label={category
+                            ? categoryList.find(c => c.name === category)?.icon
+                            : "All"
+                        }
+                        isActive={!!category}
                     >
-                        📅
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={view === "week"}
-                        onClick={() => {
-                            onViewChange("week");
-                        }}
-                    >
-                        7️⃣
-                    </RectangleButton>
+                        <PopoverItem
+                            icon="*"
+                            label="All"
+                            isActive={!category}
+                            onClick={() => onCategoryChange(null)}
+                        />
+                        {categoryList.map(({ name, icon }) => (
+                            <PopoverItem
+                                key={name}
+                                icon={icon}
+                                label={name.charAt(0).toUpperCase() + name.slice(1)}
+                                isActive={category === name}
+                                onClick={() => onCategoryChange(category === name ? null : name)}
+                            />
+                        ))}
+                    </ToolbarPopover>
                 </div>
-                <div className="flex gap-1 p-1 rounded-none bg-neutral-100 dark:bg-neutral-800/60">
+                <div className="w-px h-6 bg-neutral-300 dark:bg-neutral-600 mx-1" />
+                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
                         isActive={showDate}
                         onClick={() => setShowDate(!showDate)}>
@@ -180,9 +245,6 @@ export const BlocksList = ({
                         isActive={showSubcategory}
                         onClick={() => setShowSubcategory(!showSubcategory)}>
                         📁
-                    </RectangleButton>
-                    <RectangleButton onClick={() => { }}>
-                        🔃
                     </RectangleButton>
                 </div>
             </div>

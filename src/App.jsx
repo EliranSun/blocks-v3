@@ -156,6 +156,8 @@ function App() {
                   onPrevDate={() => setDateOffset(prev => prev - 1)}
                   currentDate={currentDate}
                   data={filteredData}
+                  category={category}
+                  onCategoryChange={setCategory}
                   onBlockClick={handleBlockClick} />
               )}
           </div>
