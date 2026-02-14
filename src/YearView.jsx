@@ -1,6 +1,31 @@
 import { useMemo } from "react";
 import { format, startOfYear, eachMonthOfInterval, isSameMonth } from "date-fns";
 import { Block } from "./Block";
+import { motion } from "framer-motion";
+
+const monthCardVariants = {
+    hidden: { opacity: 0, scale: 0.92, y: 12 },
+    visible: (i) => ({
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            delay: i * 0.04,
+            type: "spring",
+            damping: 20,
+            stiffness: 300,
+        },
+    }),
+};
+
+const blockListVariants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.02,
+        },
+    },
+};
 
 export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList, onBlockClick }) => {
     // Group items by month for year view
@@ -37,15 +62,27 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
     return (
         <div className="space-grotesk-400">
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 w-full">
-                {yearData.yearMonths?.map(month => {
+                {yearData.yearMonths?.map((month, index) => {
                     const monthKey = format(month, 'yyyy-MM');
                     const monthItems = yearData.grouped[monthKey] || [];
                     return (
-                        <div key={monthKey} className="flex flex-col p-2 h-[18vh]">
+                        <motion.div
+                            key={monthKey}
+                            className="flex flex-col p-2 h-[18vh]"
+                            custom={index}
+                            variants={monthCardVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
                             <div className="font-semibold text-xs mb-2 text-center border-b pb-1 shrink-0">
                                 {format(month, 'MMM')}<br />
                             </div>
-                            <ol className="space-y-1 list-decimal overflow-y-auto flex-1">
+                            <motion.ol
+                                className="space-y-1 list-decimal overflow-y-auto flex-1"
+                                variants={blockListVariants}
+                                initial="hidden"
+                                animate="visible"
+                            >
                                 {monthItems
                                     .sort((a, b) => {
                                         // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
@@ -76,12 +113,11 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
                                             onClick={onBlockClick}
                                         />
                                     ))}
-                            </ol>
-                        </div>
+                            </motion.ol>
+                        </motion.div>
                     );
                 })}
             </div>
         </div>
     );
 };
-

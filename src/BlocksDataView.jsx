@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { Categories } from "./constants";
 import { formatDistanceToNow, format } from 'date-fns';
+import { motion } from "framer-motion";
 
 const timeAgo = date => {
     if (!date) return "None";
@@ -14,25 +15,72 @@ const timeAgo = date => {
     return date;
 };
 
+const categorySectionVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: (i) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            delay: i * 0.08,
+            type: "spring",
+            damping: 20,
+            stiffness: 300,
+        },
+    }),
+};
+
+const blockRowVariants = {
+    hidden: { opacity: 0, x: -10 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            type: "spring",
+            damping: 20,
+            stiffness: 300,
+        },
+    },
+};
+
+const blockListVariants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.03,
+        },
+    },
+};
+
 export const BlocksDataView = ({ data = [] }) => {
     console.log({ data });
 
     return (
         <div className="space-y-2 pb-40">
-            <h1 className="text-xl merriweather-900">BLOCKS DATA</h1>
-            {Object.values(Categories).map(category => {
+            <motion.h1
+                className="text-xl merriweather-900"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            >
+                BLOCKS DATA
+            </motion.h1>
+            {Object.values(Categories).map((category, catIndex) => {
                 return (
-                    <div key={category.name} className="">
+                    <motion.div
+                        key={category.name}
+                        custom={catIndex}
+                        variants={categorySectionVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
                         <h2 className="text-lg uppercase py-2 font-bold underline merriweather-500">
                             {category.name}
                         </h2>
-                        {/* <div className="grid grid-cols-4">
-                            <h3>Block</h3>
-                            <h3>Last</h3>
-                            <h3>Note</h3>
-                            <h3>Count</h3>
-                        </div> */}
-                        <div className="">
+                        <motion.div
+                            variants={blockListVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
                             {category.blocks.map(block => {
                                 const blocks = data
                                     .filter(item => {
@@ -42,35 +90,33 @@ export const BlocksDataView = ({ data = [] }) => {
                                             item.subcategory?.toLowerCase().trim() === block.toLowerCase().trim()
                                         )
                                     })
-                                // .sort((a, b) =>
-                                //     new Date(b.date.slice(0, 10)).getTime() -
-                                //     new Date(a.date.slice(0, 10)).getTime());
 
                                 return (
-                                    <div className={classNames("my-2 flex")}>
-                                        <h3 key={block} className={classNames(category.color, "space-grotesk-600 w-28 font-bold uppercase")}>
+                                    <motion.div
+                                        key={block}
+                                        className={classNames("my-2 flex")}
+                                        variants={blockRowVariants}
+                                        whileHover={{ x: 4 }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                    >
+                                        <h3 className={classNames(category.color, "space-grotesk-600 w-28 font-bold uppercase")}>
                                             {block}
                                         </h3>
                                         <div className="flex gap-1 merriweather-400">
                                             {blocks.length ? (
                                                 <span className="">
                                                     {[
-                                                        // format(new Date(blocks.at(0)?.date), "MM-dd"),
                                                         timeAgo(blocks.at(0)?.date),
-                                                        // blocks.at(0)?.note,
                                                         blocks.length + " times"
                                                     ].filter(Boolean).join(", ")}
                                                 </span>
                                             ) : "None"}
-                                            {/* <pre>
-                                                {JSON.stringify(blocks, null, 2)}
-                                            </pre> */}
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 )
                             })}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
                 );
             })}
         </div>

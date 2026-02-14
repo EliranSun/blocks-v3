@@ -10,6 +10,7 @@ import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
 import { BlocksDataView } from './BlocksDataView';
 import classNames from 'classnames';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Views = ["week", "list", "year"];
 
@@ -111,13 +112,24 @@ function App() {
             onEdit={editLog}
             onDelete={deleteLog}
           />
-          <div className={classNames(
-            "fixed bottom-5 inset-x-0 flex justify-between gap-2",
-            "bg-neutral-200 dark:bg-neutral-700 rounded-full",
-            "shadow-lg px-4 py-2 max-w-2xl md:w-full mx-2 md:mx-auto",
-          )}>
+          <motion.div
+            className={classNames(
+              "fixed bottom-5 inset-x-0 flex justify-between gap-2",
+              "bg-neutral-200 dark:bg-neutral-700 rounded-full",
+              "shadow-lg px-4 py-2 max-w-2xl md:w-full mx-2 md:mx-auto",
+            )}
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{
+              type: "spring",
+              damping: 20,
+              stiffness: 200,
+              delay: 0.2,
+            }}
+          >
             <div className='flex gap-4'>
-              <button
+              <motion.button
+                whileTap={{ scale: 0.92 }}
                 className={classNames('underline', {
                   "dark:text-amber-400 text-amber-600": page === ""
                 })}
@@ -125,8 +137,9 @@ function App() {
                   setPage("");
                 }}>
                 Blocks
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.92 }}
                 className={classNames('underline', {
                   "dark:text-amber-400 text-amber-600": page !== ""
                 })}
@@ -134,7 +147,7 @@ function App() {
                   setPage("blocksData");
                 }}>
                 Data
-              </button>
+              </motion.button>
             </div>
             <RectangleButton
               isActive
@@ -143,23 +156,41 @@ function App() {
               aria-label="Toggle add log dialog">
               Add block
             </RectangleButton>
-          </div>
+          </motion.div>
           <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto'>
-            {page === "blocksData" ?
-              <BlocksDataView data={logs} />
-              : (
-                <BlocksList
-                  view={viewName}
-                  title={title}
-                  onViewChange={setViewName}
-                  onNextDate={() => setDateOffset(prev => prev + 1)}
-                  onPrevDate={() => setDateOffset(prev => prev - 1)}
-                  currentDate={currentDate}
-                  data={filteredData}
-                  category={category}
-                  onCategoryChange={setCategory}
-                  onBlockClick={handleBlockClick} />
+            <AnimatePresence mode="wait">
+              {page === "blocksData" ? (
+                <motion.div
+                  key="blocksData"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                  <BlocksDataView data={logs} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="blocks"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                  <BlocksList
+                    view={viewName}
+                    title={title}
+                    onViewChange={setViewName}
+                    onNextDate={() => setDateOffset(prev => prev + 1)}
+                    onPrevDate={() => setDateOffset(prev => prev - 1)}
+                    currentDate={currentDate}
+                    data={filteredData}
+                    category={category}
+                    onCategoryChange={setCategory}
+                    onBlockClick={handleBlockClick} />
+                </motion.div>
               )}
+            </AnimatePresence>
           </div>
         </div>
         {/* <div className='flex items-center justify-center gap-2 p-4 mb-2
