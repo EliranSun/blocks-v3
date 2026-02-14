@@ -50,6 +50,7 @@ export const Blocks = {
     DAVID: "david",
     JULIA: "julia",
     ROTEM: "rotem",
+    FRIENDS_OTHER: "other",
 
     // household
     LAUNDRY: "laundry",
@@ -183,6 +184,7 @@ export const Categories = {
             Blocks.DAVID,
             Blocks.JULIA,
             Blocks.ROTEM,
+            Blocks.FRIENDS_OTHER,
         ],
     },
     Avoid: {
