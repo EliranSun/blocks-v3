@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears } from 'date-fns';
+import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears, addMonths } from 'date-fns';
 // import { MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
 // import { CategoryButtons } from './CategoryButtons';
@@ -22,6 +22,7 @@ function App() {
   const [selectedLog, setSelectedLog] = useState(null);
   const { logs, addLog, editLog, deleteLog } = useLogsData();
   const [viewName, setViewName] = useState(Views[0]);
+  const [listScope, setListScope] = useState("all");
 
   const handleBlockClick = (item) => {
     setSelectedLog(item);
@@ -49,10 +50,15 @@ function App() {
         return addWeeks(now, dateOffset);
 
       case 'list':
+        if (listScope === 'year') return addYears(now, dateOffset);
+        if (listScope === 'month') return addMonths(now, dateOffset);
+        if (listScope === 'week') return addWeeks(now, dateOffset);
+        return now;
+
       default:
         return now;
     }
-  }, [viewName, dateOffset]);
+  }, [viewName, dateOffset, listScope]);
 
   const title = useMemo(() => {
     switch (viewName) {
@@ -69,10 +75,15 @@ function App() {
         return format(currentDate, 'EEE, MMM d, yyyy');
 
       case 'list':
+        if (listScope === 'year') return format(currentDate, 'yyyy');
+        if (listScope === 'month') return format(currentDate, 'MMMM yyyy');
+        if (listScope === 'week') return "Week " + format(currentDate, 'w') + ", " + format(currentDate, 'yyyy');
+        return '';
+
       default:
         return '';
     }
-  }, [viewName, currentDate]);
+  }, [viewName, currentDate, listScope]);
 
   const filteredData = useMemo(() => {
     if (!logs)
@@ -83,7 +94,12 @@ function App() {
       month: (itemDate) => isSameMonth(itemDate, currentDate),
       week: (itemDate) => isSameWeek(itemDate, currentDate),
       day: (itemDate) => isSameDay(itemDate, currentDate),
-      list: () => true
+      list: (itemDate) => {
+        if (listScope === 'year') return isSameYear(itemDate, currentDate);
+        if (listScope === 'month') return isSameMonth(itemDate, currentDate);
+        if (listScope === 'week') return isSameWeek(itemDate, currentDate);
+        return true;
+      }
     };
 
     const comparator = dateComparators[viewName];
@@ -97,7 +113,7 @@ function App() {
         item.category?.toLowerCase() === category?.toLowerCase()
       )
       .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [logs, viewName, currentDate, category]);
+  }, [logs, viewName, currentDate, category, listScope]);
 
   return (
     <>
@@ -187,7 +203,12 @@ function App() {
                     data={filteredData}
                     category={category}
                     onCategoryChange={setCategory}
-                    onBlockClick={handleBlockClick} />
+                    onBlockClick={handleBlockClick}
+                    listScope={listScope}
+                    onListScopeChange={(scope) => {
+                      setListScope(scope);
+                      setDateOffset(0);
+                    }} />
                 </motion.div>
               )}
             </AnimatePresence>
