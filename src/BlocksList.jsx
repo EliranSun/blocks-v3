@@ -133,6 +133,13 @@ const PopoverItem = ({ icon, label, isActive, onClick }) => (
     </motion.button>
 );
 
+const listScopeOptions = [
+    { key: "all", label: "All" },
+    { key: "year", label: "Year" },
+    { key: "month", label: "Month" },
+    { key: "week", label: "Week" },
+];
+
 export const BlocksList = ({
     view,
     onViewChange,
@@ -144,6 +151,8 @@ export const BlocksList = ({
     title,
     category,
     onCategoryChange,
+    listScope = "all",
+    onListScopeChange,
 }) => {
     const [showDate, setShowDate] = useState(false);
     const [showColorOnly, setShowColorOnly] = useState(false);
@@ -219,17 +228,21 @@ export const BlocksList = ({
         )
     }
 
+    const showNavigation = view !== 'list' || listScope !== 'all';
+
     return (
         <div className="space-y-2">
             <div className='flex gap-4 items-center w-full'>
-                <div className='flex gap-2'>
-                    <Button onClick={onPrevDate}>
-                        ←
-                    </Button>
-                    <Button onClick={onNextDate}>
-                        →
-                    </Button>
-                </div>
+                {showNavigation && (
+                    <div className='flex gap-2'>
+                        <Button onClick={onPrevDate}>
+                            ←
+                        </Button>
+                        <Button onClick={onNextDate}>
+                            →
+                        </Button>
+                    </div>
+                )}
                 <div className='spacy-y-4'>
                     <motion.h1
                         className='text-2xl merriweather-900'
@@ -245,6 +258,25 @@ export const BlocksList = ({
                     </h2>
                 </div>
             </div>
+            {view === 'list' && (
+                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
+                    {listScopeOptions.map(({ key, label }) => (
+                        <motion.button
+                            key={key}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => onListScopeChange(key)}
+                            className={classNames(
+                                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
+                                listScope === key
+                                    ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
+                                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                            )}
+                        >
+                            {label}
+                        </motion.button>
+                    ))}
+                </div>
+            )}
             <Search
                 value={searchTerm}
                 autoHide={false}
