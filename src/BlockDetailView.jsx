@@ -195,30 +195,35 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                         All entries
                     </h2>
                     <div className="space-y-1">
-                        {sortedLogs.map((log, i) => (
-                            <motion.div
-                                key={log.id ?? `${log.date}-${i}`}
-                                custom={i}
-                                variants={rowVariants}
-                                initial="hidden"
-                                animate="visible"
-                                className="flex items-start gap-3 py-2 border-b border-neutral-800"
-                            >
-                                <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
-                                    {format(new Date(log.date), "dd MMM yyyy")}
-                                </span>
-                                <div className="flex flex-col min-w-0">
-                                    {log.note && (
-                                        <span className="text-sm merriweather-400 truncate">{log.note}</span>
-                                    )}
-                                    {(log.subcategory || log.location) && (
-                                        <span className="text-xs text-neutral-400 space-grotesk-400">
-                                            {[log.subcategory, log.location].filter(Boolean).join(" · ")}
-                                        </span>
-                                    )}
-                                </div>
-                            </motion.div>
-                        ))}
+                        {sortedLogs.map((log, i) => {
+                            console.log({ log });
+                            return (
+                                <motion.div
+                                    key={log.id ?? `${log.date}-${i}`}
+                                    custom={i}
+                                    variants={rowVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    className="flex items-start gap-3 py-2 border-b border-neutral-800"
+                                >
+                                    <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
+                                        {format(new Date(log.date), "dd MMM yyyy")}
+                                    </span>
+                                    <div className="flex flex-col min-w-0">
+                                        {log.name && log.name !== log.subcategory && (
+                                            <span className="text-sm merriweather-400 truncate">
+                                                {log.name}{log.note ? ` - ${log.note}` : null}
+                                            </span>
+                                        )}
+                                        {(log.name || log.subcategory || log.location) && (
+                                            <span className="text-xs text-neutral-400 space-grotesk-400">
+                                                {[log.name, log.subcategory, log.location].filter(Boolean).join(" · ")}
+                                            </span>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            )
+                        })}
                     </div>
                 </motion.div>
             )}
