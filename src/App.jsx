@@ -9,6 +9,7 @@ import { RectangleButton } from "./Button";
 import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
 import { BlocksDataView } from './BlocksDataView';
+import { BlockDetailView } from './BlockDetailView';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,6 +17,7 @@ const Views = ["week", "list", "year"];
 
 function App() {
   const [page, setPage] = useState("");
+  const [selectedBlock, setSelectedBlock] = useState(null);
   const [dateOffset, setDateOffset] = useState(0);
   const [category, setCategory] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -151,16 +153,18 @@ function App() {
                 })}
                 onClick={() => {
                   setPage("");
+                  setSelectedBlock(null);
                 }}>
                 Blocks
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.92 }}
                 className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page !== ""
+                  "dark:text-amber-400 text-amber-600": page === "blocksData" || page === "blockDetail"
                 })}
                 onClick={() => {
                   setPage("blocksData");
+                  setSelectedBlock(null);
                 }}>
                 Data
               </motion.button>
@@ -175,7 +179,24 @@ function App() {
           </motion.div>
           <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto'>
             <AnimatePresence mode="wait">
-              {page === "blocksData" ? (
+              {page === "blockDetail" && selectedBlock ? (
+                <motion.div
+                  key="blockDetail"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                  <BlockDetailView
+                    block={selectedBlock}
+                    data={logs}
+                    onBack={() => {
+                      setPage("blocksData");
+                      setSelectedBlock(null);
+                    }}
+                  />
+                </motion.div>
+              ) : page === "blocksData" ? (
                 <motion.div
                   key="blocksData"
                   initial={{ opacity: 0, y: 20 }}
@@ -183,7 +204,13 @@ function App() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 >
-                  <BlocksDataView data={logs} />
+                  <BlocksDataView
+                    data={logs}
+                    onBlockClick={(block) => {
+                      setSelectedBlock(block);
+                      setPage("blockDetail");
+                    }}
+                  />
                 </motion.div>
               ) : (
                 <motion.div

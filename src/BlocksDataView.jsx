@@ -51,9 +51,7 @@ const blockListVariants = {
     },
 };
 
-export const BlocksDataView = ({ data = [] }) => {
-    console.log({ data });
-
+export const BlocksDataView = ({ data = [], onBlockClick }) => {
     return (
         <div className="space-y-2 pb-40">
             <motion.h1
@@ -92,14 +90,15 @@ export const BlocksDataView = ({ data = [] }) => {
                                     })
 
                                 return (
-                                    <motion.div
+                                    <motion.button
                                         key={block}
-                                        className={classNames("my-2 flex")}
+                                        className={classNames("my-2 flex w-full text-left cursor-pointer")}
                                         variants={blockRowVariants}
                                         whileHover={{ x: 4 }}
                                         transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                        onClick={() => onBlockClick?.(block)}
                                     >
-                                        <h3 className={classNames(category.color, "space-grotesk-600 w-28 font-bold uppercase")}>
+                                        <h3 className={classNames(category.color, "space-grotesk-600 w-28 font-bold uppercase shrink-0")}>
                                             {block}
                                         </h3>
                                         <div className="flex gap-1 merriweather-400">
@@ -112,7 +111,7 @@ export const BlocksDataView = ({ data = [] }) => {
                                                 </span>
                                             ) : "None"}
                                         </div>
-                                    </motion.div>
+                                    </motion.button>
                                 )
                             })}
                         </motion.div>
