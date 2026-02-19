@@ -212,7 +212,7 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                                     <div className="flex flex-col min-w-0">
                                         {log.name && log.name !== log.subcategory && (
                                             <span className="text-sm merriweather-400 truncate">
-                                                {log.name}{log.note ? ` - ${log.note}` : null}
+                                                {log.note || log.name}
                                             </span>
                                         )}
                                         {(log.name || log.subcategory || log.location) && (
