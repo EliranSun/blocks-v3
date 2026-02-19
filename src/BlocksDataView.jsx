@@ -51,7 +51,7 @@ const blockListVariants = {
     },
 };
 
-export const BlocksDataView = ({ data = [], onBlockClick }) => {
+export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => {
     return (
         <div className="space-y-2 pb-40">
             <motion.h1
@@ -71,9 +71,17 @@ export const BlocksDataView = ({ data = [], onBlockClick }) => {
                         initial="hidden"
                         animate="visible"
                     >
-                        <h2 className="text-lg uppercase py-2 font-bold underline merriweather-500">
-                            {category.name}
-                        </h2>
+                        <motion.button
+                            className="flex items-center gap-2 py-2 w-full text-left"
+                            whileHover={{ x: 3 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            onClick={() => onCategoryClick?.(category.name)}
+                        >
+                            <span className="text-base">{category.icon}</span>
+                            <h2 className={classNames("text-lg uppercase font-bold underline merriweather-500", category.color)}>
+                                {category.name}
+                            </h2>
+                        </motion.button>
                         <motion.div
                             variants={blockListVariants}
                             initial="hidden"

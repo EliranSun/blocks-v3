@@ -10,6 +10,7 @@ import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
 import { BlocksDataView } from './BlocksDataView';
 import { BlockDetailView } from './BlockDetailView';
+import { CategoryDetailView } from './CategoryDetailView';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,6 +19,8 @@ const Views = ["week", "list", "year"];
 function App() {
   const [page, setPage] = useState("");
   const [selectedBlock, setSelectedBlock] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [blockDetailPreviousPage, setBlockDetailPreviousPage] = useState("blocksData");
   const [dateOffset, setDateOffset] = useState(0);
   const [category, setCategory] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -160,11 +163,12 @@ function App() {
               <motion.button
                 whileTap={{ scale: 0.92 }}
                 className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === "blocksData" || page === "blockDetail"
+                  "dark:text-amber-400 text-amber-600": page === "blocksData" || page === "blockDetail" || page === "categoryDetail"
                 })}
                 onClick={() => {
                   setPage("blocksData");
                   setSelectedBlock(null);
+                  setSelectedCategory(null);
                 }}>
                 Data
               </motion.button>
@@ -191,8 +195,30 @@ function App() {
                     block={selectedBlock}
                     data={logs}
                     onBack={() => {
-                      setPage("blocksData");
                       setSelectedBlock(null);
+                      setPage(blockDetailPreviousPage);
+                    }}
+                  />
+                </motion.div>
+              ) : page === "categoryDetail" && selectedCategory ? (
+                <motion.div
+                  key="categoryDetail"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                  <CategoryDetailView
+                    categoryName={selectedCategory}
+                    data={logs}
+                    onBack={() => {
+                      setSelectedCategory(null);
+                      setPage("blocksData");
+                    }}
+                    onBlockClick={(block) => {
+                      setSelectedBlock(block);
+                      setBlockDetailPreviousPage("categoryDetail");
+                      setPage("blockDetail");
                     }}
                   />
                 </motion.div>
@@ -208,7 +234,12 @@ function App() {
                     data={logs}
                     onBlockClick={(block) => {
                       setSelectedBlock(block);
+                      setBlockDetailPreviousPage("blocksData");
                       setPage("blockDetail");
+                    }}
+                    onCategoryClick={(categoryName) => {
+                      setSelectedCategory(categoryName);
+                      setPage("categoryDetail");
                     }}
                   />
                 </motion.div>
