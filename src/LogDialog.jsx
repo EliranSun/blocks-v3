@@ -31,6 +31,16 @@ const TextInput = ({ name, placeholder, required, defaultValue }) => {
         required={required} />;
 };
 
+const TextArea = ({ name, placeholder, defaultValue }) => {
+    return <textarea
+        className="w-full px-3 py-2 text-base rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-all placeholder:text-neutral-400 resize-none"
+        name={name}
+        placeholder={placeholder}
+        defaultValue={defaultValue}
+        rows={4}
+    />;
+};
+
 const DateInput = ({ name, defaultValue, required }) => {
     // Adjust defaultValue to UTC+3 if provided (expecting ISO string, e.g., "2024-06-13T15:00")
     let localValue = defaultValue;
@@ -333,6 +343,16 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                     initial="hidden"
                     animate="visible"
                 >
+                    <label className="text-xs uppercase tracking-widest text-neutral-400 mb-1 font-semibold block">Thought</label>
+                    <TextArea name="thought" placeholder="Add a thought..." defaultValue={log?.thought || ''} />
+                </motion.div>
+
+                <motion.div
+                    custom={4}
+                    variants={formSectionVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
                     <label htmlFor="date" className="text-xs uppercase tracking-widest text-neutral-400 mb-1 font-semibold block">Date</label>
                     <DateInput
                         name="date"
@@ -343,7 +363,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
 
                 <motion.div
                     className="flex gap-3 w-full pt-2"
-                    custom={4}
+                    custom={5}
                     variants={formSectionVariants}
                     initial="hidden"
                     animate="visible"

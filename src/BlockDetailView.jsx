@@ -220,6 +220,11 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                                                 {[log.name, log.subcategory, log.location].filter(Boolean).join(" · ")}
                                             </span>
                                         )}
+                                        {log.thought && (
+                                            <span className="text-xs text-neutral-500 space-grotesk-400 mt-1 whitespace-pre-wrap">
+                                                {log.thought}
+                                            </span>
+                                        )}
                                     </div>
                                 </motion.div>
                             )
