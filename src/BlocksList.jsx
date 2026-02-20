@@ -148,6 +148,7 @@ export const BlocksList = ({
     onPrevDate,
     data = [],
     onBlockClick,
+    onAddBlock,
     title,
     category,
     onCategoryChange,
@@ -195,7 +196,7 @@ export const BlocksList = ({
     const renderView = () => {
         if (view === 'week') {
             return (
-                <WeekView {...sharedProps} />
+                <WeekView {...sharedProps} onAddBlock={onAddBlock} />
             );
         }
 
