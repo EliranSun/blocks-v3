@@ -37,7 +37,7 @@ const TextArea = ({ name, placeholder, defaultValue }) => {
         name={name}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        rows={4}
+        rows={6}
     />;
 };
 
