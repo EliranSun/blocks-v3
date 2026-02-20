@@ -117,7 +117,7 @@ const fireConfetti = () => {
     });
 };
 
-export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelete }) => {
+export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, onEdit, onDelete }) => {
     const initData = getInitialCategory(log);
     const [selectedCategory, setSelectedCategory] = useState(initData);
     const [blockName, setBlockName] = useState(log?.name.toLowerCase());
@@ -172,7 +172,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
 
     return (
         <Popover isOpen={isOpen}>
-            <form key={log?._id || 'new'} className="flex flex-col gap-5 overflow-y-auto h-full" onSubmit={handleSubmit}>
+            <form key={log?._id || defaultDate || 'new'} className="flex flex-col gap-5 overflow-y-auto h-full" onSubmit={handleSubmit}>
                 <motion.h2
                     className="text-2xl font-bold space-grotesk-600 tracking-tight"
                     initial={{ opacity: 0, x: -20 }}
@@ -336,7 +336,7 @@ export const LogDialog = ({ log, isOpen, onOpen, onClose, onAdd, onEdit, onDelet
                     <label htmlFor="date" className="text-xs uppercase tracking-widest text-neutral-400 mb-1 font-semibold block">Date</label>
                     <DateInput
                         name="date"
-                        defaultValue={log?.date || new Date().toISOString().slice(0, 16)}
+                        defaultValue={log?.date || defaultDate || new Date().toISOString().slice(0, 16)}
                         required
                     />
                 </motion.div>

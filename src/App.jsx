@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears, addMonths } from 'date-fns';
+import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears, addMonths, startOfDay } from 'date-fns';
 // import { MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
 // import { CategoryButtons } from './CategoryButtons';
@@ -25,6 +25,7 @@ function App() {
   const [category, setCategory] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
+  const [defaultDialogDate, setDefaultDialogDate] = useState(null);
   const { logs, addLog, editLog, deleteLog } = useLogsData();
   const [viewName, setViewName] = useState(Views[0]);
   const [listScope, setListScope] = useState("all");
@@ -37,10 +38,18 @@ function App() {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setSelectedLog(null);
+    setDefaultDialogDate(null);
   };
 
   const handleOpenAddDialog = () => {
     setSelectedLog(null);
+    setDefaultDialogDate(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleOpenAddDialogForDay = (day) => {
+    setSelectedLog(null);
+    setDefaultDialogDate(format(startOfDay(day), "yyyy-MM-dd'T'HH:mm"));
     setIsDialogOpen(true);
   };
 
@@ -126,6 +135,7 @@ function App() {
         <div className="h-full space-y-4 flex-col md:flex-row gap-4">
           <LogDialog
             log={selectedLog}
+            defaultDate={defaultDialogDate}
             isOpen={isDialogOpen}
             onOpen={handleOpenAddDialog}
             onClose={handleDialogClose}
@@ -262,6 +272,7 @@ function App() {
                     category={category}
                     onCategoryChange={setCategory}
                     onBlockClick={handleBlockClick}
+                    onAddBlock={handleOpenAddDialogForDay}
                     listScope={listScope}
                     onListScopeChange={(scope) => {
                       setListScope(scope);

@@ -29,7 +29,8 @@ const blockListVariants = {
 export const WeekView = ({ currentDate,
     data = [],
     blockProps = {},
-    onBlockClick }) => {
+    onBlockClick,
+    onAddBlock }) => {
     // Group items by day for week view
     const weekData = useMemo(() => {
         if (!currentDate) return {};
@@ -106,6 +107,16 @@ export const WeekView = ({ currentDate,
                                         />
                                     ))}
                             </motion.ul>
+                            {onAddBlock && (
+                                <motion.button
+                                    whileTap={{ scale: 0.88 }}
+                                    onClick={() => onAddBlock(day)}
+                                    className="w-full mt-1 py-0.5 text-xs text-neutral-400 dark:text-neutral-600 border border-dashed border-neutral-300 dark:border-neutral-700 rounded hover:text-neutral-600 dark:hover:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors"
+                                    title={`Add block for ${format(day, 'EEE d/MM')}`}
+                                >
+                                    +
+                                </motion.button>
+                            )}
                         </motion.div>
                     );
                 })}
