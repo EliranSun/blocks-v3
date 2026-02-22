@@ -91,7 +91,7 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
                                 const blocks = data
                                     .filter(item => {
                                         return (
-                                            item.name.toLowerCase().trim().includes(block.toLowerCase().trim()) ||
+                                            item.name.toLowerCase().trim() === block.toLowerCase().trim() ||
                                             item.category.toLowerCase().trim() === block.toLowerCase().trim() ||
                                             item.subcategory?.toLowerCase().trim() === block.toLowerCase().trim()
                                         )

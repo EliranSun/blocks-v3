@@ -27,7 +27,7 @@ const MONTHS_TO_SHOW = 24;
 
 function getBlockLogs(data, block) {
     return data.filter(item =>
-        item.name.toLowerCase().trim().includes(block.toLowerCase().trim()) ||
+        item.name.toLowerCase().trim() === block.toLowerCase().trim() ||
         item.category?.toLowerCase().trim() === block.toLowerCase().trim() ||
         item.subcategory?.toLowerCase().trim() === block.toLowerCase().trim()
     );
