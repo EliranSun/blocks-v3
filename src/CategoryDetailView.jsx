@@ -47,7 +47,7 @@ function getBlockForLog(log, blocks) {
     if (subcatMatch) return subcatMatch;
 
     const nameMatch = blocks.find(
-        b => log.name?.toLowerCase().trim().includes(b.toLowerCase().trim())
+        b => log.name?.toLowerCase().trim() === b.toLowerCase().trim()
     );
     return nameMatch ?? null;
 }
