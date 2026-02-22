@@ -154,6 +154,7 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                 <h2 className="text-xs uppercase tracking-widest text-neutral-400 mb-3 space-grotesk-400">
                     Monthly count · last {MONTHS_TO_SHOW} months
                 </h2>
+                <div className="overflow-hidden w-full">
                 <ResponsiveContainer width="100%" height={180}>
                     <BarChart data={monthlyData} margin={{ top: 0, right: 0, left: -28, bottom: 0 }}>
                         <XAxis
@@ -182,6 +183,7 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
+                </div>
             </motion.div>
 
             {/* Log entries */}

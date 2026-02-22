@@ -53,7 +53,7 @@ const DateInput = ({ name, defaultValue, required }) => {
 
     return (
         <input
-            className="w-full h-10 px-3 text-base rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-all"
+            className="w-full min-w-0 h-10 px-3 text-base rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-all"
             type="datetime-local"
             name={name}
             defaultValue={localValue}
@@ -182,7 +182,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
 
     return (
         <Popover isOpen={isOpen}>
-            <form key={log?._id || defaultDate || 'new'} className="flex flex-col gap-5 overflow-y-auto h-full" onSubmit={handleSubmit}>
+            <form key={log?._id || defaultDate || 'new'} className="flex flex-col gap-5 overflow-y-auto overflow-x-hidden h-full" onSubmit={handleSubmit}>
                 <motion.h2
                     className="text-2xl font-bold space-grotesk-600 tracking-tight"
                     initial={{ opacity: 0, x: -20 }}

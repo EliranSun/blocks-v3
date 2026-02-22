@@ -191,7 +191,7 @@ function App() {
               Add block
             </RectangleButton>
           </motion.div>
-          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto'>
+          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden'>
             <AnimatePresence mode="wait">
               {page === "blockDetail" && selectedBlock ? (
                 <motion.div

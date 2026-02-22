@@ -109,9 +109,9 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
                                         <h3 className={classNames(category.color, "space-grotesk-600 w-28 font-bold uppercase shrink-0")}>
                                             {block}
                                         </h3>
-                                        <div className="flex gap-1 merriweather-400">
+                                        <div className="flex gap-1 merriweather-400 min-w-0 overflow-hidden">
                                             {blocks.length ? (
-                                                <span className="">
+                                                <span className="truncate">
                                                     {[
                                                         timeAgo(blocks.at(0)?.date),
                                                         blocks.length + " times"
