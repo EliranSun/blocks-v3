@@ -18,7 +18,7 @@ export const Popover = ({ children, isOpen }) => {
                             "fixed inset-0 m-auto rounded-2xl",
                             "shadow-xl bg-white/90 dark:bg-neutral-900/90",
                             "backdrop-blur-xl border border-neutral-200/60 dark:border-neutral-700/60",
-                            "p-5 w-full md:h-11/12 max-w-xl z-50",
+                            "p-5 w-full md:h-11/12 max-w-xl z-50 overflow-hidden",
                         )}
                         initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
