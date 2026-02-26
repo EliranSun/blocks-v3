@@ -22,7 +22,7 @@ export const useLogsData = () => {
                 if (!res.ok) throw new Error("Failed to add log");
                 return res.json();
             })
-            .then(() => setLogs(prev => [...prev, data]))
+            .then(createdLog => setLogs(prev => [...prev, createdLog]))
             .catch(console.error);
     }, []);
 
