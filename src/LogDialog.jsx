@@ -182,7 +182,8 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
 
     return (
         <Popover isOpen={isOpen}>
-            <form key={log?._id || defaultDate || 'new'} className="flex flex-col gap-5 overflow-y-auto overflow-x-hidden h-full" onSubmit={handleSubmit}>
+            <form key={log?._id || defaultDate || 'new'} className="flex flex-col h-full" onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-5 overflow-y-auto overflow-x-hidden flex-1 pb-2">
                 <motion.h2
                     className="text-2xl font-bold space-grotesk-600 tracking-tight"
                     initial={{ opacity: 0, x: -20 }}
@@ -360,9 +361,10 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                         required
                     />
                 </motion.div>
+                </div>
 
                 <motion.div
-                    className="flex gap-3 w-full pt-2"
+                    className="flex gap-3 w-full pt-3"
                     custom={5}
                     variants={formSectionVariants}
                     initial="hidden"
