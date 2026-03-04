@@ -42,6 +42,7 @@ export const Blocks = {
     SHACHAR: "shachar",
     OFEK: "ofek",
     YAHEL: "yahel",
+    BAR_ZAKAI: "bar zakai",
 
     // friends
     MAYA: "maya",
@@ -172,6 +173,7 @@ export const Categories = {
             Blocks.SHACHAR,
             Blocks.OFEK,
             Blocks.YAHEL,
+            Blocks.BAR_ZAKAI,
         ],
     },
     Friends: {
