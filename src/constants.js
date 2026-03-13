@@ -198,7 +198,7 @@ export const Categories = {
         icon: "🚫",
         bgColor: "bg-zinc-500",
         color: "text-zinc-500",
-        blocks: [Blocks.DOOM_SCROLL, Blocks.SICK, Blocks.PORN],
+        blocks: [Blocks.DOOM_SCROLL, Blocks.SICK, Blocks.PORN, Blocks.GRUNT],
         subcategories: []
     },
     // Testosterone: { name: "Testosterone", icon: "⚡️", subcategories: [] },
