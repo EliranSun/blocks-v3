@@ -228,6 +228,79 @@ export const CategoryBgColors = {
     avoid: "bg-gray-500",
 };
 
+export const BlockIcons = {
+    // wife
+    "date": "💑",
+    "trip": "✈️",
+    "gestures": "💐",
+    "sex": "🔥",
+    "grunt": "😤",
+    // creative
+    "play": "🎮",
+    "read": "📖",
+    "code": "💻",
+    "watch": "📺",
+    "draw": "✏️",
+    "css": "🎨",
+    // health
+    "fat": "📊",
+    "weight": "⚖️",
+    "physio": "🦴",
+    "yoga": "🧘",
+    "power": "💪",
+    "cardio": "🏃",
+    "therapy": "🧠",
+    "massage": "💆",
+    // family
+    "dad": "👨",
+    "mom": "👩",
+    "grandma": "👵",
+    "grandpa": "👴",
+    "or": "👦",
+    "sahar": "👧",
+    "shachar": "👦",
+    "ofek": "👦",
+    "yahel": "👧",
+    "bar zakai": "👶",
+    // friends
+    "maya": "👩",
+    "odelia": "👩",
+    "nati": "👨",
+    "ofir": "👨",
+    "david": "👨",
+    "julia": "👩",
+    "rotem": "👩",
+    "other": "👥",
+    // household
+    "laundry": "🧺",
+    "cook": "🍳",
+    "organize": "📦",
+    "clean": "🧹",
+    "towels": "🧻",
+    "sheets": "🛏️",
+    "plants": "🌱",
+    "dishes": "🍽️",
+    "groceries": "🛒",
+    // avoid
+    "doom scroll": "📱",
+    "sick": "🤒",
+    "porn": "🚫",
+    // mood (emoji names map to themselves)
+    "😀": "😀",
+    "🙂": "🙂",
+    "😐": "😐",
+    "🙁": "🙁",
+    "😭": "😭",
+};
+
+export const MoodLabels = {
+    "😀": "Great",
+    "🙂": "Good",
+    "😐": "Okay",
+    "🙁": "Bad",
+    "😭": "Awful",
+};
+
 export const MonthNotes = {
     "2026-02": "Dad to Noga; Pre-Tikal; CSS prototype",
     "2026-01": "Noga's Birth 🥰; Grandpa's Death 😢",
