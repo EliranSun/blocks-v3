@@ -229,7 +229,7 @@ export const CategoryBgColors = {
 };
 
 export const MonthNotes = {
-    "2026-03": "Tikal, Elementor & the Great ...",
+    "2026-03": "Tikal, Elementor & the 'Great' Plateau",
     "2026-02": "Dad to Noga; Pre-Tikal; CSS prototype",
     "2026-01": "Noga's Birth 🥰; Grandpa's Death 😢",
     "2025-12": "Job Hunt + GameIS Petition",
