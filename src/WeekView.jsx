@@ -83,18 +83,18 @@ export const WeekView = ({
                         <div key={format(day, 'yyyy-MM-dd')} className="flex flex-col items-center gap-0.5">
                             <span className={classNames(
                                 "text-[10px] font-semibold tracking-wide",
-                                today ? "text-blue-400" : "text-neutral-500"
+                                today ? "text-blue-500 dark:text-blue-400" : "text-neutral-400 dark:text-neutral-500"
                             )}>
                                 {format(day, 'EEE').toUpperCase()}
                             </span>
                             <span className={classNames(
                                 "text-lg font-bold",
-                                today ? "text-blue-400" : "text-neutral-200"
+                                today ? "text-blue-500 dark:text-blue-400" : "text-neutral-700 dark:text-neutral-200"
                             )}>
                                 {format(day, 'd')}
                             </span>
                             {today && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400" />
                             )}
                         </div>
                     );
@@ -115,7 +115,7 @@ export const WeekView = ({
                         {row.cells.map((cell, colIndex) => {
                             const bgColor = cell.logged
                                 ? CategoryBgColors[row.category?.toLowerCase()] || "bg-neutral-600"
-                                : "bg-neutral-800";
+                                : "bg-neutral-200 dark:bg-neutral-800";
 
                             return (
                                 <motion.button
@@ -132,7 +132,7 @@ export const WeekView = ({
                                         "w-10 h-10 rounded-full flex flex-col items-center justify-center",
                                         "text-sm transition-colors",
                                         bgColor,
-                                        cell.logged ? "text-white shadow-md" : "text-neutral-600"
+                                        cell.logged ? "text-white shadow-md" : "text-neutral-400 dark:text-neutral-600"
                                     )}
                                     title={cell.logged ? `${row.name} - ${format(cell.day, 'EEE d')}` : `Add for ${format(cell.day, 'EEE d')}`}
                                 >
@@ -145,7 +145,7 @@ export const WeekView = ({
                         {/* Show label below first logged cell in the row */}
                         {rowIndex < 3 && (
                             <div className="col-span-7 -mt-2">
-                                <span className="text-[8px] text-neutral-500 font-semibold tracking-wider uppercase ml-1">
+                                <span className="text-[8px] text-neutral-400 dark:text-neutral-500 font-semibold tracking-wider uppercase ml-1">
                                     {row.name}
                                 </span>
                             </div>
@@ -161,7 +161,7 @@ export const WeekView = ({
                                 key={format(day, 'yyyy-MM-dd') + '-add'}
                                 whileTap={{ scale: 0.88 }}
                                 onClick={() => onAddBlock(day)}
-                                className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-600 hover:text-neutral-400 hover:bg-neutral-700 transition-colors"
+                                className="w-10 h-10 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center text-neutral-400 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
                                 title={`Add block for ${format(day, 'EEE d')}`}
                             >
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">

@@ -169,7 +169,7 @@ function App() {
 
                     {/* FAB */}
                     <motion.button
-                        className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center z-50"
+                        className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg dark:shadow-lg flex items-center justify-center z-50"
                         whileTap={{ scale: 0.9 }}
                         whileHover={{ scale: 1.05 }}
                         onClick={handleOpenAddDialog}
@@ -184,7 +184,7 @@ function App() {
                     <motion.div
                         className={classNames(
                             "fixed bottom-5 inset-x-0 flex justify-around items-center",
-                            "bg-neutral-800 rounded-full",
+                            "bg-white dark:bg-neutral-800 rounded-full",
                             "shadow-lg px-2 py-3 max-w-sm mx-auto",
                         )}
                         initial={{ y: 80, opacity: 0 }}
@@ -195,7 +195,7 @@ function App() {
                             whileTap={{ scale: 0.88 }}
                             className={classNames(
                                 "p-2 rounded-full transition-colors",
-                                activeNav === "home" ? "text-white" : "text-neutral-500"
+                                activeNav === "home" ? "text-neutral-900 dark:text-white" : "text-neutral-400 dark:text-neutral-500"
                             )}
                             onClick={() => {
                                 setPage("");
@@ -209,7 +209,7 @@ function App() {
                             whileTap={{ scale: 0.88 }}
                             className={classNames(
                                 "p-2 rounded-full transition-colors",
-                                activeNav === "stats" ? "text-white" : "text-neutral-500"
+                                activeNav === "stats" ? "text-neutral-900 dark:text-white" : "text-neutral-400 dark:text-neutral-500"
                             )}
                             onClick={() => {
                                 setPage("blocksData");
@@ -221,7 +221,7 @@ function App() {
                         </motion.button>
                         <motion.button
                             whileTap={{ scale: 0.88 }}
-                            className="p-2 text-neutral-500 hover:text-white transition-colors"
+                            className="p-2 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
                             onClick={handleOpenAddDialog}
                         >
                             <PlusIcon />
@@ -230,7 +230,7 @@ function App() {
                             whileTap={{ scale: 0.88 }}
                             className={classNames(
                                 "p-2 rounded-full transition-colors",
-                                viewName === "year" && page === "" ? "text-white" : "text-neutral-500"
+                                viewName === "year" && page === "" ? "text-neutral-900 dark:text-white" : "text-neutral-400 dark:text-neutral-500"
                             )}
                             onClick={() => {
                                 setPage("");
@@ -242,7 +242,7 @@ function App() {
                         </motion.button>
                         <motion.button
                             whileTap={{ scale: 0.88 }}
-                            className="p-2 text-neutral-500 hover:text-white transition-colors"
+                            className="p-2 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
                         >
                             <ProfileIcon />
                         </motion.button>

@@ -54,16 +54,16 @@ export const CompletionCard = ({ weekData = [], allLogs = [], currentDate }) => 
             variants={cardVariants}
             initial="hidden"
             animate="visible"
-            className="bg-neutral-800/80 rounded-2xl p-5"
+            className="bg-neutral-100 dark:bg-neutral-800/80 rounded-2xl p-5"
         >
-            <p className="text-neutral-500 text-xs font-semibold tracking-wider uppercase mb-2">
+            <p className="text-neutral-400 dark:text-neutral-500 text-xs font-semibold tracking-wider uppercase mb-2">
                 Completion
             </p>
             <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-amber-400">
+                <span className="text-4xl font-bold text-amber-500 dark:text-amber-400">
                     {percentage}%
                 </span>
-                <span className={`text-sm ${diff >= 0 ? "text-green-400" : "text-red-400"}`}>
+                <span className={`text-sm ${diff >= 0 ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"}`}>
                     {diff >= 0 ? "+" : ""}{diff}% vs LW
                 </span>
             </div>
@@ -96,18 +96,18 @@ export const TopMoodCard = ({ weekData = [] }) => {
             variants={cardVariants}
             initial="hidden"
             animate="visible"
-            className="bg-neutral-800/80 rounded-2xl p-5"
+            className="bg-neutral-100 dark:bg-neutral-800/80 rounded-2xl p-5"
         >
-            <p className="text-neutral-500 text-xs font-semibold tracking-wider uppercase mb-2">
+            <p className="text-neutral-400 dark:text-neutral-500 text-xs font-semibold tracking-wider uppercase mb-2">
                 Top Mood
             </p>
             <div className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-full bg-amber-900/50 flex items-center justify-center text-xl">
+                <span className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center text-xl">
                     {topMood.emoji}
                 </span>
                 <div>
-                    <p className="text-white font-semibold">{topMood.label}</p>
-                    <p className="text-neutral-500 text-xs">{topMood.count} days this week</p>
+                    <p className="text-neutral-800 dark:text-white font-semibold">{topMood.label}</p>
+                    <p className="text-neutral-400 dark:text-neutral-500 text-xs">{topMood.count} days this week</p>
                 </div>
             </div>
         </motion.div>
