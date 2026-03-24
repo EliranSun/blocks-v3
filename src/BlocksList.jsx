@@ -280,7 +280,6 @@ export const BlocksList = ({
                             value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);
-                                if (e.target.value.length > 0) onViewChange("list");
                             }}
                             placeholder="Search habits or mood..."
                             className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600"
@@ -374,7 +373,6 @@ export const BlocksList = ({
                             value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);
-                                if (e.target.value.length > 0) onViewChange("list");
                             }}
                             placeholder="Search..."
                             className="w-full pl-10 pr-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
