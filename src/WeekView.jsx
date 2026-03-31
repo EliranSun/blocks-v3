@@ -1,15 +1,16 @@
 import { useMemo } from "react";
-import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
-import { Block } from "./Block";
+import { format, startOfWeek, eachDayOfInterval, isSameDay, isToday } from "date-fns";
+import { BlockIcons, CategoryBgColors } from "./constants";
 import { motion } from "framer-motion";
+import classNames from "classnames";
 
-const dayColumnVariants = {
-    hidden: { opacity: 0, y: 16 },
+const rowVariants = {
+    hidden: { opacity: 0, y: 10 },
     visible: (i) => ({
         opacity: 1,
         y: 0,
         transition: {
-            delay: i * 0.05,
+            delay: i * 0.04,
             type: "spring",
             damping: 20,
             stiffness: 300,
@@ -17,107 +18,110 @@ const dayColumnVariants = {
     }),
 };
 
-const blockListVariants = {
-    hidden: {},
-    visible: {
-        transition: {
-            staggerChildren: 0.03,
-        },
-    },
-};
-
-export const WeekView = ({ currentDate,
+export const WeekView = ({
+    currentDate,
     data = [],
-    blockProps = {},
     onBlockClick,
-    onAddBlock }) => {
-    // Group items by day for week view
+    onAddBlock,
+}) => {
     const weekData = useMemo(() => {
-        if (!currentDate) return {};
+        if (!currentDate) return { weekDays: [], rows: [] };
 
-        // Get the week range (Sunday to Saturday)
         const baseDate = currentDate instanceof Date ? currentDate : new Date(currentDate);
-        const weekStart = startOfWeek(baseDate, { weekStartsOn: 0 });
+        const weekStart = startOfWeek(baseDate, { weekStartsOn: 1 });
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 6);
-
-        // Create array of all days in the week
         const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
-        // Group items by day
-        const grouped = {};
+        // Group data by day
+        const dayMap = {};
         weekDays.forEach(day => {
-            grouped[format(day, 'yyyy-MM-dd')] = data.filter(item => {
-                const itemDate = new Date(item.date);
-                return isSameDay(itemDate, day);
-            });
+            dayMap[format(day, 'yyyy-MM-dd')] = [];
+        });
+        data.forEach(item => {
+            const key = format(new Date(item.date), 'yyyy-MM-dd');
+            if (dayMap[key]) {
+                dayMap[key].push(item);
+            }
         });
 
-        return { weekDays, grouped };
+        // Build day columns: each day has its list of logged blocks
+        const dayColumns = weekDays.map(day => {
+            const dayKey = format(day, 'yyyy-MM-dd');
+            const items = (dayMap[dayKey] || []).map(item => ({
+                ...item,
+                icon: BlockIcons[item.name] || item.name.charAt(0).toUpperCase(),
+            }));
+            return { day, dayKey, items };
+        });
+
+        return { weekDays, dayColumns };
     }, [currentDate, data]);
 
     return (
         <div className="space-grotesk-400">
-            <div className="grid grid-cols-7  gap-1 w-full overflow-x-auto">
-                {weekData.weekDays?.map((day, index) => {
-                    const dayKey = format(day, 'yyyy-MM-dd');
-                    const dayItems = weekData.grouped[dayKey] || [];
+            {/* Day columns with headers and blocks */}
+            <div className="grid grid-cols-7 gap-1">
+                {weekData.dayColumns?.map(({ day, dayKey, items }, colIndex) => {
+                    const today = isToday(day);
                     return (
-                        <motion.div
-                            key={dayKey}
-                            className="flex-1"
-                            custom={index}
-                            variants={dayColumnVariants}
-                            initial="hidden"
-                            animate="visible"
-                        >
-                            <div className="font-semibold text-xs mb-2 text-center border-b pb-1">
-                                {format(day, 'EEE')}
-                                <br />
-                                <span className="text-gray-500">{format(day, 'd/MM')}</span>
-                            </div>
-                            <motion.ul
-                                className="space-y-1"
-                                variants={blockListVariants}
-                                initial="hidden"
-                                animate="visible"
-                            >
-                                {dayItems
-                                    .sort((a, b) => {
-                                        // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
-                                        const getTime = (dateStr) => {
-                                            if (dateStr.includes('T')) {
-                                                // Has time component
-                                                const timePart = dateStr.split('T')[1];
-                                                const [hours, minutes] = timePart.split(':').map(Number);
-                                                return hours * 60 + (minutes || 0); // Convert to minutes for easier comparison
-                                            }
-                                            // No time component, treat as midnight (00:00)
-                                            return 0;
-                                        };
-                                        return getTime(a.date) - getTime(b.date);
-                                    })
-                                    .map(item => (
-                                        <Block
-                                            key={item.date + item.name}
-                                            item={item}
-                                            variant="week"
-                                            {...blockProps}
-                                            onClick={onBlockClick}
-                                        />
-                                    ))}
-                            </motion.ul>
+                        <div key={dayKey} className="flex flex-col items-center gap-1.5">
+                            {/* Day header */}
+                            <span className={classNames(
+                                "text-[10px] font-semibold tracking-wide",
+                                today ? "text-blue-500 dark:text-blue-400" : "text-neutral-400 dark:text-neutral-500"
+                            )}>
+                                {format(day, 'EEE').toUpperCase()}
+                            </span>
+                            <span className={classNames(
+                                "text-lg font-bold",
+                                today ? "text-blue-500 dark:text-blue-400" : "text-neutral-700 dark:text-neutral-200"
+                            )}>
+                                {format(day, 'd')}
+                            </span>
+                            {today && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400" />
+                            )}
+
+                            {/* Blocks for this day */}
+                            {items.map((item, i) => {
+                                const bgColor = CategoryBgColors[item.category?.toLowerCase()] || "bg-neutral-600";
+                                return (
+                                    <motion.button
+                                        key={`${item.name}-${dayKey}`}
+                                        variants={rowVariants}
+                                        custom={colIndex}
+                                        initial="hidden"
+                                        animate="visible"
+                                        whileTap={{ scale: 0.88 }}
+                                        onClick={() => onBlockClick && onBlockClick(item)}
+                                        className={classNames(
+                                            "w-10 h-10 rounded-full flex items-center justify-center",
+                                            "text-sm transition-colors text-white shadow-md",
+                                            bgColor,
+                                        )}
+                                        title={`${item.name} - ${format(day, 'EEE d')}`}
+                                    >
+                                        <span className="text-base leading-none">{item.icon}</span>
+                                    </motion.button>
+                                );
+                            })}
+
+                            {/* Add button */}
                             {onAddBlock && (
                                 <motion.button
                                     whileTap={{ scale: 0.88 }}
                                     onClick={() => onAddBlock(day)}
-                                    className="w-full mt-1 py-0.5 text-xs text-neutral-400 dark:text-neutral-600 border border-dashed border-neutral-300 dark:border-neutral-700 rounded hover:text-neutral-600 dark:hover:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors"
-                                    title={`Add block for ${format(day, 'EEE d/MM')}`}
+                                    className="w-10 h-10 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center text-neutral-400 dark:text-neutral-600 hover:text-neutral-500 dark:hover:text-neutral-400 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
+                                    title={`Add block for ${format(day, 'EEE d')}`}
                                 >
-                                    +
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="8" y1="3" x2="8" y2="13" />
+                                        <line x1="3" y1="8" x2="13" y2="8" />
+                                    </svg>
                                 </motion.button>
                             )}
-                        </motion.div>
+                        </div>
                     );
                 })}
             </div>

@@ -1,11 +1,11 @@
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
 import { Block } from "./Block";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Search } from './Search';
+import { useMemo, useRef, useState, useEffect } from "react";
 import { RectangleButton, Button } from "./Button";
 import { format } from "date-fns";
 import { Categories, MonthNotes } from './constants';
+import { CompletionCard, TopMoodCard } from "./WeekSummaryCards";
 import classNames from "classnames";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -18,28 +18,12 @@ const viewOptions = [
 ];
 
 const dropdownVariants = {
-    hidden: {
-        opacity: 0,
-        scale: 0.92,
-        y: -4,
-    },
+    hidden: { opacity: 0, scale: 0.92, y: -4 },
     visible: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: {
-            type: "spring",
-            damping: 22,
-            stiffness: 400,
-            staggerChildren: 0.03,
-        },
+        opacity: 1, scale: 1, y: 0,
+        transition: { type: "spring", damping: 22, stiffness: 400, staggerChildren: 0.03 },
     },
-    exit: {
-        opacity: 0,
-        scale: 0.95,
-        y: -4,
-        transition: { duration: 0.12 },
-    },
+    exit: { opacity: 0, scale: 0.95, y: -4, transition: { duration: 0.12 } },
 };
 
 const dropdownItemVariants = {
@@ -49,11 +33,7 @@ const dropdownItemVariants = {
 
 const listContainerVariants = {
     hidden: {},
-    visible: {
-        transition: {
-            staggerChildren: 0.025,
-        },
-    },
+    visible: { transition: { staggerChildren: 0.025 } },
 };
 
 const ToolbarPopover = ({ label, isActive, children }) => {
@@ -140,6 +120,13 @@ const listScopeOptions = [
     { key: "week", label: "Week" },
 ];
 
+const SearchIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+);
+
 export const BlocksList = ({
     view,
     onViewChange,
@@ -147,6 +134,7 @@ export const BlocksList = ({
     onNextDate,
     onPrevDate,
     data = [],
+    allLogs = [],
     onBlockClick,
     onAddBlock,
     title,
@@ -175,42 +163,49 @@ export const BlocksList = ({
                 );
             });
         }
-
         return data;
     }, [data, searchTerm]);
 
     const blockAlterProps = {
-        showDate: showDate,
-        showNote: showNote,
-        showColorOnly: showColorOnly,
-        showSubcategory: showSubcategory,
+        showDate,
+        showNote,
+        showColorOnly,
+        showSubcategory,
     };
 
     const sharedProps = {
         blockProps: blockAlterProps,
-        currentDate: currentDate,
+        currentDate,
         data: filteredData,
-        onBlockClick: onBlockClick,
+        onBlockClick,
     };
 
+    const isWeekView = view === 'week';
+
     const renderView = () => {
-        if (view === 'week') {
+        if (isWeekView) {
             return (
-                <WeekView {...sharedProps} onAddBlock={onAddBlock} />
+                <>
+                    <WeekView {...sharedProps} onAddBlock={onAddBlock} />
+                    <div className="space-y-3 mt-6">
+                        <CompletionCard
+                            weekData={filteredData}
+                            allLogs={allLogs}
+                            currentDate={currentDate}
+                        />
+                        <TopMoodCard weekData={filteredData} />
+                    </div>
+                </>
             );
         }
 
         if (view === 'year') {
-            return (
-                <YearView {...sharedProps} />
-            );
+            return <YearView {...sharedProps} />;
         }
 
         return (
             <motion.ul
-                className={classNames('flex flex-wrap', {
-                    "gap-2": !showColorOnly
-                })}
+                className={classNames('flex flex-wrap', { "gap-2": !showColorOnly })}
                 variants={listContainerVariants}
                 initial="hidden"
                 animate="visible"
@@ -226,129 +221,216 @@ export const BlocksList = ({
                     />
                 )}
             </motion.ul>
-        )
-    }
+        );
+    };
 
     const showNavigation = view !== 'list' || listScope !== 'all';
 
     return (
-        <div className="space-y-2">
-            <div className='flex gap-4 items-center w-full'>
-                {showNavigation && (
-                    <div className='flex gap-2'>
-                        <Button onClick={onPrevDate}>
-                            ←
-                        </Button>
-                        <Button onClick={onNextDate}>
-                            →
-                        </Button>
+        <div className="space-y-3">
+            {/* Header */}
+            {isWeekView ? (
+                <>
+                    {/* Week view header: search icon, centered nav, avatar */}
+                    <div className="flex items-center justify-between">
+                        <button className="text-neutral-400 hover:text-white transition-colors p-1">
+                            <SearchIcon />
+                        </button>
+                        <div className="flex items-center gap-3">
+                            <motion.button
+                                whileTap={{ scale: 0.88 }}
+                                onClick={onPrevDate}
+                                className="text-neutral-400 hover:text-white transition-colors"
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                            </motion.button>
+                            <motion.h1
+                                className="text-lg font-bold text-white"
+                                key={title}
+                                initial={{ opacity: 0, y: -6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                            >
+                                {title}
+                            </motion.h1>
+                            <motion.button
+                                whileTap={{ scale: 0.88 }}
+                                onClick={onNextDate}
+                                className="text-neutral-400 hover:text-white transition-colors"
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </motion.button>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center">
+                            <span className="text-xs">👤</span>
+                        </div>
                     </div>
-                )}
-                <div className='spacy-y-4'>
-                    <motion.h1
-                        className='text-2xl merriweather-900'
-                        key={title}
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                    >
-                        {title}
-                    </motion.h1>
-                    <h2 className='text-gray-400 text-xs'>
-                        {MonthNotes[format(currentDate, 'yyyy-MM')]}
-                    </h2>
-                </div>
-            </div>
-            {view === 'list' && (
-                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
-                    {listScopeOptions.map(({ key, label }) => (
+
+                    {/* Search bar */}
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+                            <SearchIcon />
+                        </span>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                            }}
+                            placeholder="Search habits or mood..."
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600"
+                        />
+                    </div>
+
+                    {/* Category filter pills */}
+                    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                         <motion.button
-                            key={key}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => onListScopeChange(key)}
+                            onClick={() => onCategoryChange(null)}
                             className={classNames(
-                                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
-                                listScope === key
-                                    ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
-                                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
+                                !category
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700"
                             )}
                         >
-                            {label}
+                            All
                         </motion.button>
-                    ))}
-                </div>
-            )}
-            <Search
-                value={searchTerm}
-                autoHide={false}
-                onInputChange={input => {
-                    setSearchTerm(input);
-                    if (input.length > 0) onViewChange("list");
-                }} />
-            <div className="flex gap-2 items-center">
-                <div className="flex gap-2 items-center">
-                    <ToolbarPopover
-                        label={viewOptions.find(v => v.key === view)?.icon || "📃"}
-                        isActive={false}
-                    >
-                        {viewOptions.map(({ key, icon, label }) => (
-                            <PopoverItem
-                                key={key}
-                                icon={icon}
-                                label={label}
-                                isActive={view === key}
-                                onClick={() => onViewChange(key)}
-                            />
-                        ))}
-                    </ToolbarPopover>
-                    <ToolbarPopover
-                        label={category
-                            ? categoryList.find(c => c.name === category)?.icon
-                            : "All"
-                        }
-                        isActive={!!category}
-                    >
-                        <PopoverItem
-                            icon="*"
-                            label="All"
-                            isActive={!category}
-                            onClick={() => onCategoryChange(null)}
-                        />
                         {categoryList.map(({ name, icon }) => (
-                            <PopoverItem
+                            <motion.button
                                 key={name}
-                                icon={icon}
-                                label={name.charAt(0).toUpperCase() + name.slice(1)}
-                                isActive={category === name}
+                                whileTap={{ scale: 0.95 }}
                                 onClick={() => onCategoryChange(category === name ? null : name)}
-                            />
+                                className={classNames(
+                                    "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
+                                    category === name
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700"
+                                )}
+                            >
+                                {name.charAt(0).toUpperCase() + name.slice(1)}
+                            </motion.button>
                         ))}
-                    </ToolbarPopover>
-                </div>
-                <div className="w-px h-6 bg-neutral-300 dark:bg-neutral-600 mx-1" />
-                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
-                    <RectangleButton
-                        isActive={showDate}
-                        onClick={() => setShowDate(!showDate)}>
-                        📆
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={showNote}
-                        onClick={() => setShowNote(!showNote)}>
-                        📒
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={showColorOnly}
-                        onClick={() => setShowColorOnly(!showColorOnly)}>
-                        🦄
-                    </RectangleButton>
-                    <RectangleButton
-                        isActive={showSubcategory}
-                        onClick={() => setShowSubcategory(!showSubcategory)}>
-                        📁
-                    </RectangleButton>
-                </div>
-            </div>
+                    </div>
+                </>
+            ) : (
+                <>
+                    {/* Non-week header (original style) */}
+                    <div className="flex gap-4 items-center w-full">
+                        {showNavigation && (
+                            <div className="flex gap-2">
+                                <Button onClick={onPrevDate}>←</Button>
+                                <Button onClick={onNextDate}>→</Button>
+                            </div>
+                        )}
+                        <div className="spacy-y-4">
+                            <motion.h1
+                                className="text-2xl merriweather-900"
+                                key={title}
+                                initial={{ opacity: 0, y: -8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                            >
+                                {title}
+                            </motion.h1>
+                            <h2 className="text-gray-400 text-xs">
+                                {MonthNotes[format(currentDate, 'yyyy-MM')]}
+                            </h2>
+                        </div>
+                    </div>
+
+                    {view === 'list' && (
+                        <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
+                            {listScopeOptions.map(({ key, label }) => (
+                                <motion.button
+                                    key={key}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => onListScopeChange(key)}
+                                    className={classNames(
+                                        "px-3 py-1 text-xs font-medium rounded-md transition-colors",
+                                        listScope === key
+                                            ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
+                                            : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                    )}
+                                >
+                                    {label}
+                                </motion.button>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Search for non-week views */}
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+                            <SearchIcon />
+                        </span>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                            }}
+                            placeholder="Search..."
+                            className="w-full pl-10 pr-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+                        />
+                    </div>
+
+                    {/* Toolbar (non-week views) */}
+                    <div className="flex gap-2 items-center">
+                        <div className="flex gap-2 items-center">
+                            <ToolbarPopover
+                                label={viewOptions.find(v => v.key === view)?.icon || "📃"}
+                                isActive={false}
+                            >
+                                {viewOptions.map(({ key, icon, label }) => (
+                                    <PopoverItem
+                                        key={key}
+                                        icon={icon}
+                                        label={label}
+                                        isActive={view === key}
+                                        onClick={() => onViewChange(key)}
+                                    />
+                                ))}
+                            </ToolbarPopover>
+                            <ToolbarPopover
+                                label={category
+                                    ? categoryList.find(c => c.name === category)?.icon
+                                    : "All"
+                                }
+                                isActive={!!category}
+                            >
+                                <PopoverItem
+                                    icon="*"
+                                    label="All"
+                                    isActive={!category}
+                                    onClick={() => onCategoryChange(null)}
+                                />
+                                {categoryList.map(({ name, icon }) => (
+                                    <PopoverItem
+                                        key={name}
+                                        icon={icon}
+                                        label={name.charAt(0).toUpperCase() + name.slice(1)}
+                                        isActive={category === name}
+                                        onClick={() => onCategoryChange(category === name ? null : name)}
+                                    />
+                                ))}
+                            </ToolbarPopover>
+                        </div>
+                        <div className="w-px h-6 bg-neutral-300 dark:bg-neutral-600 mx-1" />
+                        <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
+                            <RectangleButton isActive={showDate} onClick={() => setShowDate(!showDate)}>📆</RectangleButton>
+                            <RectangleButton isActive={showNote} onClick={() => setShowNote(!showNote)}>📒</RectangleButton>
+                            <RectangleButton isActive={showColorOnly} onClick={() => setShowColorOnly(!showColorOnly)}>🦄</RectangleButton>
+                            <RectangleButton isActive={showSubcategory} onClick={() => setShowSubcategory(!showSubcategory)}>📁</RectangleButton>
+                        </div>
+                    </div>
+                </>
+            )}
+
             <AnimatePresence mode="wait">
                 <motion.div
                     key={view}
@@ -362,5 +444,5 @@ export const BlocksList = ({
                 </motion.div>
             </AnimatePresence>
         </div>
-    )
-}
+    );
+};
