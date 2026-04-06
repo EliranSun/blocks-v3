@@ -11,6 +11,7 @@ import { LogDialog } from "./LogDialog";
 import { BlocksDataView } from './BlocksDataView';
 import { BlockDetailView } from './BlockDetailView';
 import { CategoryDetailView } from './CategoryDetailView';
+import { InsightsView } from './InsightsView';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -182,6 +183,18 @@ function App() {
                 }}>
                 Data
               </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.92 }}
+                className={classNames('underline', {
+                  "dark:text-amber-400 text-amber-600": page === "insights"
+                })}
+                onClick={() => {
+                  setPage("insights");
+                  setSelectedBlock(null);
+                  setSelectedCategory(null);
+                }}>
+                Insights
+              </motion.button>
             </div>
             <RectangleButton
               isActive
@@ -229,6 +242,27 @@ function App() {
                       setSelectedBlock(block);
                       setBlockDetailPreviousPage("categoryDetail");
                       setPage("blockDetail");
+                    }}
+                  />
+                </motion.div>
+              ) : page === "insights" ? (
+                <motion.div
+                  key="insights"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                  <InsightsView
+                    data={logs}
+                    onBlockClick={(block) => {
+                      setSelectedBlock(block);
+                      setBlockDetailPreviousPage("insights");
+                      setPage("blockDetail");
+                    }}
+                    onCategoryClick={(categoryName) => {
+                      setSelectedCategory(categoryName);
+                      setPage("categoryDetail");
                     }}
                   />
                 </motion.div>
