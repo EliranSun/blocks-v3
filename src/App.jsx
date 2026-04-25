@@ -12,6 +12,7 @@ import { BlocksDataView } from './BlocksDataView';
 import { BlockDetailView } from './BlockDetailView';
 import { CategoryDetailView } from './CategoryDetailView';
 import { InsightsView } from './InsightsView';
+import { ThemeToggle } from './ThemeToggle';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -146,65 +147,60 @@ function App() {
           />
           <motion.div
             className={classNames(
-              "fixed bottom-5 inset-x-0 flex justify-between gap-2",
-              "bg-neutral-200 dark:bg-neutral-700 rounded-full",
-              "shadow-lg px-4 py-2 max-w-2xl md:w-full mx-2 md:mx-auto",
+              "fixed bottom-4 inset-x-0 flex items-center justify-between gap-2",
+              "bg-(--color-brut-paper) text-(--brut-fg)",
+              "brut-border-thick brut-shadow-lg",
+              "px-3 py-2 max-w-2xl md:w-full mx-3 md:mx-auto",
             )}
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{
               type: "spring",
-              damping: 20,
-              stiffness: 200,
-              delay: 0.2,
+              damping: 22,
+              stiffness: 800,
+              mass: 0.5,
+              delay: 0.15,
             }}
           >
-            <div className='flex gap-4'>
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === ""
-                })}
+            <div className='flex gap-2 items-center'>
+              <RectangleButton
+                isActive={page === ""}
                 onClick={() => {
                   setPage("");
                   setSelectedBlock(null);
                 }}>
                 Blocks
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === "blocksData" || page === "blockDetail" || page === "categoryDetail"
-                })}
+              </RectangleButton>
+              <RectangleButton
+                isActive={page === "blocksData" || page === "blockDetail" || page === "categoryDetail"}
                 onClick={() => {
                   setPage("blocksData");
                   setSelectedBlock(null);
                   setSelectedCategory(null);
                 }}>
                 Data
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === "insights"
-                })}
+              </RectangleButton>
+              <RectangleButton
+                isActive={page === "insights"}
                 onClick={() => {
                   setPage("insights");
                   setSelectedBlock(null);
                   setSelectedCategory(null);
                 }}>
                 Insights
-              </motion.button>
+              </RectangleButton>
             </div>
-            <RectangleButton
-              isActive
-              onClick={handleOpenAddDialog}
-              className="rounded-full px-4"
-              aria-label="Toggle add log dialog">
-              Add block
-            </RectangleButton>
+            <div className='flex gap-2 items-center'>
+              <ThemeToggle />
+              <RectangleButton
+                onClick={handleOpenAddDialog}
+                className="bg-(--color-brut-orange) text-(--color-brut-ink) hover:bg-(--color-brut-orange)"
+                aria-label="Toggle add log dialog">
+                + Add
+              </RectangleButton>
+            </div>
           </motion.div>
-          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden'>
+          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden pr-1'>
             <AnimatePresence mode="wait">
               {page === "blockDetail" && selectedBlock ? (
                 <motion.div

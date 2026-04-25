@@ -74,24 +74,23 @@ const ToolbarPopover = ({ label, isActive, children }) => {
     return (
         <div className="relative" ref={popoverRef}>
             <motion.button
-                whileTap={{ scale: 0.93 }}
-                whileHover={{ scale: 1.04 }}
-                transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                whileHover={{ x: -2, y: -2 }}
+                whileTap={{ x: 2, y: 2 }}
+                transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                 onClick={() => setIsOpen(!isOpen)}
                 className={classNames(
-                    "px-3 py-1.5 text-sm font-semibold transition-colors",
-                    "border border-neutral-300 dark:border-neutral-600 rounded-md",
+                    "px-3 py-1.5 text-sm font-bold uppercase tracking-wide brut-border brut-shadow-sm",
                     "flex items-center gap-1.5",
                     isOpen || isActive
-                        ? "bg-neutral-800 text-white border-neutral-600"
-                        : "bg-white text-neutral-700 hover:bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700",
+                        ? "bg-(--brut-fg) text-(--brut-bg)"
+                        : "bg-(--color-brut-paper) text-(--brut-fg) hover:bg-(--color-brut-yellow)",
                 )}
             >
                 {label}
                 <motion.span
                     className="text-[10px]"
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    transition={{ type: "spring", stiffness: 800, damping: 22 }}
                 >
                     ▾
                 </motion.span>
@@ -104,9 +103,9 @@ const ToolbarPopover = ({ label, isActive, children }) => {
                         animate="visible"
                         exit="exit"
                         className={classNames(
-                            "absolute top-full left-0 mt-1 z-40",
-                            "bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700",
-                            "shadow-lg rounded-md p-2 space-y-1 min-w-40"
+                            "absolute top-full left-0 mt-2 z-40",
+                            "bg-(--color-brut-paper) text-(--brut-fg) brut-border brut-shadow",
+                            "p-2 space-y-1 min-w-40"
                         )}
                     >
                         {children}
@@ -120,13 +119,13 @@ const ToolbarPopover = ({ label, isActive, children }) => {
 const PopoverItem = ({ icon, label, isActive, onClick }) => (
     <motion.button
         variants={dropdownItemVariants}
-        whileHover={{ x: 3, backgroundColor: "rgba(128,128,128,0.08)" }}
+        whileHover={{ x: 3 }}
         whileTap={{ scale: 0.97 }}
-        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+        transition={{ type: "spring", stiffness: 800, damping: 22 }}
         onClick={onClick}
         className={classNames(
-            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded-md",
-            isActive ? "bg-neutral-200 dark:bg-neutral-600" : ""
+            "flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left font-bold uppercase tracking-wide",
+            isActive ? "bg-(--brut-fg) text-(--brut-bg)" : "hover:bg-(--color-brut-yellow)"
         )}
     >
         <span>{icon}</span> <span>{label}</span>
@@ -244,33 +243,36 @@ export const BlocksList = ({
                         </Button>
                     </div>
                 )}
-                <div className='spacy-y-4'>
+                <div className='space-y-1'>
                     <motion.h1
-                        className='text-2xl merriweather-900'
+                        className='text-3xl uppercase tracking-tight'
+                        style={{ fontFamily: 'var(--font-display)', fontWeight: 900 }}
                         key={title}
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                        transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                     >
                         {title}
                     </motion.h1>
-                    <h2 className='text-gray-400 text-xs'>
+                    <h2 className='brut-label opacity-70'>
                         {MonthNotes[format(currentDate, 'yyyy-MM')]}
                     </h2>
                 </div>
             </div>
             {view === 'list' && (
-                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
+                <div className="flex gap-2 p-2 brut-border bg-(--color-brut-paper)">
                     {listScopeOptions.map(({ key, label }) => (
                         <motion.button
                             key={key}
-                            whileTap={{ scale: 0.95 }}
+                            whileHover={{ x: -2, y: -2 }}
+                            whileTap={{ x: 2, y: 2 }}
+                            transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                             onClick={() => onListScopeChange(key)}
                             className={classNames(
-                                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
+                                "px-3 py-1 text-xs uppercase tracking-wide font-bold brut-border brut-shadow-sm",
                                 listScope === key
-                                    ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900"
-                                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                    ? "bg-(--brut-fg) text-(--brut-bg)"
+                                    : "bg-(--color-brut-paper) text-(--brut-fg) hover:bg-(--color-brut-lime)"
                             )}
                         >
                             {label}
@@ -325,8 +327,8 @@ export const BlocksList = ({
                         ))}
                     </ToolbarPopover>
                 </div>
-                <div className="w-px h-6 bg-neutral-300 dark:bg-neutral-600 mx-1" />
-                <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
+                <div className="w-0.5 h-6 bg-(--brut-border) mx-1" />
+                <div className="flex gap-2 p-2 brut-border bg-(--color-brut-paper)">
                     <RectangleButton
                         isActive={showDate}
                         onClick={() => setShowDate(!showDate)}>
@@ -352,11 +354,10 @@ export const BlocksList = ({
             <AnimatePresence mode="wait">
                 <motion.div
                     key={view}
-                    className="space-grotesk-400"
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                    transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                 >
                     {renderView()}
                 </motion.div>

@@ -1,14 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Space+Grotesk:wght@300..700&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brut-paper: #fff8ec;
+  --color-brut-ink: #0a0a0a;
+  --color-brut-orange: #ff6a00;
+  --color-brut-lime: #b6f24c;
+  --color-brut-pink: #ff4dd2;
+  --color-brut-blue: #2b7fff;
+  --color-brut-yellow: #ffd400;
+  --color-brut-red: #ff2e2e;
+  --color-brut-violet: #7c3aed;
+  --color-brut-cyan: #00e5d1;
+
+  --font-display: "Merriweather", serif;
+  --font-ui: "Space Grotesk", sans-serif;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Space Grotesk", system-ui, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  --brut-border: #0a0a0a;
+  --brut-fg: #0a0a0a;
+  --brut-bg: #fff8ec;
+  --brut-shadow:    4px 4px 0 0 #0a0a0a;
+  --brut-shadow-sm: 2px 2px 0 0 #0a0a0a;
+  --brut-shadow-lg: 8px 8px 0 0 #0a0a0a;
+
+  color: var(--brut-fg);
+  background-color: var(--brut-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,52 +42,31 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.merriweather-400 {
-  font-family: "Merriweather", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-variation-settings:
-    "wdth" 100;
+.dark {
+  --brut-border: #ffffff;
+  --brut-fg: #ffffff;
+  --brut-bg: #15151a;
+  --brut-shadow:    4px 4px 0 0 #ffffff;
+  --brut-shadow-sm: 2px 2px 0 0 #ffffff;
+  --brut-shadow-lg: 8px 8px 0 0 #ffffff;
+
+  color: var(--brut-fg);
+  background-color: var(--brut-bg);
 }
 
-.merriweather-500 {
-  font-family: "Merriweather", serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-variation-settings:
-    "wdth" 100;
-}
-
-.merriweather-900 {
-  font-family: "Merriweather", serif;
-  font-optical-sizing: auto;
-  font-weight: 900;
-  font-variation-settings:
-    "wdth" 100;
-}
-
-.space-grotesk-600 {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.space-grotesk-400 {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
+.merriweather-400 { font-family: "Merriweather", serif; font-weight: 400; }
+.merriweather-500 { font-family: "Merriweather", serif; font-weight: 500; }
+.merriweather-900 { font-family: "Merriweather", serif; font-weight: 900; }
+.space-grotesk-400 { font-family: "Space Grotesk", sans-serif; font-weight: 400; }
+.space-grotesk-600 { font-family: "Space Grotesk", sans-serif; font-weight: 600; }
+.space-grotesk-700 { font-family: "Space Grotesk", sans-serif; font-weight: 700; }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
+  font-weight: 700;
+  color: var(--brut-fg);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 html {
@@ -82,30 +87,107 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  background-color: var(--brut-bg);
+  color: var(--brut-fg);
 }
 
 button {
-  font-weight: 500;
   font-family: inherit;
+  font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
 
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: #f9f6f2;
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--brut-border);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brut-border);
+  border-radius: 0;
+}
+
+::selection {
+  background: var(--color-brut-yellow);
+  color: var(--brut-ink, #0a0a0a);
+}
+
+@utility brut-card {
+  background-color: var(--brut-bg);
+  border: 2px solid var(--brut-border);
+  border-radius: 0;
+  box-shadow: var(--brut-shadow);
+}
+
+@utility brut-card-sm {
+  background-color: var(--brut-bg);
+  border: 2px solid var(--brut-border);
+  border-radius: 0;
+  box-shadow: var(--brut-shadow-sm);
+}
+
+@utility brut-shadow {
+  box-shadow: var(--brut-shadow);
+}
+
+@utility brut-shadow-sm {
+  box-shadow: var(--brut-shadow-sm);
+}
+
+@utility brut-shadow-lg {
+  box-shadow: var(--brut-shadow-lg);
+}
+
+@utility brut-border {
+  border: 2px solid var(--brut-border);
+  border-radius: 0;
+}
+
+@utility brut-border-thick {
+  border: 3px solid var(--brut-border);
+  border-radius: 0;
+}
+
+@utility brut-hover {
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--brut-shadow-lg);
   }
-
-  /* button {
-    box-shadow: 0 4px 18px 0 rgba(33, 53, 71, 0.18), 0 1.5px 5px rgba(33, 53, 71, 0.12);
-  } */
-
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
   }
+}
 
-  a:hover {
-    color: #747bff;
+@utility brut-label {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+}
+
+@utility brut-display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+@utility brut-focus {
+  outline: none;
+  &:focus-visible {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--brut-shadow-sm);
   }
 }

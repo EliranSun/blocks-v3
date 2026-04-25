@@ -7,25 +7,29 @@ import {
     XAxis,
     YAxis,
     Tooltip,
+    CartesianGrid,
     ResponsiveContainer,
 } from "recharts";
 import { Categories } from "./constants";
+import { useChartTokens, BrutTooltip, brutAxis } from "./chartHelpers";
 
 const MONTHS_TO_SHOW = 24;
+const SNAP = { type: "spring", stiffness: 800, damping: 22, mass: 0.5 };
 
-// Distinct colors assigned per block index within a category
-const BLOCK_PALETTE = [
-    "#7c3aed", // violet
-    "#0ea5e9", // sky
-    "#84cc16", // lime
-    "#f59e0b", // amber
-    "#ec4899", // pink
-    "#06b6d4", // cyan
-    "#f97316", // orange
-    "#a78bfa", // violet-400
-    "#dc2626", // red
-    "#10b981", // emerald
+const BLOCK_PALETTE_LIGHT = [
+    "#ff6a00", "#2b7fff", "#b6f24c", "#ffd400", "#ff4dd2",
+    "#00bfa6", "#ff2e2e", "#7c3aed", "#84cc16", "#0a0a0a",
 ];
+const BLOCK_PALETTE_DARK = [
+    "#ff8a3d", "#6aa9ff", "#d2ff7a", "#ffe066", "#ff8be3",
+    "#5eead4", "#ff7676", "#a78bfa", "#bef264", "#f5f5f5",
+];
+
+const useBlockPalette = () => {
+    const t = useChartTokens();
+    const isDark = t.paper === "#15151a";
+    return isDark ? BLOCK_PALETTE_DARK : BLOCK_PALETTE_LIGHT;
+};
 
 function getCategoryDef(categoryName) {
     return Object.values(Categories).find(
@@ -39,7 +43,6 @@ function getCategoryLogs(data, categoryName) {
     );
 }
 
-// Determine which block a log belongs to (returns the block name or null)
 function getBlockForLog(log, blocks) {
     const subcatMatch = blocks.find(
         b => log.subcategory?.toLowerCase().trim() === b.toLowerCase().trim()
@@ -74,34 +77,13 @@ function getStackedMonthlyData(logs, blocks) {
     return months;
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-        const total = payload.reduce((sum, p) => sum + (p.value || 0), 0);
-        const entries = payload.filter(p => p.value > 0);
-        return (
-            <div className="bg-neutral-800 text-white text-xs rounded px-3 py-2 shadow-lg space-y-1">
-                <p className="font-bold mb-1">{label}</p>
-                {entries.map(p => (
-                    <p key={p.dataKey} style={{ color: p.fill }}>
-                        {p.dataKey}: {p.value}
-                    </p>
-                ))}
-                {total > 0 && (
-                    <p className="text-neutral-400 pt-1 border-t border-neutral-700">
-                        Total: {total}
-                    </p>
-                )}
-            </div>
-        );
-    }
-    return null;
-};
-
 export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockClick }) => {
     const category = getCategoryDef(categoryName);
     const blocks = category?.blocks ?? [];
     const logs = getCategoryLogs(data, categoryName);
     const monthlyData = getStackedMonthlyData(logs, blocks);
+    const palette = useBlockPalette();
+    const tokens = useChartTokens();
 
     const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -112,69 +94,69 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
             name: block,
             count: blockLogs.length,
             last: lastLog?.date ?? null,
-            color: BLOCK_PALETTE[i % BLOCK_PALETTE.length],
+            color: palette[i % palette.length],
         };
     });
 
     return (
-        <div className="pb-40 space-y-6">
-            {/* Back button */}
+        <div className="pb-40 space-y-5">
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                transition={SNAP}
             >
-                <button
+                <motion.button
+                    whileHover={{ x: -2, y: -2 }}
+                    whileTap={{ x: 2, y: 2 }}
+                    transition={SNAP}
                     onClick={onBack}
-                    className="text-neutral-400 hover:text-neutral-200 transition-colors text-sm underline"
+                    className="px-3 py-1.5 brut-border brut-shadow-sm bg-(--color-brut-paper) text-sm font-bold uppercase tracking-wide hover:bg-(--color-brut-yellow)"
                 >
                     ← Data
-                </button>
+                </motion.button>
             </motion.div>
 
-            {/* Title */}
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "spring", damping: 20, stiffness: 300, delay: 0.05 }}
+                transition={{ ...SNAP, delay: 0.05 }}
+                className={classNames("brut-border brut-shadow p-4", category?.bgColor)}
             >
                 <div className="flex items-center gap-2">
-                    <span className="text-2xl">{category?.icon}</span>
-                    <h1 className={classNames("text-2xl uppercase font-bold merriweather-900", category?.color)}>
+                    <span className="text-3xl">{category?.icon}</span>
+                    <h1 className="text-4xl uppercase tracking-tight" style={{ fontFamily: 'var(--font-display)', fontWeight: 900 }}>
                         {categoryName}
                     </h1>
                 </div>
-                <p className="text-xs uppercase tracking-widest text-neutral-400 mt-1 space-grotesk-400">
+                <p className="brut-label opacity-80 mt-1">
                     Combined category view
                 </p>
             </motion.div>
 
-            {/* Top stats */}
             <motion.div
-                className="flex gap-6"
+                className="grid grid-cols-3 gap-3"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
             >
-                <div>
-                    <p className="text-2xl font-bold space-grotesk-600">{logs.length}</p>
-                    <p className="text-xs text-neutral-400 uppercase tracking-wide">Total</p>
+                <div className="brut-card p-3">
+                    <p className="text-3xl font-black" style={{ fontFamily: 'var(--font-display)' }}>{logs.length}</p>
+                    <p className="brut-label opacity-70">Total</p>
                 </div>
                 {sortedLogs[0] && (
-                    <div>
-                        <p className="text-2xl font-bold space-grotesk-600">
+                    <div className="brut-card p-3">
+                        <p className="text-xl font-black" style={{ fontFamily: 'var(--font-display)' }}>
                             {formatDistanceToNow(new Date(sortedLogs[0].date), { addSuffix: false })}
                         </p>
-                        <p className="text-xs text-neutral-400 uppercase tracking-wide">Last entry</p>
+                        <p className="brut-label opacity-70">Last</p>
                     </div>
                 )}
-                <div>
-                    <p className="text-2xl font-bold space-grotesk-600">{blocks.length}</p>
-                    <p className="text-xs text-neutral-400 uppercase tracking-wide">Types</p>
+                <div className="brut-card p-3">
+                    <p className="text-3xl font-black" style={{ fontFamily: 'var(--font-display)' }}>{blocks.length}</p>
+                    <p className="brut-label opacity-70">Types</p>
                 </div>
             </motion.div>
 
-            {/* Per-block mini stats grid */}
             <motion.div
                 className="grid grid-cols-2 gap-2"
                 initial={{ opacity: 0 }}
@@ -184,25 +166,26 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                 {blockStats.map(({ name, count, last, color }) => (
                     <motion.button
                         key={name}
-                        className="flex items-center gap-2 py-2 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-800 transition-colors text-left"
-                        whileHover={{ x: 2 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        className="flex items-center gap-2 py-2 px-3 brut-border brut-shadow-sm bg-(--color-brut-paper) text-left"
+                        whileHover={{ x: -2, y: -2 }}
+                        whileTap={{ x: 2, y: 2 }}
+                        transition={SNAP}
                         onClick={() => onBlockClick?.(name)}
                     >
                         <span
-                            className="w-2.5 h-2.5 rounded-sm shrink-0"
+                            className="w-3 h-3 shrink-0 brut-border"
                             style={{ backgroundColor: color }}
                         />
                         <div className="min-w-0">
                             <p
-                                className="text-sm font-bold uppercase space-grotesk-600 truncate"
+                                className="text-sm font-bold uppercase tracking-wide truncate"
                                 style={{ color }}
                             >
                                 {name}
                             </p>
-                            <p className="text-xs text-neutral-400">
+                            <p className="text-xs opacity-70">
                                 {count > 0
-                                    ? `${count}x · ${formatDistanceToNow(new Date(last), { addSuffix: false })} ago`
+                                    ? `${count}× · ${formatDistanceToNow(new Date(last), { addSuffix: false })} ago`
                                     : "None"}
                             </p>
                         </div>
@@ -210,73 +193,64 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                 ))}
             </motion.div>
 
-            {/* Stacked bar chart */}
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15, type: "spring", damping: 20, stiffness: 300 }}
+                transition={{ delay: 0.15, ...SNAP }}
+                className="brut-card p-4"
             >
-                <h2 className="text-xs uppercase tracking-widest text-neutral-400 mb-3 space-grotesk-400">
+                <h2 className="brut-label mb-3 opacity-70">
                     Monthly breakdown · last {MONTHS_TO_SHOW} months
                 </h2>
                 <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={monthlyData} margin={{ top: 0, right: 0, left: -28, bottom: 0 }}>
+                        <CartesianGrid stroke={tokens.gridDim} strokeWidth={1} strokeDasharray="0" vertical={false} />
                         <XAxis
                             dataKey="label"
-                            tick={{ fontSize: 10, fill: "#737373" }}
                             interval={Math.floor(MONTHS_TO_SHOW / 8)}
-                            axisLine={false}
-                            tickLine={false}
+                            {...brutAxis(tokens)}
                         />
-                        <YAxis
-                            allowDecimals={false}
-                            tick={{ fontSize: 10, fill: "#737373" }}
-                            axisLine={false}
-                            tickLine={false}
-                        />
-                        <Tooltip
-                            content={<CustomTooltip />}
-                            cursor={{ fill: "rgba(255,255,255,0.05)" }}
-                        />
+                        <YAxis allowDecimals={false} {...brutAxis(tokens)} />
+                        <Tooltip content={<BrutTooltip />} cursor={{ fill: tokens.gridDim }} />
                         {blocks.map((block, i) => (
                             <Bar
                                 key={block}
                                 dataKey={block}
                                 stackId="a"
-                                fill={BLOCK_PALETTE[i % BLOCK_PALETTE.length]}
-                                maxBarSize={24}
-                                radius={i === blocks.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]}
+                                fill={palette[i % palette.length]}
+                                stroke={tokens.border}
+                                strokeWidth={1}
+                                maxBarSize={22}
+                                radius={0}
                             />
                         ))}
                     </BarChart>
                 </ResponsiveContainer>
 
-                {/* Chart legend */}
-                <div className="flex flex-wrap gap-3 mt-3">
+                <div className="flex flex-wrap gap-2 mt-3">
                     {blocks.map((block, i) => (
                         <button
                             key={block}
-                            className="flex items-center gap-1.5 text-xs hover:opacity-80 transition-opacity"
+                            className="flex items-center gap-1.5 text-xs px-2 py-0.5 brut-border bg-(--color-brut-paper)"
                             onClick={() => onBlockClick?.(block)}
                         >
                             <span
-                                className="w-2.5 h-2.5 rounded-sm shrink-0"
-                                style={{ backgroundColor: BLOCK_PALETTE[i % BLOCK_PALETTE.length] }}
+                                className="w-2.5 h-2.5 shrink-0"
+                                style={{ backgroundColor: palette[i % palette.length] }}
                             />
-                            <span className="text-neutral-300 uppercase space-grotesk-400">{block}</span>
+                            <span className="uppercase font-bold tracking-wide">{block}</span>
                         </button>
                     ))}
                 </div>
             </motion.div>
 
-            {/* All entries list */}
             {sortedLogs.length > 0 && (
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                 >
-                    <h2 className="text-xs uppercase tracking-widest text-neutral-400 mb-3 space-grotesk-400">
+                    <h2 className="brut-label mb-3 opacity-70">
                         All entries
                     </h2>
                     <div className="space-y-1">
@@ -286,8 +260,8 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                             );
                             const blockColor =
                                 blockIndex >= 0
-                                    ? BLOCK_PALETTE[blockIndex % BLOCK_PALETTE.length]
-                                    : "#525252";
+                                    ? palette[blockIndex % palette.length]
+                                    : tokens.muted;
                             const matchedBlock = blockIndex >= 0 ? blocks[blockIndex] : null;
 
                             return (
@@ -297,32 +271,30 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{
                                         delay: i * 0.02,
-                                        type: "spring",
-                                        damping: 20,
-                                        stiffness: 300,
+                                        ...SNAP,
                                     }}
-                                    className="flex items-start gap-3 py-2 border-b border-neutral-800"
+                                    className="flex items-start gap-3 py-2 border-b-2 border-(--brut-border)/30"
                                 >
-                                    <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
-                                        {format(new Date(log.date), "dd MMM yyyy")}
+                                    <span className="text-sm font-bold uppercase tracking-wide w-24 shrink-0 opacity-70">
+                                        {format(new Date(log.date), "dd MMM yy")}
                                     </span>
                                     <div className="flex flex-col min-w-0 flex-1">
                                         {log.name && (
-                                            <span className="text-sm merriweather-400 truncate">
+                                            <span className="text-sm font-bold truncate">
                                                 {log.note || log.name}
                                             </span>
                                         )}
                                         <div className="flex items-center gap-2">
                                             {matchedBlock && (
                                                 <span
-                                                    className="text-xs font-bold uppercase space-grotesk-600"
+                                                    className="text-xs font-bold uppercase tracking-wide"
                                                     style={{ color: blockColor }}
                                                 >
                                                     {matchedBlock}
                                                 </span>
                                             )}
                                             {log.location && (
-                                                <span className="text-xs text-neutral-500">
+                                                <span className="text-xs opacity-60">
                                                     {log.location}
                                                 </span>
                                             )}
@@ -337,7 +309,7 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
 
             {sortedLogs.length === 0 && (
                 <motion.p
-                    className="text-neutral-500 text-sm merriweather-400"
+                    className="text-sm opacity-60 brut-card p-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
