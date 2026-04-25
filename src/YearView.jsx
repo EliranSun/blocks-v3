@@ -46,8 +46,6 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
         // Group items by month
         const grouped = {};
 
-        console.log({ yearMonths });
-
         yearMonths.forEach(month => {
             grouped[format(month, 'yyyy-MM')] = data.filter(item => {
                 const itemDate = new Date(item.date);
@@ -60,7 +58,7 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
 
 
     return (
-        <div className="space-grotesk-400">
+        <div>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 w-full">
                 {yearData.yearMonths?.map((month, index) => {
                     const monthKey = format(month, 'yyyy-MM');
@@ -68,13 +66,13 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
                     return (
                         <motion.div
                             key={monthKey}
-                            className="flex flex-col p-2 h-[18vh]"
+                            className="flex flex-col p-2 h-[18vh] brut-border bg-(--color-brut-paper)"
                             custom={index}
                             variants={monthCardVariants}
                             initial="hidden"
                             animate="visible"
                         >
-                            <div className="font-semibold text-xs mb-2 text-center border-b pb-1 shrink-0">
+                            <div className="text-xs mb-2 text-center pb-1 shrink-0 brut-label border-b-2 border-(--brut-border)">
                                 {format(month, 'MMM')}<br />
                             </div>
                             <motion.ol

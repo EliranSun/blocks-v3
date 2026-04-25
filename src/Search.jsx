@@ -24,7 +24,7 @@ export const Search = ({
     };
 
     return (
-        <div className="flex flex-row-reverse items-center gap-2 border border-neutral-200 dark:border-neutral-700 rounded-none">
+        <div className="flex flex-row-reverse items-center gap-2 brut-border bg-(--color-brut-paper)">
             <Button
                 onClick={handleToggle}
                 aria-label="Toggle search"
@@ -63,7 +63,7 @@ export const Search = ({
             >
                 <input
                     type="text"
-                    className="w-full outline-none bg-transparent"
+                    className="w-full outline-none bg-transparent uppercase tracking-wide font-bold placeholder:opacity-50"
                     value={value}
                     placeholder="Search..."
                     onChange={event => onInputChange(event.target.value)}
@@ -72,14 +72,14 @@ export const Search = ({
                 <AnimatePresence>
                     {value && (
                         <motion.button
-                            initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
-                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                            exit={{ opacity: 0, scale: 0.5, rotate: 90 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                             whileTap={{ scale: 0.85 }}
                             onClick={() => onInputChange('')}
                             aria-label="Clear search"
-                            className="flex items-center justify-center ml-2 p-1 rounded-full"
+                            className="flex items-center justify-center ml-2 p-1 brut-border bg-(--color-brut-paper)"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

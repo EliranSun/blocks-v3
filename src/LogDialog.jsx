@@ -6,24 +6,13 @@ import { Categories } from "./constants";
 import classNames from "classnames";
 import { motion, AnimatePresence } from "framer-motion";
 
-const PlusIcon = () => {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 transition-transform duration-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" strokeWidth="2" />
-            <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" strokeWidth="2" />
-        </svg>
-    )
-}
+const SNAP = { type: "spring", stiffness: 800, damping: 22, mass: 0.5 };
+
+const inputClasses = "w-full px-3 text-base brut-border bg-(--color-brut-paper) text-(--brut-fg) outline-none focus:translate-x-[-2px] focus:translate-y-[-2px] focus:shadow-[var(--brut-shadow-sm)] transition-transform duration-100 placeholder:opacity-50 font-bold";
 
 const TextInput = ({ name, placeholder, required, defaultValue }) => {
     return <input
-        className="w-full h-10 px-3 text-base rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-all placeholder:text-neutral-400"
+        className={classNames(inputClasses, "h-10")}
         type="text"
         name={name}
         placeholder={placeholder}
@@ -33,7 +22,7 @@ const TextInput = ({ name, placeholder, required, defaultValue }) => {
 
 const TextArea = ({ name, placeholder, defaultValue }) => {
     return <textarea
-        className="w-full px-3 py-2 text-base rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-all placeholder:text-neutral-400 resize-none"
+        className={classNames(inputClasses, "py-2 resize-none")}
         name={name}
         placeholder={placeholder}
         defaultValue={defaultValue}
@@ -42,10 +31,8 @@ const TextArea = ({ name, placeholder, defaultValue }) => {
 };
 
 const DateInput = ({ name, defaultValue, required }) => {
-    // Adjust defaultValue to UTC+3 if provided (expecting ISO string, e.g., "2024-06-13T15:00")
     let localValue = defaultValue;
     if (defaultValue) {
-        // Parse the date string and add 3 hours (UTC+3)
         const date = new Date(defaultValue);
         date.setHours(date.getHours() + 4);
         localValue = date.toISOString().slice(0, 16);
@@ -53,7 +40,7 @@ const DateInput = ({ name, defaultValue, required }) => {
 
     return (
         <input
-            className="w-full min-w-0 h-10 px-3 text-base rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition-all"
+            className={classNames(inputClasses, "h-10 min-w-0")}
             type="datetime-local"
             name={name}
             defaultValue={localValue}
@@ -78,26 +65,13 @@ const formSectionVariants = {
         opacity: 1,
         y: 0,
         transition: {
-            delay: i * 0.06,
+            delay: i * 0.04,
             type: "spring",
-            damping: 20,
-            stiffness: 300,
+            stiffness: 800,
+            damping: 22,
+            mass: 0.5,
         },
     }),
-};
-
-const pillVariants = {
-    idle: { scale: 1 },
-    selected: {
-        scale: [1, 1.15, 1],
-        transition: {
-            duration: 0.3,
-            times: [0, 0.5, 1],
-            type: "spring",
-            stiffness: 400,
-            damping: 15,
-        },
-    },
 };
 
 const fireConfetti = () => {
@@ -106,31 +80,55 @@ const fireConfetti = () => {
         ticks: 70,
         gravity: 0.8,
         decay: 0.92,
-        startVelocity: 20,
-        colors: ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd'],
+        startVelocity: 25,
+        colors: ['#ff6a00', '#ffd400', '#2b7fff', '#ff4dd2', '#b6f24c', '#ff2e2e', '#0a0a0a'],
     };
 
     confetti({
         ...defaults,
-        particleCount: 40,
-        scalar: 1.2,
-        shapes: ['star'],
+        particleCount: 50,
+        scalar: 1.4,
+        shapes: ['square'],
         origin: { x: 0.5, y: 0.4 },
     });
 
     confetti({
         ...defaults,
         particleCount: 25,
-        scalar: 0.8,
+        scalar: 1,
         shapes: ['circle'],
         origin: { x: 0.5, y: 0.4 },
     });
 };
 
+const Pill = ({ id, name, value, isSelected, onSelect, children }) => (
+    <motion.div whileHover={{ x: -2, y: -2 }} whileTap={{ x: 2, y: 2 }} transition={SNAP} layout>
+        <input
+            type="radio"
+            name={name}
+            className="hidden"
+            id={id}
+            value={value}
+            onChange={onSelect}
+            checked={isSelected}
+        />
+        <label
+            htmlFor={id}
+            className={classNames(
+                "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm cursor-pointer select-none brut-border uppercase tracking-wide font-bold",
+                isSelected
+                    ? "bg-(--brut-fg) text-(--brut-bg) brut-shadow-sm"
+                    : "bg-(--color-brut-paper) text-(--brut-fg) hover:bg-(--color-brut-yellow)"
+            )}>
+            {children}
+        </label>
+    </motion.div>
+);
+
 export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, onEdit, onDelete }) => {
     const initData = getInitialCategory(log);
     const [selectedCategory, setSelectedCategory] = useState(initData);
-    const [blockName, setBlockName] = useState(log?.name.toLowerCase());
+    const [blockName, setBlockName] = useState(log?.name?.toLowerCase() || "");
     const [subcategory, setSubcategory] = useState(log?.subcategory || '');
     const isEditMode = Boolean(log?._id);
 
@@ -144,7 +142,6 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
         e.preventDefault();
         const form = e.target;
 
-        // Use HTML5 validation
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
@@ -163,8 +160,6 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
             fireConfetti();
         }
 
-        // Reset React state so controlled radio buttons are cleared
-        // (form.reset() only clears uncontrolled inputs, not React state)
         setSelectedCategory(categoryArray[0]);
         setBlockName("");
         setSubcategory('');
@@ -185,10 +180,11 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
             <form key={log?._id || defaultDate || 'new'} className="flex flex-col h-full" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-5 overflow-y-auto overflow-x-hidden flex-1 pb-2">
                 <motion.h2
-                    className="text-2xl font-bold space-grotesk-600 tracking-tight"
+                    className="text-3xl font-display font-black uppercase tracking-tight"
+                    style={{ fontFamily: 'var(--font-display)' }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                    transition={SNAP}
                 >
                     {isEditMode ? 'Edit Block' : 'Add Block'}
                 </motion.h2>
@@ -199,40 +195,25 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                     initial="hidden"
                     animate="visible"
                 >
-                    <legend className="text-xs uppercase tracking-widest text-neutral-400 mb-2 font-semibold">Categories</legend>
+                    <legend className="brut-label mb-2">Categories</legend>
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(Categories).map(([categoryName, category]) => {
                             const isSelected = categoryName.toLowerCase() === selectedCategory.name.toLowerCase();
                             return (
-                                <motion.div
+                                <Pill
                                     key={categoryName}
-                                    variants={pillVariants}
-                                    animate={isSelected ? "selected" : "idle"}
-                                    layout
+                                    id={categoryName}
+                                    name="category"
+                                    value={categoryName}
+                                    isSelected={isSelected}
+                                    onSelect={() => {
+                                        setSelectedCategory(category);
+                                        setSubcategory('');
+                                    }}
                                 >
-                                    <input
-                                        type="radio"
-                                        name="category"
-                                        className="hidden peer"
-                                        id={categoryName}
-                                        value={categoryName}
-                                        onChange={() => {
-                                            setSelectedCategory(category);
-                                            setSubcategory('');
-                                        }}
-                                        checked={isSelected} />
-                                    <label
-                                        htmlFor={categoryName}
-                                        className={classNames(
-                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm cursor-pointer transition-all select-none",
-                                            isSelected
-                                                ? "bg-neutral-800 text-white shadow-md ring-2 ring-neutral-600"
-                                                : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:bg-neutral-700/60"
-                                        )}>
-                                        <span className="text-base">{category.icon}</span>
-                                        {categoryName}
-                                    </label>
-                                </motion.div>
+                                    <span className="text-base">{category.icon}</span>
+                                    {categoryName}
+                                </Pill>
                             );
                         })}
                     </div>
@@ -244,42 +225,20 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                     initial="hidden"
                     animate="visible"
                 >
-                    <legend className="text-xs uppercase tracking-widest text-neutral-400 mb-2 font-semibold">Blocks</legend>
+                    <legend className="brut-label mb-2">Blocks</legend>
                     <div className="flex flex-wrap gap-2">
                         <AnimatePresence mode="popLayout">
                             {selectedCategory.blocks.map(block => (
-                                <motion.div
+                                <Pill
                                     key={block}
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                                    id={block}
+                                    name="name"
+                                    value={block}
+                                    isSelected={blockName === block}
+                                    onSelect={() => setBlockName(block)}
                                 >
-                                    <motion.div
-                                        variants={pillVariants}
-                                        animate={blockName === block ? "selected" : "idle"}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="name"
-                                            className="hidden"
-                                            id={block}
-                                            value={block}
-                                            onChange={() => setBlockName(block)}
-                                        />
-                                        <label
-                                            htmlFor={block}
-                                            className={classNames(
-                                                "px-3 py-1.5 rounded-full text-sm cursor-pointer transition-all select-none inline-block",
-                                                blockName === block
-                                                    ? "bg-neutral-800 text-white shadow-md ring-2 ring-neutral-600"
-                                                    : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:bg-neutral-700/60"
-                                            )}>
-                                            {block}
-                                        </label>
-                                    </motion.div>
-                                </motion.div>
+                                    {block}
+                                </Pill>
                             ))}
                         </AnimatePresence>
                     </div>
@@ -291,37 +250,21 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            transition={SNAP}
                         >
-                            <legend className="text-xs uppercase tracking-widest text-neutral-400 mb-2 font-semibold">Type</legend>
+                            <legend className="brut-label mb-2">Type</legend>
                             <div className="flex flex-wrap gap-2">
                                 {selectedCategory.subcategories.map(sub => (
-                                    <motion.div
+                                    <Pill
                                         key={sub}
-                                        variants={pillVariants}
-                                        animate={subcategory === sub ? "selected" : "idle"}
-                                        layout
+                                        id={sub}
+                                        name="subcategory"
+                                        value={sub}
+                                        isSelected={subcategory === sub}
+                                        onSelect={() => setSubcategory(sub)}
                                     >
-                                        <input
-                                            type="radio"
-                                            name="subcategory"
-                                            className="hidden"
-                                            id={sub}
-                                            value={sub}
-                                            onChange={() => setSubcategory(sub)}
-                                            checked={subcategory === sub}
-                                        />
-                                        <label
-                                            htmlFor={sub}
-                                            className={classNames(
-                                                "px-3 py-1.5 rounded-full text-sm cursor-pointer transition-all select-none inline-block",
-                                                subcategory === sub
-                                                    ? "bg-neutral-800 text-white shadow-md ring-2 ring-neutral-600"
-                                                    : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:bg-neutral-700/60"
-                                            )}>
-                                            {sub}
-                                        </label>
-                                    </motion.div>
+                                        {sub}
+                                    </Pill>
                                 ))}
                             </div>
                         </motion.fieldset>
@@ -334,7 +277,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                     initial="hidden"
                     animate="visible"
                 >
-                    <label className="text-xs uppercase tracking-widest text-neutral-400 mb-1 font-semibold block">Note</label>
+                    <label className="brut-label mb-1 block">Note</label>
                     <TextInput name="note" placeholder="Add a note..." defaultValue={log?.note || ''} />
                 </motion.div>
 
@@ -344,7 +287,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                     initial="hidden"
                     animate="visible"
                 >
-                    <label className="text-xs uppercase tracking-widest text-neutral-400 mb-1 font-semibold block">Thought</label>
+                    <label className="brut-label mb-1 block">Thought</label>
                     <TextArea name="thought" placeholder="Add a thought..." defaultValue={log?.thought || ''} />
                 </motion.div>
 
@@ -354,7 +297,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                     initial="hidden"
                     animate="visible"
                 >
-                    <label htmlFor="date" className="text-xs uppercase tracking-widest text-neutral-400 mb-1 font-semibold block">Date</label>
+                    <label htmlFor="date" className="brut-label mb-1 block">Date</label>
                     <DateInput
                         name="date"
                         defaultValue={log?.date || defaultDate || new Date().toISOString().slice(0, 16)}
@@ -364,36 +307,39 @@ export const LogDialog = ({ log, defaultDate, isOpen, onOpen, onClose, onAdd, on
                 </div>
 
                 <motion.div
-                    className="flex gap-3 w-full pt-3"
+                    className="flex gap-2 w-full pt-3"
                     custom={5}
                     variants={formSectionVariants}
                     initial="hidden"
                     animate="visible"
                 >
                     <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={{ x: -2, y: -2 }}
+                        whileTap={{ x: 2, y: 2 }}
+                        transition={SNAP}
                         type="submit"
-                        className="grow h-11 rounded-lg bg-neutral-800 text-white font-semibold text-sm hover:bg-neutral-700 transition-colors">
-                        {isEditMode ? 'SAVE' : 'ADD'}
+                        className="grow h-11 brut-border brut-shadow-sm bg-(--color-brut-orange) text-(--color-brut-ink) uppercase font-black tracking-wider text-sm">
+                        {isEditMode ? 'Save' : 'Add'}
                     </motion.button>
                     {isEditMode && (
                         <motion.button
-                            whileTap={{ scale: 0.95 }}
-                            whileHover={{ scale: 1.02 }}
+                            whileHover={{ x: -2, y: -2 }}
+                            whileTap={{ x: 2, y: 2 }}
+                            transition={SNAP}
                             type="button"
-                            className="grow h-11 rounded-lg bg-red-500/15 text-red-500 font-semibold text-sm hover:bg-red-500/25 transition-colors"
+                            className="grow h-11 brut-border brut-shadow-sm bg-(--color-brut-red) text-white uppercase font-black tracking-wider text-sm"
                             onClick={handleDelete}>
-                            DELETE
+                            Delete
                         </motion.button>
                     )}
                     <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={{ x: -2, y: -2 }}
+                        whileTap={{ x: 2, y: 2 }}
+                        transition={SNAP}
                         type="button"
-                        className="grow h-11 rounded-lg bg-neutral-100 text-neutral-600 font-semibold text-sm hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 transition-colors"
+                        className="grow h-11 brut-border brut-shadow-sm bg-(--color-brut-paper) text-(--brut-fg) uppercase font-black tracking-wider text-sm"
                         onClick={onClose}>
-                        CLOSE
+                        Close
                     </motion.button>
                 </motion.div>
             </form>

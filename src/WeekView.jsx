@@ -57,24 +57,24 @@ export const WeekView = ({ currentDate,
     }, [currentDate, data]);
 
     return (
-        <div className="space-grotesk-400">
-            <div className="grid grid-cols-7  gap-1 w-full overflow-x-auto">
+        <div>
+            <div className="grid grid-cols-7 gap-1 w-full overflow-x-auto">
                 {weekData.weekDays?.map((day, index) => {
                     const dayKey = format(day, 'yyyy-MM-dd');
                     const dayItems = weekData.grouped[dayKey] || [];
                     return (
                         <motion.div
                             key={dayKey}
-                            className="flex-1"
+                            className="flex-1 brut-border bg-(--color-brut-paper) p-1.5"
                             custom={index}
                             variants={dayColumnVariants}
                             initial="hidden"
                             animate="visible"
                         >
-                            <div className="font-semibold text-xs mb-2 text-center border-b pb-1">
+                            <div className="text-xs mb-2 text-center pb-1 brut-label border-b-2 border-(--brut-border)">
                                 {format(day, 'EEE')}
                                 <br />
-                                <span className="text-gray-500">{format(day, 'd/MM')}</span>
+                                <span className="opacity-70">{format(day, 'd/MM')}</span>
                             </div>
                             <motion.ul
                                 className="space-y-1"
@@ -84,15 +84,12 @@ export const WeekView = ({ currentDate,
                             >
                                 {dayItems
                                     .sort((a, b) => {
-                                        // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
                                         const getTime = (dateStr) => {
                                             if (dateStr.includes('T')) {
-                                                // Has time component
                                                 const timePart = dateStr.split('T')[1];
                                                 const [hours, minutes] = timePart.split(':').map(Number);
-                                                return hours * 60 + (minutes || 0); // Convert to minutes for easier comparison
+                                                return hours * 60 + (minutes || 0);
                                             }
-                                            // No time component, treat as midnight (00:00)
                                             return 0;
                                         };
                                         return getTime(a.date) - getTime(b.date);
@@ -109,9 +106,10 @@ export const WeekView = ({ currentDate,
                             </motion.ul>
                             {onAddBlock && (
                                 <motion.button
-                                    whileTap={{ scale: 0.88 }}
+                                    whileHover={{ x: -1, y: -1 }}
+                                    whileTap={{ x: 1, y: 1 }}
                                     onClick={() => onAddBlock(day)}
-                                    className="w-full mt-1 py-0.5 text-xs text-neutral-400 dark:text-neutral-600 border border-dashed border-neutral-300 dark:border-neutral-700 rounded hover:text-neutral-600 dark:hover:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors"
+                                    className="w-full mt-2 py-0.5 text-xs font-bold border-2 border-dashed border-(--brut-border) opacity-60 hover:opacity-100 hover:bg-(--color-brut-yellow)"
                                     title={`Add block for ${format(day, 'EEE d/MM')}`}
                                 >
                                     +

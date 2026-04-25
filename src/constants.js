@@ -83,8 +83,8 @@ export const Categories = {
     Mood: {
         name: "mood",
         icon: "🧐",
-        bgColor: "bg-black",
-        color: "text-black",
+        bgColor: "bg-(--brut-fg) text-(--brut-bg)",
+        color: "text-(--brut-fg)",
         subcategories: [],
         blocks: [
             Blocks.GREAT,
@@ -97,8 +97,8 @@ export const Categories = {
     Wife: {
         name: "wife",
         icon: "❤️",
-        bgColor: "bg-violet-600",
-        color: "text-violet-600",
+        bgColor: "bg-brut-pink text-brut-ink",
+        color: "text-brut-pink",
         subcategories: [],
         blocks: [
             Blocks.DATE,
@@ -111,8 +111,8 @@ export const Categories = {
     Creative: {
         name: "creative",
         icon: "🎨",
-        bgColor: "bg-amber-400",
-        color: "text-amber-400",
+        bgColor: "bg-brut-orange text-brut-ink",
+        color: "text-brut-orange",
         subcategories: [],
         blocks: [
             Blocks.PLAY,
@@ -126,8 +126,8 @@ export const Categories = {
     Health: {
         name: "health",
         icon: "🧘‍♂️",
-        bgColor: "bg-lime-500",
-        color: "text-lime-500",
+        bgColor: "bg-brut-lime text-brut-ink",
+        color: "text-brut-lime",
         subcategories: [],
         blocks: [
             Blocks.WEIGHT,
@@ -144,8 +144,8 @@ export const Categories = {
     Household: {
         name: "household",
         icon: "🏠",
-        bgColor: "bg-orange-700",
-        color: "text-orange-700",
+        bgColor: "bg-brut-yellow text-brut-ink",
+        color: "text-brut-yellow",
         subcategories: [],
         blocks: [
             Blocks.LAUNDRY,
@@ -162,8 +162,8 @@ export const Categories = {
     Family: {
         name: "family",
         icon: "☀️",
-        bgColor: "bg-rose-600",
-        color: "text-rose-600",
+        bgColor: "bg-brut-red text-brut-ink",
+        color: "text-brut-red",
         subcategories: ["WhatsApp", "call", "meet", "date"],
         blocks: [
             Blocks.DAD,
@@ -181,8 +181,8 @@ export const Categories = {
     Friends: {
         name: "friends",
         icon: "🌳",
-        bgColor: "bg-sky-500",
-        color: "text-sky-500",
+        bgColor: "bg-brut-blue text-brut-ink",
+        color: "text-brut-blue",
         subcategories: ["WhatsApp", "call", "meet", "date"],
         blocks: [
             Blocks.MAYA,
@@ -198,7 +198,7 @@ export const Categories = {
     Avoid: {
         name: "avoid",
         icon: "🚫",
-        bgColor: "bg-zinc-500",
+        bgColor: "bg-zinc-500 text-white",
         color: "text-zinc-500",
         blocks: [Blocks.DOOM_SCROLL, Blocks.SICK, Blocks.PORN, Blocks.GRUNT],
         subcategories: []
@@ -207,27 +207,52 @@ export const Categories = {
 };
 
 export const CategoryColors = {
-    mood: "text-black",
-    creative: "text-orange-500",
-    health: "text-green-500",
-    testosterone: "text-gray-500",
-    household: "text-yellow-500",
-    family: "text-red-500",
-    friends: "text-blue-500",
-    wife: "text-pink-500",
-    avoid: "text-gray-500",
+    mood: "text-(--brut-fg)",
+    creative: "text-brut-orange",
+    health: "text-brut-lime",
+    testosterone: "text-brut-cyan",
+    household: "text-brut-yellow",
+    family: "text-brut-red",
+    friends: "text-brut-blue",
+    wife: "text-brut-pink",
+    avoid: "text-zinc-500",
 };
 
 export const CategoryBgColors = {
-    mood: "bg-black",
-    creative: "bg-orange-500",
-    health: "bg-green-500",
-    testosterone: "bg-gray-500",
-    household: "bg-yellow-500",
-    family: "bg-red-500",
-    friends: "bg-blue-500",
-    wife: "bg-pink-500",
-    avoid: "bg-gray-500",
+    mood: "bg-(--brut-fg) text-(--brut-bg)",
+    creative: "bg-brut-orange text-brut-ink",
+    health: "bg-brut-lime text-brut-ink",
+    testosterone: "bg-brut-cyan text-brut-ink",
+    household: "bg-brut-yellow text-brut-ink",
+    family: "bg-brut-red text-brut-ink",
+    friends: "bg-brut-blue text-brut-ink",
+    wife: "bg-brut-pink text-brut-ink",
+    avoid: "bg-zinc-500 text-white",
+};
+
+export const CategoryHex = {
+    light: {
+        mood: "#0a0a0a",
+        creative: "#ff6a00",
+        health: "#29b04a",
+        household: "#ffb400",
+        family: "#ff2e2e",
+        friends: "#2b7fff",
+        wife: "#ff4dd2",
+        avoid: "#6b6b6b",
+        testosterone: "#00bfa6",
+    },
+    dark: {
+        mood: "#f5f5f5",
+        creative: "#ff8a3d",
+        health: "#6ee07f",
+        household: "#ffd24d",
+        family: "#ff7676",
+        friends: "#6aa9ff",
+        wife: "#ff8be3",
+        avoid: "#a3a3a3",
+        testosterone: "#5eead4",
+    },
 };
 
 export const MonthNotes = {

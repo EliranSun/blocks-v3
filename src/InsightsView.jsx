@@ -3,10 +3,8 @@ import classNames from "classnames";
 import {
   format,
   subMonths,
-  startOfMonth,
   startOfWeek,
   differenceInWeeks,
-  differenceInDays,
   getDay,
 } from "date-fns";
 import { motion } from "framer-motion";
@@ -21,20 +19,13 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 import { Categories } from "./constants";
+import { useCategoryHex, useChartTokens, BrutTooltip, brutAxis } from "./chartHelpers";
 
-const CATEGORY_HEX = {
-  mood: "#000000",
-  wife: "#7c3aed",
-  creative: "#fbbf24",
-  health: "#84cc16",
-  household: "#b45309",
-  family: "#dc2626",
-  friends: "#0ea5e9",
-  avoid: "#71717a",
-};
+const SNAP = { type: "spring", stiffness: 800, damping: 22, mass: 0.5 };
 
 const DATE_RANGES = [
   { key: "3m", label: "3M", months: 3 },
@@ -81,7 +72,6 @@ function getActiveDays(logs) {
 
 function getWeeklyAreaData(logs) {
   if (!logs.length) return [];
-  const cats = Object.values(Categories).map((c) => c.name);
   const dates = logs.map((l) => new Date(l.date));
   const minDate = new Date(Math.min(...dates));
   const maxDate = new Date(Math.max(...dates));
@@ -117,7 +107,7 @@ function getWeeklyAreaData(logs) {
     .map(([, v]) => v);
 }
 
-function getCategoryDistribution(logs) {
+function getCategoryDistribution(logs, palette) {
   const counts = {};
   logs.forEach((l) => {
     const cat = l.category?.toLowerCase().trim() || "other";
@@ -127,12 +117,12 @@ function getCategoryDistribution(logs) {
     .map(([name, value]) => ({
       name,
       value,
-      color: CATEGORY_HEX[name] || "#999",
+      color: palette[name] || "#999",
     }))
     .sort((a, b) => b.value - a.value);
 }
 
-function getTopBlocks(logs, limit = 10) {
+function getTopBlocks(logs, palette, limit = 10) {
   const counts = {};
   logs.forEach((l) => {
     const name = l.name?.toLowerCase().trim();
@@ -151,7 +141,7 @@ function getTopBlocks(logs, limit = 10) {
     .slice(0, limit)
     .map((b) => ({
       ...b,
-      color: CATEGORY_HEX[b.category] || "#999",
+      color: palette[b.category] || "#999",
     }));
 }
 
@@ -188,37 +178,22 @@ function getMonthComparison(logs) {
 const anim = (delay = 0) => ({
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
-  transition: { type: "spring", damping: 20, stiffness: 300, delay },
+  transition: { ...SNAP, delay },
 });
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="bg-neutral-800 text-white text-xs rounded px-2 py-1 shadow-lg">
-      <p className="font-semibold mb-1">{label}</p>
-      {payload.map((p, i) => (
-        <p key={i} style={{ color: p.color || p.fill }}>
-          {p.name}: {p.value}
-        </p>
-      ))}
+const ChartCard = ({ title, children, className }) => (
+    <div className={classNames("brut-card p-4", className)}>
+        <h2 className="brut-label mb-3 opacity-70">{title}</h2>
+        {children}
     </div>
-  );
-};
-
-const PieTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null;
-  const d = payload[0];
-  return (
-    <div className="bg-neutral-800 text-white text-xs rounded px-2 py-1 shadow-lg">
-      <p>{d.name}: {d.value}</p>
-    </div>
-  );
-};
+);
 
 export function InsightsView({ data, onBlockClick, onCategoryClick }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [dateRange, setDateRange] = useState("12m");
+  const palette = useCategoryHex();
+  const tokens = useChartTokens();
 
   const filteredLogs = useMemo(() => {
     if (!data) return [];
@@ -280,8 +255,8 @@ export function InsightsView({ data, onBlockClick, onCategoryClick }) {
   }, [filteredLogs, dateRange]);
 
   const areaData = useMemo(() => getWeeklyAreaData(filteredLogs), [filteredLogs]);
-  const pieData = useMemo(() => getCategoryDistribution(filteredLogs), [filteredLogs]);
-  const topBlocks = useMemo(() => getTopBlocks(filteredLogs), [filteredLogs]);
+  const pieData = useMemo(() => getCategoryDistribution(filteredLogs, palette), [filteredLogs, palette]);
+  const topBlocks = useMemo(() => getTopBlocks(filteredLogs, palette), [filteredLogs, palette]);
   const dayData = useMemo(() => getDayOfWeekData(filteredLogs), [filteredLogs]);
   const monthComparison = useMemo(() => getMonthComparison(data || []), [data]);
 
@@ -314,84 +289,82 @@ export function InsightsView({ data, onBlockClick, onCategoryClick }) {
     selectedBlocks.length > 0 ||
     dateRange !== "12m";
 
+  const FilterPill = ({ active, accent, onClick, children }) => (
+    <motion.button
+      whileHover={{ x: -2, y: -2 }}
+      whileTap={{ x: 2, y: 2 }}
+      transition={SNAP}
+      className={classNames(
+        "px-3 py-1 text-xs uppercase tracking-wide font-bold whitespace-nowrap brut-border brut-shadow-sm shrink-0",
+        active
+          ? (accent || "bg-(--brut-fg) text-(--brut-bg)")
+          : "bg-(--color-brut-paper) text-(--brut-fg) hover:bg-(--color-brut-yellow)"
+      )}
+      onClick={onClick}
+    >
+      {children}
+    </motion.button>
+  );
+
   return (
-    <div className="pb-40 space-y-6">
+    <div className="pb-40 space-y-5">
       <motion.h1
-        className="text-2xl font-bold dark:text-white"
+        className="text-4xl uppercase tracking-tight"
+        style={{ fontFamily: 'var(--font-display)', fontWeight: 900 }}
         {...anim(0)}
       >
         Insights
       </motion.h1>
 
-      {/* Date range filter */}
       <motion.div className="flex gap-2 flex-wrap" {...anim(0.03)}>
         {DATE_RANGES.map((r) => (
-          <motion.button
+          <FilterPill
             key={r.key}
-            whileTap={{ scale: 0.92 }}
-            className={classNames(
-              "px-3 py-1 rounded-full text-sm font-semibold transition-colors",
-              dateRange === r.key
-                ? "bg-amber-500 text-white"
-                : "bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-300"
-            )}
+            active={dateRange === r.key}
+            accent="bg-(--color-brut-orange) text-(--color-brut-ink)"
             onClick={() => setDateRange(r.key)}
           >
             {r.label}
-          </motion.button>
+          </FilterPill>
         ))}
       </motion.div>
 
-      {/* Category filter */}
       <motion.div
         className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
         {...anim(0.05)}
       >
         {categoryDefs.map((cat) => (
-          <motion.button
+          <FilterPill
             key={cat.name}
-            whileTap={{ scale: 0.92 }}
-            className={classNames(
-              "px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap transition-colors shrink-0",
-              selectedCategories.includes(cat.name)
-                ? "bg-neutral-800 text-white ring-2 ring-neutral-600"
-                : "bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-400"
-            )}
+            active={selectedCategories.includes(cat.name)}
             onClick={() => toggleCategory(cat.name)}
           >
             {cat.icon} {cat.name}
-          </motion.button>
+          </FilterPill>
         ))}
       </motion.div>
 
-      {/* Block filter */}
       {availableBlocks.length > 0 && (
         <motion.div
           className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
           {...anim(0.07)}
         >
           {availableBlocks.map((block) => (
-            <motion.button
+            <FilterPill
               key={block}
-              whileTap={{ scale: 0.92 }}
-              className={classNames(
-                "px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors shrink-0",
-                selectedBlocks.includes(block.toLowerCase())
-                  ? "bg-amber-500 text-white"
-                  : "bg-neutral-100 dark:bg-neutral-700 dark:text-neutral-400"
-              )}
+              active={selectedBlocks.includes(block.toLowerCase())}
+              accent="bg-(--color-brut-lime) text-(--color-brut-ink)"
               onClick={() => toggleBlock(block)}
             >
               {block}
-            </motion.button>
+            </FilterPill>
           ))}
         </motion.div>
       )}
 
-      {/* Clear filters */}
       {hasFilters && (
         <motion.button
-          className="text-xs text-amber-500 underline"
+          className="text-xs font-bold uppercase tracking-wide underline"
           onClick={() => {
             setSelectedCategories([]);
             setSelectedBlocks([]);
@@ -403,200 +376,195 @@ export function InsightsView({ data, onBlockClick, onCategoryClick }) {
         </motion.button>
       )}
 
-      {/* Summary stats */}
       <motion.div
-        className="grid grid-cols-4 gap-3 text-center"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center"
         {...anim(0.1)}
       >
         {[
-          { label: "Total", value: stats.total },
-          { label: "Active days", value: stats.activeDays },
-          { label: "Avg/week", value: stats.avgPerWeek },
-          { label: "Streak", value: `${stats.streak}d` },
+          { label: "Total", value: stats.total, accent: "bg-(--color-brut-orange) text-(--color-brut-ink)" },
+          { label: "Active days", value: stats.activeDays, accent: "bg-(--color-brut-blue) text-(--color-brut-ink)" },
+          { label: "Avg/week", value: stats.avgPerWeek, accent: "bg-(--color-brut-lime) text-(--color-brut-ink)" },
+          { label: "Streak", value: `${stats.streak}d`, accent: "bg-(--color-brut-pink) text-(--color-brut-ink)" },
         ].map((s) => (
           <div
             key={s.label}
-            className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-3"
+            className={classNames("brut-border brut-shadow p-3", s.accent)}
           >
-            <div className="text-xl font-bold dark:text-white">{s.value}</div>
-            <div className="text-xs text-neutral-500 dark:text-neutral-400">
+            <div className="text-3xl font-black" style={{ fontFamily: 'var(--font-display)' }}>{s.value}</div>
+            <div className="brut-label mt-1">
               {s.label}
             </div>
           </div>
         ))}
       </motion.div>
 
-      {/* Activity over time */}
       <motion.div {...anim(0.15)}>
-        <h2 className="text-sm font-semibold mb-2 dark:text-neutral-300">
-          Activity Over Time
-        </h2>
-        <ResponsiveContainer width="100%" height={200}>
-          <AreaChart data={areaData}>
-            <XAxis
-              dataKey="period"
-              tick={{ fontSize: 10 }}
-              stroke="#737373"
-              interval="preserveStartEnd"
-            />
-            <YAxis tick={{ fontSize: 10 }} stroke="#737373" width={30} />
-            <Tooltip content={<CustomTooltip />} />
-            {chartCats.map((cat) => (
-              <Area
-                key={cat}
-                type="monotone"
-                dataKey={cat}
-                stackId="1"
-                stroke={CATEGORY_HEX[cat] || "#999"}
-                fill={CATEGORY_HEX[cat] || "#999"}
-                fillOpacity={0.6}
+        <ChartCard title="Activity Over Time">
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={areaData}>
+              <CartesianGrid stroke={tokens.gridDim} strokeWidth={1} strokeDasharray="0" vertical={false} />
+              <XAxis
+                dataKey="period"
+                interval="preserveStartEnd"
+                {...brutAxis(tokens)}
               />
-            ))}
-          </AreaChart>
-        </ResponsiveContainer>
+              <YAxis width={30} {...brutAxis(tokens)} />
+              <Tooltip content={<BrutTooltip />} cursor={{ fill: tokens.gridDim }} />
+              {chartCats.map((cat) => (
+                <Area
+                  key={cat}
+                  type="linear"
+                  dataKey={cat}
+                  stackId="1"
+                  stroke={tokens.border}
+                  strokeWidth={1.5}
+                  fill={palette[cat] || "#999"}
+                  fillOpacity={0.85}
+                />
+              ))}
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartCard>
       </motion.div>
 
-      {/* Category distribution */}
       <motion.div {...anim(0.2)}>
-        <h2 className="text-sm font-semibold mb-2 dark:text-neutral-300">
-          Category Distribution
-        </h2>
-        <div className="flex items-center justify-center">
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={85}
-                dataKey="value"
-                paddingAngle={2}
-                onClick={(entry) => onCategoryClick?.(entry.name)}
+        <ChartCard title="Category Distribution">
+          <div className="flex items-center justify-center">
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={85}
+                  dataKey="value"
+                  paddingAngle={0}
+                  stroke={tokens.border}
+                  strokeWidth={2}
+                  onClick={(entry) => onCategoryClick?.(entry.name)}
+                  className="cursor-pointer"
+                >
+                  {pieData.map((entry, i) => (
+                    <Cell key={i} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip content={<BrutTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-wrap gap-2 justify-center mt-2">
+            {pieData.map((entry) => (
+              <button
+                key={entry.name}
+                className="flex items-center gap-1.5 text-xs px-2 py-0.5 brut-border bg-(--color-brut-paper) cursor-pointer uppercase font-bold tracking-wide"
+                onClick={() => onCategoryClick?.(entry.name)}
+              >
+                <span
+                  className="inline-block w-2.5 h-2.5"
+                  style={{ backgroundColor: entry.color }}
+                />
+                {entry.name} ({entry.value})
+              </button>
+            ))}
+          </div>
+        </ChartCard>
+      </motion.div>
+
+      <motion.div {...anim(0.25)}>
+        <ChartCard title="Top Blocks">
+          <ResponsiveContainer width="100%" height={topBlocks.length * 32 + 20}>
+            <BarChart data={topBlocks} layout="vertical" margin={{ left: 60 }}>
+              <CartesianGrid stroke={tokens.gridDim} strokeWidth={1} strokeDasharray="0" horizontal={false} />
+              <XAxis type="number" {...brutAxis(tokens)} />
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={55}
+                {...brutAxis(tokens)}
+              />
+              <Tooltip content={<BrutTooltip />} cursor={{ fill: tokens.gridDim }} />
+              <Bar
+                dataKey="count"
+                radius={0}
+                stroke={tokens.border}
+                strokeWidth={1.5}
+                onClick={(entry) => {
+                  const cat =
+                    entry.category || getCategoryForBlock(entry.name);
+                  if (cat) {
+                    onBlockClick?.({
+                      name: entry.name,
+                      category: cat,
+                    });
+                  }
+                }}
                 className="cursor-pointer"
               >
-                {pieData.map((entry, i) => (
+                {topBlocks.map((entry, i) => (
                   <Cell key={i} fill={entry.color} />
                 ))}
-              </Pie>
-              <Tooltip content={<PieTooltip />} />
-            </PieChart>
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
-        </div>
-        <div className="flex flex-wrap gap-2 justify-center mt-2">
-          {pieData.map((entry) => (
-            <button
-              key={entry.name}
-              className="flex items-center gap-1 text-xs dark:text-neutral-300 cursor-pointer"
-              onClick={() => onCategoryClick?.(entry.name)}
-            >
-              <span
-                className="inline-block w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: entry.color }}
-              />
-              {entry.name} ({entry.value})
-            </button>
-          ))}
-        </div>
+        </ChartCard>
       </motion.div>
 
-      {/* Top blocks */}
-      <motion.div {...anim(0.25)}>
-        <h2 className="text-sm font-semibold mb-2 dark:text-neutral-300">
-          Top Blocks
-        </h2>
-        <ResponsiveContainer width="100%" height={topBlocks.length * 32 + 20}>
-          <BarChart data={topBlocks} layout="vertical" margin={{ left: 60 }}>
-            <XAxis type="number" tick={{ fontSize: 10 }} stroke="#737373" />
-            <YAxis
-              type="category"
-              dataKey="name"
-              tick={{ fontSize: 11 }}
-              stroke="#737373"
-              width={55}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar
-              dataKey="count"
-              radius={[0, 4, 4, 0]}
-              onClick={(entry) => {
-                const cat =
-                  entry.category || getCategoryForBlock(entry.name);
-                if (cat) {
-                  onBlockClick?.({
-                    name: entry.name,
-                    category: cat,
-                  });
-                }
-              }}
-              className="cursor-pointer"
-            >
-              {topBlocks.map((entry, i) => (
-                <Cell key={i} fill={entry.color} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </motion.div>
-
-      {/* Day of week */}
       <motion.div {...anim(0.3)}>
-        <h2 className="text-sm font-semibold mb-2 dark:text-neutral-300">
-          Day of Week
-        </h2>
-        <ResponsiveContainer width="100%" height={140}>
-          <BarChart data={dayData}>
-            <XAxis dataKey="day" tick={{ fontSize: 11 }} stroke="#737373" />
-            <YAxis tick={{ fontSize: 10 }} stroke="#737373" width={30} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <ChartCard title="Day of Week">
+          <ResponsiveContainer width="100%" height={140}>
+            <BarChart data={dayData}>
+              <CartesianGrid stroke={tokens.gridDim} strokeWidth={1} strokeDasharray="0" vertical={false} />
+              <XAxis dataKey="day" {...brutAxis(tokens)} />
+              <YAxis width={30} {...brutAxis(tokens)} />
+              <Tooltip content={<BrutTooltip />} cursor={{ fill: tokens.gridDim }} />
+              <Bar dataKey="count" fill="var(--color-brut-orange)" stroke={tokens.border} strokeWidth={1.5} radius={0} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
       </motion.div>
 
-      {/* Monthly comparison */}
       <motion.div {...anim(0.35)}>
-        <h2 className="text-sm font-semibold mb-2 dark:text-neutral-300">
-          This Month vs Last Month
-        </h2>
-        <div className="grid grid-cols-1 gap-1">
-          {monthComparison
-            .filter((m) => m.current > 0 || m.previous > 0)
-            .map((m) => {
-              const catDef = Object.values(Categories).find(
-                (c) => c.name === m.category
-              );
-              return (
-                <button
-                  key={m.category}
-                  className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 cursor-pointer"
-                  onClick={() => onCategoryClick?.(m.category)}
-                >
-                  <span className="text-sm dark:text-neutral-200">
-                    {catDef?.icon} {m.category}
-                  </span>
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="text-neutral-500 dark:text-neutral-400">
-                      {m.previous}
+        <ChartCard title="This Month vs Last Month">
+          <div className="grid grid-cols-1 gap-1">
+            {monthComparison
+              .filter((m) => m.current > 0 || m.previous > 0)
+              .map((m) => {
+                const catDef = Object.values(Categories).find(
+                  (c) => c.name === m.category
+                );
+                return (
+                  <button
+                    key={m.category}
+                    className="flex items-center justify-between px-3 py-2 brut-border brut-shadow-sm bg-(--color-brut-paper) cursor-pointer"
+                    onClick={() => onCategoryClick?.(m.category)}
+                  >
+                    <span className="text-sm font-bold uppercase tracking-wide">
+                      {catDef?.icon} {m.category}
                     </span>
-                    <span className="dark:text-white font-semibold">
-                      {m.current}
-                    </span>
-                    <span
-                      className={classNames("text-xs font-medium min-w-[3rem] text-right", {
-                        "text-green-500": m.delta > 0,
-                        "text-red-500": m.delta < 0,
-                        "text-neutral-400": m.delta === 0,
-                      })}
-                    >
-                      {m.delta > 0 ? "+" : ""}
-                      {m.delta}%
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-        </div>
+                    <div className="flex items-center gap-3 text-sm">
+                      <span className="opacity-50">
+                        {m.previous}
+                      </span>
+                      <span className="font-black text-lg" style={{ fontFamily: 'var(--font-display)' }}>
+                        {m.current}
+                      </span>
+                      <span
+                        className={classNames("text-xs font-black uppercase tracking-wide min-w-[3rem] text-right", {
+                          "text-brut-lime": m.delta > 0,
+                          "text-brut-red": m.delta < 0,
+                          "opacity-50": m.delta === 0,
+                        })}
+                      >
+                        {m.delta > 0 ? "+" : ""}
+                        {m.delta}%
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+          </div>
+        </ChartCard>
       </motion.div>
     </div>
   );

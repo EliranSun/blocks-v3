@@ -4,15 +4,15 @@ import classNames from "classnames";
 import { motion } from "framer-motion";
 
 export const blockItemVariants = {
-    hidden: { opacity: 0, y: 8, scale: 0.97 },
+    hidden: { opacity: 0, y: 8 },
     visible: {
         opacity: 1,
         y: 0,
-        scale: 1,
         transition: {
             type: "spring",
-            damping: 20,
-            stiffness: 300,
+            stiffness: 800,
+            damping: 22,
+            mass: 0.5,
         },
     },
 };
@@ -28,15 +28,15 @@ export const Block = ({
 }) => {
     const variantClasses = {
         week: {
-            base: "px-1 py-2 break-words text-center font-bold text-shadow-2 text-xs text-left",
+            base: "px-1 py-1.5 break-words text-left font-bold text-xs border-2 border-(--brut-border)",
             useBackground: true,
         },
         year: {
-            base: "px-2 pt-1 text-center font-bold text-shadow-2 text-xs text-left",
+            base: "px-1.5 py-1 text-left font-bold text-xs border-2 border-(--brut-border)",
             useBackground: true,
         },
         list: {
-            base: "px-2 pt-1 text-center border-b-2 font-bold text-sm grow-0 text-left",
+            base: "px-3 py-2 text-left font-bold text-sm grow-0 brut-border brut-shadow-sm",
             useBackground: true,
         },
     };
@@ -49,21 +49,21 @@ export const Block = ({
     return (
         <motion.li
             variants={blockItemVariants}
-            whileHover={onClick ? { scale: 1.03, y: -2 } : undefined}
-            whileTap={onClick ? { scale: 0.97 } : undefined}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            whileHover={onClick ? { x: -2, y: -2 } : undefined}
+            whileTap={onClick ? { x: 2, y: 2 } : undefined}
+            transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
             className={classNames(
                 config.base,
                 colorClass,
                 onClick && "cursor-pointer",
-                showColorOnly && "text-[0px] h-2 border-none"
+                showColorOnly && "text-[0px] h-2 border-2"
             )}
             onClick={() => onClick?.(item)}
         >
-            {item.name}
-            {showDate && ` - ${format(item.date, "d MMM yy, EEE")}`}
-            {showSubcategory && item.subcategory ? ` - ${item.subcategory}` : ""}
-            {showNote && item.note ? ` - ${item.note}` : ""}
+            <span className="uppercase tracking-wide">{item.name}</span>
+            {showDate && <span className="opacity-80"> {format(item.date, "d MMM yy, EEE")}</span>}
+            {showSubcategory && item.subcategory ? <span className="opacity-80"> · {item.subcategory}</span> : ""}
+            {showNote && item.note ? <span className="opacity-80"> · {item.note}</span> : ""}
         </motion.li>
     );
 };

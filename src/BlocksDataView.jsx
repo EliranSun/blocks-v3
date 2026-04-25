@@ -53,14 +53,15 @@ const blockListVariants = {
 
 export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => {
     return (
-        <div className="space-y-2 pb-40">
+        <div className="space-y-4 pb-40">
             <motion.h1
-                className="text-xl merriweather-900"
+                className="text-4xl uppercase tracking-tight"
+                style={{ fontFamily: 'var(--font-display)', fontWeight: 900 }}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
             >
-                BLOCKS DATA
+                Blocks Data
             </motion.h1>
             {Object.values(Categories).map((category, catIndex) => {
                 return (
@@ -70,15 +71,20 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
                         variants={categorySectionVariants}
                         initial="hidden"
                         animate="visible"
+                        className="brut-card p-3"
                     >
                         <motion.button
-                            className="flex items-center gap-2 py-2 w-full text-left"
-                            whileHover={{ x: 3 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            className={classNames(
+                                "flex items-center gap-2 px-3 py-2 w-full text-left brut-border brut-shadow-sm uppercase",
+                                category.bgColor
+                            )}
+                            whileHover={{ x: -2, y: -2 }}
+                            whileTap={{ x: 2, y: 2 }}
+                            transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                             onClick={() => onCategoryClick?.(category.name)}
                         >
                             <span className="text-base">{category.icon}</span>
-                            <h2 className={classNames("text-lg uppercase font-bold underline merriweather-500", category.color)}>
+                            <h2 className="text-lg font-black tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
                                 {category.name}
                             </h2>
                         </motion.button>
@@ -86,6 +92,7 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
                             variants={blockListVariants}
                             initial="hidden"
                             animate="visible"
+                            className="mt-2"
                         >
                             {category.blocks.map(block => {
                                 const blocks = data
@@ -100,24 +107,21 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
                                 return (
                                     <motion.button
                                         key={block}
-                                        className={classNames("my-2 flex w-full text-left cursor-pointer")}
+                                        className="my-1 flex w-full text-left cursor-pointer items-baseline border-b-2 border-(--brut-border)/20 py-1"
                                         variants={blockRowVariants}
                                         whileHover={{ x: 4 }}
-                                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                        transition={{ type: "spring", stiffness: 800, damping: 22, mass: 0.5 }}
                                         onClick={() => onBlockClick?.(block)}
                                     >
-                                        <h3 className={classNames(category.color, "space-grotesk-600 w-28 font-bold uppercase shrink-0")}>
+                                        <h3 className={classNames(category.color, "w-28 font-bold uppercase tracking-wide shrink-0 text-sm")}>
                                             {block}
                                         </h3>
-                                        <div className="flex gap-1 merriweather-400 min-w-0 overflow-hidden">
+                                        <div className="flex gap-1 min-w-0 overflow-hidden text-sm">
                                             {blocks.length ? (
                                                 <span className="truncate">
-                                                    {[
-                                                        timeAgo(blocks.at(0)?.date),
-                                                        blocks.length + " times"
-                                                    ].filter(Boolean).join(", ")}
+                                                    <span className="font-black">{blocks.length}×</span> · {timeAgo(blocks.at(0)?.date)}
                                                 </span>
-                                            ) : "None"}
+                                            ) : <span className="opacity-50">None</span>}
                                         </div>
                                     </motion.button>
                                 )
