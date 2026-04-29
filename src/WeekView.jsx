@@ -86,39 +86,34 @@ export const WeekView = ({ currentDate,
                                     {format(day, 'EEEEE')}
                                     <div className="text-[10px] md:text-xs font-black mt-0.5">{format(day, 'd')}</div>
                                 </div>
-                                <div className="border-2 border-black rounded-sm bg-[#fffbe6] min-h-[60px] p-1 overflow-hidden">
-                                    <motion.ul
-                                        className="space-y-1"
-                                        variants={blockListVariants}
-                                        initial="hidden"
-                                        animate="visible"
-                                    >
-                                        {dayItems
-                                            .sort((a, b) => {
-                                                // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
-                                                const getTime = (dateStr) => {
-                                                    if (dateStr.includes('T')) {
-                                                        // Has time component
-                                                        const timePart = dateStr.split('T')[1];
-                                                        const [hours, minutes] = timePart.split(':').map(Number);
-                                                        return hours * 60 + (minutes || 0); // Convert to minutes for easier comparison
-                                                    }
-                                                    // No time component, treat as midnight (00:00)
-                                                    return 0;
-                                                };
-                                                return getTime(a.date) - getTime(b.date);
-                                            })
-                                            .map(item => (
-                                                <Block
-                                                    key={item.date + item.name}
-                                                    item={item}
-                                                    variant="week"
-                                                    {...blockProps}
-                                                    onClick={onBlockClick}
-                                                />
-                                            ))}
-                                    </motion.ul>
-                                </div>
+                                <motion.ul
+                                    className="space-y-1 min-h-[60px]"
+                                    variants={blockListVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
+                                    {dayItems
+                                        .sort((a, b) => {
+                                            const getTime = (dateStr) => {
+                                                if (dateStr.includes('T')) {
+                                                    const timePart = dateStr.split('T')[1];
+                                                    const [hours, minutes] = timePart.split(':').map(Number);
+                                                    return hours * 60 + (minutes || 0);
+                                                }
+                                                return 0;
+                                            };
+                                            return getTime(a.date) - getTime(b.date);
+                                        })
+                                        .map(item => (
+                                            <Block
+                                                key={item.date + item.name}
+                                                item={item}
+                                                variant="week"
+                                                {...blockProps}
+                                                onClick={onBlockClick}
+                                            />
+                                        ))}
+                                </motion.ul>
                                 {onAddBlock && (
                                     <motion.button
                                         whileTap={{ translateX: 2, translateY: 2, boxShadow: "0 0 0 0 #000" }}
