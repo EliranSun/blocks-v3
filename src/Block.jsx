@@ -38,7 +38,14 @@ export const Block = ({
             useBackground: true,
         },
         list: {
-            base: "px-3 py-1.5 rounded-sm border-2 md:border-[3px] border-black shadow-[2px_2px_0_0_#000] md:shadow-[3px_3px_0_0_#000] active:shadow-[1px_1px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] transition-[transform,box-shadow] duration-75 font-bold uppercase tracking-tight space-grotesk-600 text-sm text-white",
+            base: "px-2 py-1 rounded-xs border-2 md:border-[3px] " +
+                "border-black dark:border-white " +
+                "shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] " +
+                "md:shadow-[3px_3px_0_0_#000] dark:md:shadow-[3px_3px_0_0_#fff] " +
+                "active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff] " +
+                "active:translate-x-[2px] active:translate-y-[2px] transition-[transform,box-shadow] " +
+                "duration-75 font-bold uppercase tracking-tight space-grotesk-600 text-[10px] text-white dark:text-black",
+
             useBackground: true,
         },
     };
@@ -65,7 +72,7 @@ export const Block = ({
             onClick={() => onClick?.(item)}
         >
             {item.name}
-            {showDate && ` - ${format(item.date, "d MMM yy, EEE")}`}
+            {showDate && ` - ${format(item.date, "d.M.yy")}`}
             {showSubcategory && item.subcategory ? ` - ${item.subcategory}` : ""}
             {showNote && item.note ? ` - ${item.note}` : ""}
         </motion.li>

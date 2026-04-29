@@ -62,11 +62,7 @@ const ToolbarPopover = ({ label, isActive, children }) => {
 
     useEffect(() => {
         if (!isOpen) return;
-        const handleClickOutside = (e) => {
-            if (popoverRef.current && !popoverRef.current.contains(e.target)) {
-                setIsOpen(false);
-            }
-        };
+        const handleClickOutside = () => setIsOpen(false);
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isOpen]);
@@ -209,7 +205,7 @@ export const BlocksList = ({
         return (
             <motion.ul
                 className={classNames('flex flex-wrap', {
-                    "gap-3": !showColorOnly
+                    "gap-2": !showColorOnly
                 })}
                 variants={listContainerVariants}
                 initial="hidden"
@@ -302,11 +298,11 @@ export const BlocksList = ({
                         ))}
                     </ToolbarPopover>
                     <ToolbarPopover
+                        isActive={!!category}
                         label={category
                             ? categoryList.find(c => c.name === category)?.icon
                             : "All"
                         }
-                        isActive={!!category}
                     >
                         <PopoverItem
                             icon="*"
