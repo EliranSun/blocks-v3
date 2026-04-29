@@ -5,13 +5,13 @@ import { BlocksList } from "./BlocksList";
 // import { CategoryButtons } from './CategoryButtons';
 // import { NavigationButtons } from './NavigationButtons';
 // import { DailyQuotes } from './DailyQuotes';
-import { RectangleButton } from "./Button";
 import { useLogsData } from "./useLogsData";
 import { LogDialog } from "./LogDialog";
 import { BlocksDataView } from './BlocksDataView';
 import { BlockDetailView } from './BlockDetailView';
 import { CategoryDetailView } from './CategoryDetailView';
 import { InsightsView } from './InsightsView';
+import { NavMenu } from './NavMenu';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -30,6 +30,7 @@ function App() {
   const { logs, addLog, editLog, deleteLog } = useLogsData();
   const [viewName, setViewName] = useState(Views[0]);
   const [listScope, setListScope] = useState("all");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleBlockClick = (item) => {
     setSelectedLog(item);
@@ -144,67 +145,64 @@ function App() {
             onEdit={editLog}
             onDelete={deleteLog}
           />
-          <motion.div
-            className={classNames(
-              "fixed bottom-5 inset-x-0 flex justify-between gap-2",
-              "bg-neutral-200 dark:bg-neutral-700 rounded-full",
-              "shadow-lg px-4 py-2 max-w-2xl md:w-full mx-2 md:mx-auto",
-            )}
+          <motion.button
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen(true)}
+            whileTap={{ scale: 0.92 }}
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{
-              type: "spring",
-              damping: 20,
-              stiffness: 200,
-              delay: 0.2,
-            }}
+            transition={{ type: "spring", damping: 20, stiffness: 200, delay: 0.2 }}
+            className={classNames(
+              "fixed bottom-5 left-5 z-30 w-14 h-14 flex items-center justify-center rounded-sm",
+              "border-[3px] border-black dark:border-white",
+              "bg-white text-black dark:bg-neutral-900 dark:text-white",
+              "shadow-[5px_5px_0_0_#000] dark:shadow-[5px_5px_0_0_#fff]",
+              "active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff]",
+              "active:translate-x-[4px] active:translate-y-[4px]",
+              "transition-[transform,box-shadow] duration-75",
+            )}
           >
-            <div className='flex gap-4'>
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === ""
-                })}
-                onClick={() => {
-                  setPage("");
-                  setSelectedBlock(null);
-                }}>
-                Blocks
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === "blocksData" || page === "blockDetail" || page === "categoryDetail"
-                })}
-                onClick={() => {
-                  setPage("blocksData");
-                  setSelectedBlock(null);
-                  setSelectedCategory(null);
-                }}>
-                Data
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                className={classNames('underline', {
-                  "dark:text-amber-400 text-amber-600": page === "insights"
-                })}
-                onClick={() => {
-                  setPage("insights");
-                  setSelectedBlock(null);
-                  setSelectedCategory(null);
-                }}>
-                Insights
-              </motion.button>
-            </div>
-            <RectangleButton
-              isActive
-              onClick={handleOpenAddDialog}
-              className="rounded-full px-4"
-              aria-label="Toggle add log dialog">
-              Add block
-            </RectangleButton>
-          </motion.div>
-          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden'>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </motion.button>
+          <motion.button
+            type="button"
+            aria-label="Add block"
+            onClick={handleOpenAddDialog}
+            whileTap={{ scale: 0.92 }}
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", damping: 20, stiffness: 200, delay: 0.25 }}
+            className={classNames(
+              "fixed bottom-5 right-5 z-30 h-14 px-5 flex items-center gap-2 rounded-sm",
+              "border-[3px] border-black dark:border-white",
+              "bg-white text-black dark:bg-neutral-900 dark:text-white",
+              "shadow-[5px_5px_0_0_#000] dark:shadow-[5px_5px_0_0_#fff]",
+              "active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff]",
+              "active:translate-x-[4px] active:translate-y-[4px]",
+              "transition-[transform,box-shadow] duration-75",
+              "font-black uppercase tracking-tight space-grotesk-600 text-sm",
+            )}
+          >
+            <span className="text-xl leading-none">+</span>
+            Add block
+          </motion.button>
+          <NavMenu
+            isOpen={isMenuOpen}
+            onClose={() => setIsMenuOpen(false)}
+            currentPage={page}
+            onNavigate={(key) => {
+              setPage(key);
+              setSelectedBlock(null);
+              setSelectedCategory(null);
+            }}
+          />
+          <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden pb-24'>
             <AnimatePresence mode="wait">
               {page === "blockDetail" && selectedBlock ? (
                 <motion.div
