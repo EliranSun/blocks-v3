@@ -5,20 +5,13 @@ export const Popover = ({ children, isOpen }) => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <>
-                    <motion.div
-                        className="fixed inset-0 bg-black/60 z-40"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.18 }}
-                    />
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
                     <motion.div
                         className={classNames(
-                            "fixed inset-0 m-auto rounded-sm",
+                            "pointer-events-auto rounded-sm",
                             "bg-[#fffbe6] text-black",
                             "border-[3px] border-black shadow-[8px_8px_0_0_#000]",
-                            "p-6 w-[calc(100%-2rem)] md:h-11/12 max-w-xl z-50 overflow-hidden",
+                            "p-6 w-full max-w-xl max-h-[80vh] overflow-hidden",
                         )}
                         initial={{ opacity: 0, scale: 0.94, y: 16 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -32,7 +25,7 @@ export const Popover = ({ children, isOpen }) => {
                     >
                         {children}
                     </motion.div>
-                </>
+                </div>
             )}
         </AnimatePresence>
     )
