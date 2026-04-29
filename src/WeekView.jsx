@@ -61,7 +61,7 @@ export const WeekView = ({ currentDate,
 
     return (
         <div className="space-grotesk-400">
-            <div className="border-2 md:border-[3px] border-black rounded-sm shadow-[3px_3px_0_0_#000] md:shadow-[5px_5px_0_0_#000] bg-white p-1">
+            <div className="border-2 md:border-[3px] border-black dark:border-white rounded-sm shadow-[3px_3px_0_0_#000] md:shadow-[5px_5px_0_0_#000] dark:shadow-[3px_3px_0_0_#fff] dark:md:shadow-[5px_5px_0_0_#fff] bg-white dark:bg-neutral-900 p-1">
                 <div className="grid grid-cols-7 gap-1 w-full">
                     {weekData.weekDays?.map((day, index) => {
                         const dayKey = format(day, 'yyyy-MM-dd');
@@ -78,9 +78,9 @@ export const WeekView = ({ currentDate,
                             >
                                 <div
                                     className={classNames(
-                                        "text-center py-1 mb-1 border-b-2 border-black",
+                                        "text-center py-1 mb-1 border-b-2 border-black dark:border-white",
                                         "font-bold uppercase tracking-tight space-grotesk-600 text-[10px] md:text-xs leading-none",
-                                        isToday ? "bg-black text-white" : "text-black"
+                                        isToday ? "bg-black text-white dark:bg-white dark:text-black" : "text-black dark:text-white"
                                     )}
                                 >
                                     {format(day, 'EEEEE')}
@@ -118,7 +118,7 @@ export const WeekView = ({ currentDate,
                                     <motion.button
                                         whileTap={{ translateX: 2, translateY: 2, boxShadow: "0 0 0 0 #000" }}
                                         onClick={() => onAddBlock(day)}
-                                        className="w-full mt-1 py-0.5 rounded-sm border-2 border-black bg-white text-black font-black text-sm leading-none shadow-[2px_2px_0_0_#000] transition-[transform,box-shadow] duration-75"
+                                        className="w-full mt-1 py-0.5 rounded-sm border-2 border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-black text-sm leading-none shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] transition-[transform,box-shadow] duration-75"
                                         title={`Add block for ${format(day, 'EEE d/MM')}`}
                                     >
                                         +

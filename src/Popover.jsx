@@ -17,8 +17,8 @@ export const Popover = ({ children, isOpen }) => {
                         <motion.div
                             className={classNames(
                                 "pointer-events-auto rounded-sm",
-                                "bg-[#fffbe6] text-black",
-                                "border-[3px] border-black shadow-[8px_8px_0_0_#000]",
+                                "bg-[#fffbe6] text-black dark:bg-neutral-900 dark:text-white",
+                                "border-[3px] border-black dark:border-white shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#fff]",
                                 "p-6 w-full max-w-xl max-h-[80vh] overflow-hidden",
                             )}
                             initial={{ opacity: 0, scale: 0.94, y: 16 }}
