@@ -118,7 +118,7 @@ export const WeekView = ({ currentDate,
                                     <motion.button
                                         whileTap={{ translateX: 2, translateY: 2, boxShadow: "0 0 0 0 #000" }}
                                         onClick={() => onAddBlock(day)}
-                                        className="w-full mt-1 py-0.5 rounded-sm border-2 border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-black text-sm leading-none shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] transition-[transform,box-shadow] duration-75"
+                                        className="w-full aspect-square mt-1 rounded-sm border-2 border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-black text-base leading-none shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] transition-[transform,box-shadow] duration-75"
                                         title={`Add block for ${format(day, 'EEE d/MM')}`}
                                     >
                                         +
