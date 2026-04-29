@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
+import classNames from "classnames";
 import { Block } from "./Block";
 import { motion } from "framer-motion";
 
@@ -56,70 +57,82 @@ export const WeekView = ({ currentDate,
         return { weekDays, grouped };
     }, [currentDate, data]);
 
+    const today = new Date();
+
     return (
         <div className="space-grotesk-400">
-            <div className="grid grid-cols-7  gap-1 w-full overflow-x-auto">
-                {weekData.weekDays?.map((day, index) => {
-                    const dayKey = format(day, 'yyyy-MM-dd');
-                    const dayItems = weekData.grouped[dayKey] || [];
-                    return (
-                        <motion.div
-                            key={dayKey}
-                            className="flex-1"
-                            custom={index}
-                            variants={dayColumnVariants}
-                            initial="hidden"
-                            animate="visible"
-                        >
-                            <div className="font-semibold text-xs mb-2 text-center border-b pb-1">
-                                {format(day, 'EEE')}
-                                <br />
-                                <span className="text-gray-500">{format(day, 'd/MM')}</span>
-                            </div>
-                            <motion.ul
-                                className="space-y-1"
-                                variants={blockListVariants}
+            <div className="border-2 md:border-[3px] border-black rounded-sm shadow-[3px_3px_0_0_#000] md:shadow-[5px_5px_0_0_#000] bg-white p-1">
+                <div className="grid grid-cols-7 gap-1 w-full">
+                    {weekData.weekDays?.map((day, index) => {
+                        const dayKey = format(day, 'yyyy-MM-dd');
+                        const dayItems = weekData.grouped[dayKey] || [];
+                        const isToday = isSameDay(day, today);
+                        return (
+                            <motion.div
+                                key={dayKey}
+                                className="min-w-0 flex flex-col"
+                                custom={index}
+                                variants={dayColumnVariants}
                                 initial="hidden"
                                 animate="visible"
                             >
-                                {dayItems
-                                    .sort((a, b) => {
-                                        // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
-                                        const getTime = (dateStr) => {
-                                            if (dateStr.includes('T')) {
-                                                // Has time component
-                                                const timePart = dateStr.split('T')[1];
-                                                const [hours, minutes] = timePart.split(':').map(Number);
-                                                return hours * 60 + (minutes || 0); // Convert to minutes for easier comparison
-                                            }
-                                            // No time component, treat as midnight (00:00)
-                                            return 0;
-                                        };
-                                        return getTime(a.date) - getTime(b.date);
-                                    })
-                                    .map(item => (
-                                        <Block
-                                            key={item.date + item.name}
-                                            item={item}
-                                            variant="week"
-                                            {...blockProps}
-                                            onClick={onBlockClick}
-                                        />
-                                    ))}
-                            </motion.ul>
-                            {onAddBlock && (
-                                <motion.button
-                                    whileTap={{ scale: 0.88 }}
-                                    onClick={() => onAddBlock(day)}
-                                    className="w-full mt-1 py-0.5 text-xs text-neutral-400 dark:text-neutral-600 border border-dashed border-neutral-300 dark:border-neutral-700 rounded hover:text-neutral-600 dark:hover:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors"
-                                    title={`Add block for ${format(day, 'EEE d/MM')}`}
+                                <div
+                                    className={classNames(
+                                        "text-center py-1 mb-1 border-b-2 border-black",
+                                        "font-bold uppercase tracking-tight space-grotesk-600 text-[10px] md:text-xs leading-none",
+                                        isToday ? "bg-black text-white" : "text-black"
+                                    )}
                                 >
-                                    +
-                                </motion.button>
-                            )}
-                        </motion.div>
-                    );
-                })}
+                                    {format(day, 'EEEEE')}
+                                    <div className="text-[10px] md:text-xs font-black mt-0.5">{format(day, 'd')}</div>
+                                </div>
+                                <div className="border-2 border-black rounded-sm bg-[#fffbe6] min-h-[60px] p-1 overflow-hidden">
+                                    <motion.ul
+                                        className="space-y-1"
+                                        variants={blockListVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                    >
+                                        {dayItems
+                                            .sort((a, b) => {
+                                                // Extract time from date string (format: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm")
+                                                const getTime = (dateStr) => {
+                                                    if (dateStr.includes('T')) {
+                                                        // Has time component
+                                                        const timePart = dateStr.split('T')[1];
+                                                        const [hours, minutes] = timePart.split(':').map(Number);
+                                                        return hours * 60 + (minutes || 0); // Convert to minutes for easier comparison
+                                                    }
+                                                    // No time component, treat as midnight (00:00)
+                                                    return 0;
+                                                };
+                                                return getTime(a.date) - getTime(b.date);
+                                            })
+                                            .map(item => (
+                                                <Block
+                                                    key={item.date + item.name}
+                                                    item={item}
+                                                    variant="week"
+                                                    {...blockProps}
+                                                    onClick={onBlockClick}
+                                                />
+                                            ))}
+                                    </motion.ul>
+                                </div>
+                                {onAddBlock && (
+                                    <motion.button
+                                        whileTap={{ translateX: 2, translateY: 2, boxShadow: "0 0 0 0 #000" }}
+                                        onClick={() => onAddBlock(day)}
+                                        className="w-full mt-1 py-0.5 rounded-sm border-2 border-black bg-white text-black font-black text-sm leading-none shadow-[2px_2px_0_0_#000] transition-[transform,box-shadow] duration-75"
+                                        title={`Add block for ${format(day, 'EEE d/MM')}`}
+                                    >
+                                        +
+                                    </motion.button>
+                                )}
+                            </motion.div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

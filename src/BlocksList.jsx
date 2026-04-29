@@ -209,7 +209,7 @@ export const BlocksList = ({
         return (
             <motion.ul
                 className={classNames('flex flex-wrap', {
-                    "gap-2": !showColorOnly
+                    "gap-3": !showColorOnly
                 })}
                 variants={listContainerVariants}
                 initial="hidden"

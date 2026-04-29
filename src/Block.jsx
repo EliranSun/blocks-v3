@@ -28,15 +28,15 @@ export const Block = ({
 }) => {
     const variantClasses = {
         week: {
-            base: "px-1 py-2 break-words text-center font-bold text-shadow-2 text-xs text-left",
+            base: "px-1 py-0.5 break-words text-left font-bold space-grotesk-600 uppercase tracking-tight text-[10px] md:text-xs leading-tight text-white border-2 border-black rounded-sm shadow-[1px_1px_0_0_#000] md:shadow-[2px_2px_0_0_#000]",
             useBackground: true,
         },
         year: {
-            base: "px-2 pt-1 text-center font-bold text-shadow-2 text-xs text-left",
+            base: "px-1.5 py-0.5 text-left font-bold uppercase tracking-tight space-grotesk-600 text-[10px] leading-tight text-white border-2 border-black rounded-sm shadow-[1px_1px_0_0_#000] md:shadow-[2px_2px_0_0_#000]",
             useBackground: true,
         },
         list: {
-            base: "px-2 pt-1 text-center border-b-2 font-bold text-sm grow-0 text-left",
+            base: "px-3 py-1.5 rounded-sm border-2 md:border-[3px] border-black shadow-[2px_2px_0_0_#000] md:shadow-[3px_3px_0_0_#000] active:shadow-[1px_1px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] transition-[transform,box-shadow] duration-75 font-bold uppercase tracking-tight space-grotesk-600 text-sm text-white",
             useBackground: true,
         },
     };
@@ -46,17 +46,19 @@ export const Block = ({
         ? CategoryBgColors[item.category?.toLowerCase()]
         : CategoryColors[item.category?.toLowerCase()];
 
+    const isListVariant = variant === "list";
+
     return (
         <motion.li
             variants={blockItemVariants}
-            whileHover={onClick ? { scale: 1.03, y: -2 } : undefined}
-            whileTap={onClick ? { scale: 0.97 } : undefined}
+            whileHover={onClick && isListVariant ? { y: -2 } : undefined}
+            whileTap={onClick && isListVariant ? { scale: 0.97 } : undefined}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className={classNames(
                 config.base,
                 colorClass,
                 onClick && "cursor-pointer",
-                showColorOnly && "text-[0px] h-2 border-none"
+                showColorOnly && "text-[0px] h-2 border-none shadow-none"
             )}
             onClick={() => onClick?.(item)}
         >
