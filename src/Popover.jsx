@@ -15,19 +15,19 @@ export const Popover = ({ children, isOpen }) => {
                     />
                     <motion.div
                         className={classNames(
-                            "fixed inset-0 m-auto rounded-xl",
+                            "fixed inset-0 m-auto rounded-sm",
                             "bg-[#fffbe6] text-black",
                             "border-[3px] border-black shadow-[8px_8px_0_0_#000]",
                             "p-6 w-[calc(100%-2rem)] md:h-11/12 max-w-xl z-50 overflow-hidden",
                         )}
-                        initial={{ opacity: 0, scale: 0.92, y: 24, rotate: -1 }}
-                        animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 18, rotate: 1 }}
+                        initial={{ opacity: 0, scale: 0.94, y: 16 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.96, y: 12 }}
                         transition={{
                             type: "spring",
-                            damping: 22,
-                            stiffness: 380,
-                            mass: 0.7,
+                            damping: 24,
+                            stiffness: 520,
+                            mass: 0.55,
                         }}
                     >
                         {children}

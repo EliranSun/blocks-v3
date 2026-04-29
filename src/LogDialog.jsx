@@ -17,13 +17,13 @@ const getInitialCategory = (log) => {
 };
 
 const NEO_TILE_BASE =
-    "relative select-none cursor-pointer rounded-xl border-[3px] border-black " +
-    "shadow-[6px_6px_0_0_#000] active:shadow-[2px_2px_0_0_#000] " +
+    "relative select-none cursor-pointer rounded-sm border-[3px] border-black " +
+    "shadow-[5px_5px_0_0_#000] active:shadow-[1px_1px_0_0_#000] " +
     "active:translate-x-[4px] active:translate-y-[4px] transition-[transform,box-shadow] duration-75 " +
     "flex flex-col items-center justify-center font-bold uppercase tracking-tight";
 
 const NEO_INPUT =
-    "w-full px-4 py-3 text-base font-semibold rounded-xl bg-white text-black " +
+    "w-full px-4 py-3 text-base font-semibold rounded-sm bg-white text-black " +
     "border-[3px] border-black shadow-[4px_4px_0_0_#000] " +
     "focus:outline-none focus:shadow-[6px_6px_0_0_#000] focus:-translate-x-[2px] focus:-translate-y-[2px] " +
     "transition-[transform,box-shadow] placeholder:text-neutral-500";
@@ -50,10 +50,10 @@ const formatDateForInput = (value) => {
 };
 
 const stepFade = {
-    initial: { opacity: 0, x: 24 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -24 },
-    transition: { type: "spring", damping: 22, stiffness: 320 },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.12, ease: "easeOut" },
 };
 
 const IconX = () => (
@@ -94,7 +94,7 @@ const Tile = ({ onClick, selected, color, children, size = "md", pulse }) => {
             onClick={onClick}
             whileHover={{ translateX: -1, translateY: -1 }}
             animate={pulse ? { scale: [1, 1.08, 1] } : { scale: 1 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.16 }}
             className={classNames(NEO_TILE_BASE, sizeClass, bg, text)}
         >
             {children}
@@ -107,7 +107,7 @@ const Chip = ({ onClick, color = "bg-white", children, label }) => (
         type="button"
         onClick={onClick}
         className={classNames(
-            "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border-[3px] border-black",
+            "inline-flex items-center gap-2 px-3 py-1.5 rounded-sm border-[3px] border-black",
             "shadow-[3px_3px_0_0_#000] active:shadow-[1px_1px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px]",
             "transition-[transform,box-shadow] duration-75 font-bold text-sm",
             color,
@@ -127,7 +127,7 @@ const IconButton = ({ onClick, color = "bg-white", ariaLabel, children }) => (
         onClick={onClick}
         whileTap={{ translateX: 3, translateY: 3, boxShadow: "1px 1px 0 0 #000" }}
         className={classNames(
-            "w-10 h-10 flex items-center justify-center rounded-lg border-[3px] border-black",
+            "w-10 h-10 flex items-center justify-center rounded-sm border-[3px] border-black",
             "shadow-[4px_4px_0_0_#000] transition-[transform,box-shadow] duration-75",
             color,
             color === "bg-white" ? "text-black" : "text-white",
@@ -392,7 +392,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                             type="button"
                             onClick={() => setShowOptional(v => !v)}
                             className={classNames(
-                                "inline-flex items-center gap-2 px-3 py-2 rounded-lg",
+                                "inline-flex items-center gap-2 px-3 py-2 rounded-sm",
                                 "border-[3px] border-black bg-white text-black font-bold uppercase text-xs tracking-widest",
                                 "shadow-[4px_4px_0_0_#000] active:shadow-[1px_1px_0_0_#000] active:translate-x-[3px] active:translate-y-[3px] transition-[transform,box-shadow] duration-75"
                             )}
@@ -408,7 +408,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    transition={{ type: "spring", damping: 24, stiffness: 280 }}
+                                    transition={{ duration: 0.18, ease: "easeOut" }}
                                     className="overflow-hidden"
                                 >
                                     <div className="pt-4 space-y-3">
@@ -444,7 +444,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                 {!isEditMode && (
                     <div className="pt-3 text-center">
                         <span className={classNames(
-                            "inline-block px-3 py-1 rounded-md border-[3px] border-black text-[10px] font-black uppercase tracking-widest",
+                            "inline-block px-3 py-1 rounded-sm border-[3px] border-black text-[10px] font-black uppercase tracking-widest",
                             accent, selectedCategory ? "text-white" : "bg-yellow-300 text-black"
                         )}>
                             {step === "category" && "Step 1 / pick a category"}
