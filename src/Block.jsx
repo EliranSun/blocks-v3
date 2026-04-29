@@ -28,7 +28,9 @@ export const Block = ({
 }) => {
     const variantClasses = {
         week: {
-            base: "text-left font-bold space-grotesk-600 uppercase tracking-tight text-[10px] md:text-xs leading-tight text-white border-2 border-black rounded-sm shadow-[1px_1px_0_0_#000] md:shadow-[2px_2px_0_0_#000] truncate",
+            base: "text-left font-bold space-grotesk-600 uppercase tracking-tight "
+                + "text-[10px] md:text-xs leading-tight text-white dark:text-black border-2 border-black dark:border-white truncate " +
+                "rounded-sm shadow-[1px_1px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] px-1 py-2",
             useBackground: true,
         },
         year: {

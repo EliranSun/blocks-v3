@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { format, startOfWeek, eachDayOfInterval, isSameDay } from "date-fns";
+import { format, startOfWeek, eachDayOfInterval, isSameDay, addDays } from "date-fns";
 import classNames from "classnames";
 import { Block } from "./Block";
 import { motion } from "framer-motion";
@@ -27,11 +27,13 @@ const blockListVariants = {
     },
 };
 
-export const WeekView = ({ currentDate,
+export const WeekView = ({
+    currentDate,
     data = [],
     blockProps = {},
     onBlockClick,
-    onAddBlock }) => {
+    onAddBlock
+}) => {
     // Group items by day for week view
     const weekData = useMemo(() => {
         if (!currentDate) return {};
@@ -39,8 +41,7 @@ export const WeekView = ({ currentDate,
         // Get the week range (Sunday to Saturday)
         const baseDate = currentDate instanceof Date ? currentDate : new Date(currentDate);
         const weekStart = startOfWeek(baseDate, { weekStartsOn: 0 });
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6);
+        const weekEnd = addDays(weekStart, 6);
 
         // Create array of all days in the week
         const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
@@ -60,9 +61,16 @@ export const WeekView = ({ currentDate,
     const today = new Date();
 
     return (
-        <div className="space-grotesk-400">
-            <div className="border-2 md:border-[3px] border-black dark:border-white rounded-sm shadow-[3px_3px_0_0_#000] md:shadow-[5px_5px_0_0_#000] dark:shadow-[3px_3px_0_0_#fff] dark:md:shadow-[5px_5px_0_0_#fff] bg-white dark:bg-neutral-900 p-1">
-                <div className="grid grid-cols-7 gap-1 w-full">
+        <div className="overflow-x-auto">
+            <div className={classNames(
+                "rounded-sm p-1",
+                {
+                    "bg-white dark:bg-neutral-900": false,
+                    "border-2 md:border-[3px] border-black dark:border-white": false,
+                    "shadow-[3px_3px_0_0_#000] md:shadow-[5px_5px_0_0_#000] dark:shadow-[3px_3px_0_0_#fff] dark:md:shadow-[5px_5px_0_0_#fff]": false,
+                }
+            )}>
+                <div className="flex gap-1 w-full">
                     {weekData.weekDays?.map((day, index) => {
                         const dayKey = format(day, 'yyyy-MM-dd');
                         const dayItems = weekData.grouped[dayKey] || [];
@@ -70,7 +78,7 @@ export const WeekView = ({ currentDate,
                         return (
                             <motion.div
                                 key={dayKey}
-                                className="min-w-0 flex flex-col"
+                                className="flex flex-col flex-grow"
                                 custom={index}
                                 variants={dayColumnVariants}
                                 initial="hidden"
@@ -84,10 +92,12 @@ export const WeekView = ({ currentDate,
                                     )}
                                 >
                                     {format(day, 'EEEEE')}
-                                    <div className="text-[10px] md:text-xs font-black mt-0.5">{format(day, 'd')}</div>
+                                    <div className="text-[10px] md:text-xs font-black mt-0.5">
+                                        {format(day, 'd')}
+                                    </div>
                                 </div>
                                 <motion.ul
-                                    className="space-y-1 min-h-[60px]"
+                                    className="space-y-1"
                                     variants={blockListVariants}
                                     initial="hidden"
                                     animate="visible"
@@ -118,7 +128,12 @@ export const WeekView = ({ currentDate,
                                     <motion.button
                                         whileTap={{ translateX: 2, translateY: 2, boxShadow: "0 0 0 0 #000" }}
                                         onClick={() => onAddBlock(day)}
-                                        className="w-full mt-1 py-0.5 rounded-sm border-2 border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-black text-sm leading-none shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] transition-[transform,box-shadow] duration-75"
+                                        className="w-full mt-1 py-0.5 rounded-sm border-2 
+                                        border-black dark:border-white bg-white 
+                                        dark:bg-neutral-800 text-black dark:text-white
+                                        font-black text-sm leading-none shadow-[2px_2px_0_0_#000] 
+                                        dark:shadow-[2px_2px_0_0_#fff] transition-[transform,box-shadow] 
+                                        duration-75"
                                         title={`Add block for ${format(day, 'EEE d/MM')}`}
                                     >
                                         +
