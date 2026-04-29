@@ -86,9 +86,9 @@ export const WeekView = ({ currentDate,
                                     {format(day, 'EEEEE')}
                                     <div className="text-[10px] md:text-xs font-black mt-0.5">{format(day, 'd')}</div>
                                 </div>
-                                <div className="border-2 border-black rounded-sm bg-[#fffbe6] min-h-[60px] p-0.5 overflow-hidden">
+                                <div className="border-2 border-black rounded-sm bg-[#fffbe6] min-h-[60px] p-1 overflow-hidden">
                                     <motion.ul
-                                        className="space-y-0"
+                                        className="space-y-1"
                                         variants={blockListVariants}
                                         initial="hidden"
                                         animate="visible"

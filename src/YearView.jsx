@@ -88,7 +88,7 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
                                 {format(month, 'MMM')}
                             </div>
                             <motion.ol
-                                className="space-y-0 list-none flex-1 min-h-0"
+                                className="space-y-1 list-none flex-1 min-h-0"
                                 variants={blockListVariants}
                                 initial="hidden"
                                 animate="visible"

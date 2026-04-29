@@ -28,11 +28,11 @@ export const Block = ({
 }) => {
     const variantClasses = {
         week: {
-            base: "px-1 py-0.5 break-words text-left font-bold space-grotesk-600 text-[10px] md:text-xs leading-tight text-white border-b border-black/40 last:border-b-0",
+            base: "px-1 py-0.5 break-words text-left font-bold space-grotesk-600 uppercase tracking-tight text-[10px] md:text-xs leading-tight text-white border-2 border-black rounded-sm shadow-[1px_1px_0_0_#000] md:shadow-[2px_2px_0_0_#000]",
             useBackground: true,
         },
         year: {
-            base: "px-1.5 py-0.5 text-left font-bold uppercase tracking-tight text-[10px] leading-tight text-white border-b border-black/40 last:border-b-0",
+            base: "px-1.5 py-0.5 text-left font-bold uppercase tracking-tight space-grotesk-600 text-[10px] leading-tight text-white border-2 border-black rounded-sm shadow-[1px_1px_0_0_#000] md:shadow-[2px_2px_0_0_#000]",
             useBackground: true,
         },
         list: {
