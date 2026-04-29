@@ -17,16 +17,16 @@ const getInitialCategory = (log) => {
 };
 
 const NEO_TILE_BASE =
-    "relative select-none cursor-pointer rounded-sm border-[3px] border-black " +
-    "shadow-[5px_5px_0_0_#000] active:shadow-[1px_1px_0_0_#000] " +
+    "relative select-none cursor-pointer rounded-sm border-[3px] border-black dark:border-white " +
+    "shadow-[5px_5px_0_0_#000] dark:shadow-[5px_5px_0_0_#fff] active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff] " +
     "active:translate-x-[4px] active:translate-y-[4px] transition-[transform,box-shadow] duration-75 " +
     "flex flex-col items-center justify-center font-bold uppercase tracking-tight";
 
 const NEO_INPUT =
-    "w-full px-4 py-3 text-base font-semibold rounded-sm bg-white text-black " +
-    "border-[3px] border-black shadow-[4px_4px_0_0_#000] " +
-    "focus:outline-none focus:shadow-[6px_6px_0_0_#000] focus:-translate-x-[2px] focus:-translate-y-[2px] " +
-    "transition-[transform,box-shadow] placeholder:text-neutral-500";
+    "w-full px-4 py-3 text-base font-semibold rounded-sm bg-white text-black dark:bg-neutral-800 dark:text-white " +
+    "border-[3px] border-black dark:border-white shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff] " +
+    "focus:outline-none focus:shadow-[6px_6px_0_0_#000] dark:focus:shadow-[6px_6px_0_0_#fff] focus:-translate-x-[2px] focus:-translate-y-[2px] " +
+    "transition-[transform,box-shadow] placeholder:text-neutral-500 dark:placeholder:text-neutral-400";
 
 const fireConfetti = () => {
     const defaults = {
@@ -86,8 +86,8 @@ const StepHeading = ({ children }) => (
 
 const Tile = ({ onClick, selected, color, children, size = "md", pulse }) => {
     const sizeClass = size === "lg" ? "h-28 text-base px-3" : "h-20 text-sm px-3";
-    const bg = selected ? color : "bg-white";
-    const text = selected ? "text-white" : "text-black";
+    const bg = selected ? color : "bg-white dark:bg-neutral-800";
+    const text = selected ? "text-white" : "text-black dark:text-white";
     return (
         <motion.button
             type="button"
@@ -107,11 +107,11 @@ const Chip = ({ onClick, color = "bg-white", children, label }) => (
         type="button"
         onClick={onClick}
         className={classNames(
-            "inline-flex items-center gap-2 px-3 py-1.5 rounded-sm border-[3px] border-black",
-            "shadow-[3px_3px_0_0_#000] active:shadow-[1px_1px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px]",
+            "inline-flex items-center gap-2 px-3 py-1.5 rounded-sm border-[3px] border-black dark:border-white",
+            "shadow-[3px_3px_0_0_#000] dark:shadow-[3px_3px_0_0_#fff] active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff] active:translate-x-[2px] active:translate-y-[2px]",
             "transition-[transform,box-shadow] duration-75 font-bold text-sm",
             color,
-            color === "bg-white" ? "text-black" : "text-white",
+            color === "bg-white" ? "text-black dark:bg-neutral-800 dark:text-white" : "text-white",
         )}
     >
         {label && <span className="text-[10px] uppercase tracking-widest opacity-80">{label}</span>}
@@ -127,10 +127,10 @@ const IconButton = ({ onClick, color = "bg-white", ariaLabel, children }) => (
         onClick={onClick}
         whileTap={{ translateX: 3, translateY: 3, boxShadow: "1px 1px 0 0 #000" }}
         className={classNames(
-            "w-10 h-10 flex items-center justify-center rounded-sm border-[3px] border-black",
-            "shadow-[4px_4px_0_0_#000] transition-[transform,box-shadow] duration-75",
+            "w-10 h-10 flex items-center justify-center rounded-sm border-[3px] border-black dark:border-white",
+            "shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff] transition-[transform,box-shadow] duration-75",
             color,
-            color === "bg-white" ? "text-black" : "text-white",
+            color === "bg-white" ? "text-black dark:bg-neutral-800 dark:text-white" : "text-white",
         )}
     >
         {children}
@@ -380,7 +380,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                             <motion.div key="step-review" {...stepFade}>
                                 <StepHeading>Edit block</StepHeading>
                                 {breadcrumb}
-                                <p className="text-xs uppercase tracking-widest font-bold text-neutral-700 mt-6">
+                                <p className="text-xs uppercase tracking-widest font-bold text-neutral-700 dark:text-neutral-300 mt-6">
                                     Tap any chip above to change. Edits save automatically.
                                 </p>
                             </motion.div>
@@ -393,8 +393,8 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                             onClick={() => setShowOptional(v => !v)}
                             className={classNames(
                                 "inline-flex items-center gap-2 px-3 py-2 rounded-sm",
-                                "border-[3px] border-black bg-white text-black font-bold uppercase text-xs tracking-widest",
-                                "shadow-[4px_4px_0_0_#000] active:shadow-[1px_1px_0_0_#000] active:translate-x-[3px] active:translate-y-[3px] transition-[transform,box-shadow] duration-75"
+                                "border-[3px] border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-bold uppercase text-xs tracking-widest",
+                                "shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff] active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff] active:translate-x-[3px] active:translate-y-[3px] transition-[transform,box-shadow] duration-75"
                             )}
                         >
                             <span className="text-base leading-none">{showOptional ? "−" : "+"}</span>
@@ -444,7 +444,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                 {!isEditMode && (
                     <div className="pt-3 text-center">
                         <span className={classNames(
-                            "inline-block px-3 py-1 rounded-sm border-[3px] border-black text-[10px] font-black uppercase tracking-widest",
+                            "inline-block px-3 py-1 rounded-sm border-[3px] border-black dark:border-white text-[10px] font-black uppercase tracking-widest",
                             accent, selectedCategory ? "text-white" : "bg-yellow-300 text-black"
                         )}>
                             {step === "category" && "Step 1 / pick a category"}

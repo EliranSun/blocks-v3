@@ -72,7 +72,7 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
                     return (
                         <motion.div
                             key={monthKey}
-                            className="border-2 md:border-[3px] border-black rounded-sm bg-[#fffbe6] shadow-[2px_2px_0_0_#000] md:shadow-[4px_4px_0_0_#000] flex flex-col p-2 h-[20vh] overflow-hidden"
+                            className="border-2 md:border-[3px] border-black dark:border-white rounded-sm bg-[#fffbe6] dark:bg-neutral-900 shadow-[2px_2px_0_0_#000] md:shadow-[4px_4px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff] dark:md:shadow-[4px_4px_0_0_#fff] flex flex-col p-2 h-[20vh] overflow-hidden"
                             custom={index}
                             variants={monthCardVariants}
                             initial="hidden"
@@ -80,9 +80,9 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
                         >
                             <div
                                 className={classNames(
-                                    "text-center pb-1 mb-1 border-b-2 border-black shrink-0",
+                                    "text-center pb-1 mb-1 border-b-2 border-black dark:border-white shrink-0",
                                     "font-black uppercase tracking-tight space-grotesk-600 text-xs",
-                                    isCurrentMonth ? "bg-black text-white px-1" : "text-black"
+                                    isCurrentMonth ? "bg-black text-white dark:bg-white dark:text-black px-1" : "text-black dark:text-white"
                                 )}
                             >
                                 {format(month, 'MMM')}
