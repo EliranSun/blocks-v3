@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { format, startOfYear, eachMonthOfInterval, isSameMonth } from "date-fns";
+import classNames from "classnames";
 import { Block } from "./Block";
 import { motion } from "framer-motion";
 
@@ -59,26 +60,35 @@ export const YearView = ({ currentDate, data = [], blockProps = {}, onBackToList
     }, [currentDate, data]);
 
 
+    const today = new Date();
+
     return (
         <div className="space-grotesk-400">
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 w-full">
                 {yearData.yearMonths?.map((month, index) => {
                     const monthKey = format(month, 'yyyy-MM');
                     const monthItems = yearData.grouped[monthKey] || [];
+                    const isCurrentMonth = isSameMonth(month, today);
                     return (
                         <motion.div
                             key={monthKey}
-                            className="flex flex-col p-2 h-[18vh]"
+                            className="border-2 md:border-[3px] border-black rounded-sm bg-[#fffbe6] shadow-[2px_2px_0_0_#000] md:shadow-[4px_4px_0_0_#000] flex flex-col p-2 h-[20vh] overflow-hidden"
                             custom={index}
                             variants={monthCardVariants}
                             initial="hidden"
                             animate="visible"
                         >
-                            <div className="font-semibold text-xs mb-2 text-center border-b pb-1 shrink-0">
-                                {format(month, 'MMM')}<br />
+                            <div
+                                className={classNames(
+                                    "text-center pb-1 mb-1 border-b-2 border-black shrink-0",
+                                    "font-black uppercase tracking-tight space-grotesk-600 text-xs",
+                                    isCurrentMonth ? "bg-black text-white px-1" : "text-black"
+                                )}
+                            >
+                                {format(month, 'MMM')}
                             </div>
                             <motion.ol
-                                className="space-y-1 list-decimal overflow-y-auto flex-1"
+                                className="space-y-0 list-none flex-1 min-h-0"
                                 variants={blockListVariants}
                                 initial="hidden"
                                 animate="visible"
