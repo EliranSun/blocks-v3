@@ -231,7 +231,7 @@ export const CategoryBgColors = {
 };
 
 export const MonthNotes = {
-    "2026-04": "Shachar is pregnant!",
+    "2026-04": "Noga is smiling; Shachar is pregnant!",
     "2026-03": "Tikal, Elementor & the 'Great' Plateau",
     "2026-02": "Dad to Noga; Pre-Tikal; CSS prototype",
     "2026-01": "Noga's Birth 🥰; Grandpa's Death 😢",
