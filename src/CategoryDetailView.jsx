@@ -1,6 +1,7 @@
+import { memo, useMemo } from "react";
 import classNames from "classnames";
 import { format, formatDistanceToNow, subMonths, startOfMonth } from "date-fns";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
     BarChart,
     Bar,
@@ -97,29 +98,84 @@ const CustomTooltip = ({ active, payload, label }) => {
     return null;
 };
 
+const LogEntryRow = memo(({ log, index, perDelay, blocks }) => {
+    const blockIndex = blocks.findIndex(
+        b => getBlockForLog(log, blocks) === b
+    );
+    const blockColor =
+        blockIndex >= 0
+            ? BLOCK_PALETTE[blockIndex % BLOCK_PALETTE.length]
+            : "#525252";
+    const matchedBlock = blockIndex >= 0 ? blocks[blockIndex] : null;
+
+    return (
+        <m.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+                delay: index * perDelay,
+                type: "spring",
+                damping: 20,
+                stiffness: 300,
+            }}
+            className="flex items-start gap-3 py-2 border-b border-neutral-800"
+            style={{ contentVisibility: "auto", containIntrinsicSize: "60px 400px" }}
+        >
+            <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
+                {format(new Date(log.date), "dd MMM yyyy")}
+            </span>
+            <div className="flex flex-col min-w-0 flex-1">
+                {log.name && (
+                    <span className="text-sm merriweather-400 truncate">
+                        {log.note || log.name}
+                    </span>
+                )}
+                <div className="flex items-center gap-2">
+                    {matchedBlock && (
+                        <span
+                            className="text-xs font-bold uppercase space-grotesk-600"
+                            style={{ color: blockColor }}
+                        >
+                            {matchedBlock}
+                        </span>
+                    )}
+                    {log.location && (
+                        <span className="text-xs text-neutral-500">
+                            {log.location}
+                        </span>
+                    )}
+                </div>
+            </div>
+        </m.div>
+    );
+});
+
 export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockClick }) => {
-    const category = getCategoryDef(categoryName);
-    const blocks = category?.blocks ?? [];
-    const logs = getCategoryLogs(data, categoryName);
-    const monthlyData = getStackedMonthlyData(logs, blocks);
+    const { category, blocks, logs, monthlyData, sortedLogs, blockStats } = useMemo(() => {
+        const category = getCategoryDef(categoryName);
+        const blocks = category?.blocks ?? [];
+        const logs = getCategoryLogs(data, categoryName);
+        const monthlyData = getStackedMonthlyData(logs, blocks);
+        const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const blockStats = blocks.map((block, i) => {
+            const blockLogs = logs.filter(log => getBlockForLog(log, blocks) === block);
+            const lastLog = [...blockLogs].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+            return {
+                name: block,
+                count: blockLogs.length,
+                last: lastLog?.date ?? null,
+                color: BLOCK_PALETTE[i % BLOCK_PALETTE.length],
+            };
+        });
+        return { category, blocks, logs, monthlyData, sortedLogs, blockStats };
+    }, [data, categoryName]);
 
-    const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    const blockStats = blocks.map((block, i) => {
-        const blockLogs = logs.filter(log => getBlockForLog(log, blocks) === block);
-        const lastLog = [...blockLogs].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-        return {
-            name: block,
-            count: blockLogs.length,
-            last: lastLog?.date ?? null,
-            color: BLOCK_PALETTE[i % BLOCK_PALETTE.length],
-        };
-    });
+    const perDelay = Math.min(0.02, 0.5 / Math.max(sortedLogs.length, 1));
 
     return (
         <div className="pb-40 space-y-6">
             {/* Back button */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
@@ -130,10 +186,10 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                 >
                     ← Data
                 </button>
-            </motion.div>
+            </m.div>
 
             {/* Title */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300, delay: 0.05 }}
@@ -147,10 +203,10 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                 <p className="text-xs uppercase tracking-widest text-neutral-400 mt-1 space-grotesk-400">
                     Combined category view
                 </p>
-            </motion.div>
+            </m.div>
 
             {/* Top stats */}
-            <motion.div
+            <m.div
                 className="flex gap-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -172,17 +228,17 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                     <p className="text-2xl font-bold space-grotesk-600">{blocks.length}</p>
                     <p className="text-xs text-neutral-400 uppercase tracking-wide">Types</p>
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Per-block mini stats grid */}
-            <motion.div
+            <m.div
                 className="grid grid-cols-2 gap-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.12 }}
             >
                 {blockStats.map(({ name, count, last, color }) => (
-                    <motion.button
+                    <m.button
                         key={name}
                         className="flex items-center gap-2 py-2 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-800 transition-colors text-left"
                         whileHover={{ x: 2 }}
@@ -206,12 +262,12 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                                     : "None"}
                             </p>
                         </div>
-                    </motion.button>
+                    </m.button>
                 ))}
-            </motion.div>
+            </m.div>
 
             {/* Stacked bar chart */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15, type: "spring", damping: 20, stiffness: 300 }}
@@ -267,11 +323,11 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                         </button>
                     ))}
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* All entries list */}
             {sortedLogs.length > 0 && (
-                <motion.div
+                <m.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
@@ -280,70 +336,28 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                         All entries
                     </h2>
                     <div className="space-y-1">
-                        {sortedLogs.map((log, i) => {
-                            const blockIndex = blocks.findIndex(
-                                b => getBlockForLog(log, blocks) === b
-                            );
-                            const blockColor =
-                                blockIndex >= 0
-                                    ? BLOCK_PALETTE[blockIndex % BLOCK_PALETTE.length]
-                                    : "#525252";
-                            const matchedBlock = blockIndex >= 0 ? blocks[blockIndex] : null;
-
-                            return (
-                                <motion.div
-                                    key={log.id ?? log._id ?? `${log.date}-${i}`}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{
-                                        delay: i * 0.02,
-                                        type: "spring",
-                                        damping: 20,
-                                        stiffness: 300,
-                                    }}
-                                    className="flex items-start gap-3 py-2 border-b border-neutral-800"
-                                >
-                                    <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
-                                        {format(new Date(log.date), "dd MMM yyyy")}
-                                    </span>
-                                    <div className="flex flex-col min-w-0 flex-1">
-                                        {log.name && (
-                                            <span className="text-sm merriweather-400 truncate">
-                                                {log.note || log.name}
-                                            </span>
-                                        )}
-                                        <div className="flex items-center gap-2">
-                                            {matchedBlock && (
-                                                <span
-                                                    className="text-xs font-bold uppercase space-grotesk-600"
-                                                    style={{ color: blockColor }}
-                                                >
-                                                    {matchedBlock}
-                                                </span>
-                                            )}
-                                            {log.location && (
-                                                <span className="text-xs text-neutral-500">
-                                                    {log.location}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
+                        {sortedLogs.map((log, i) => (
+                            <LogEntryRow
+                                key={log.id ?? log._id ?? `${log.date}-${i}`}
+                                log={log}
+                                index={i}
+                                perDelay={perDelay}
+                                blocks={blocks}
+                            />
+                        ))}
                     </div>
-                </motion.div>
+                </m.div>
             )}
 
             {sortedLogs.length === 0 && (
-                <motion.p
+                <m.p
                     className="text-neutral-500 text-sm merriweather-400"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                 >
                     No entries found.
-                </motion.p>
+                </m.p>
             )}
         </div>
     );

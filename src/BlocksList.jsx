@@ -1,23 +1,23 @@
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
 import { Block } from "./Block";
-import { useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { Search } from './Search';
 import { Button } from "./Button";
+import { BlocksToolbar } from "./BlocksToolbar";
 import { format } from "date-fns";
 import { MonthNotes } from './constants';
 import classNames from "classnames";
-import { motion, AnimatePresence } from "framer-motion";
-import { BlocksToolbar } from "./BlocksToolbar";
+import { m, AnimatePresence } from "framer-motion";
 
-const listContainerVariants = {
+const buildListContainerVariants = (count) => ({
     hidden: {},
     visible: {
         transition: {
-            staggerChildren: 0.025,
+            staggerChildren: Math.min(0.025, 0.5 / Math.max(count, 1)),
         },
     },
-};
+});
 
 export const BlocksList = ({
     view,
@@ -39,45 +39,31 @@ export const BlocksList = ({
     const [showNote, setShowNote] = useState(false);
     const [showSubcategory, setShowSubcategory] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const deferredSearch = useDeferredValue(searchTerm);
 
-    const toggles = {
+    const filteredData = useMemo(() => {
+        const search = deferredSearch.trim();
+        if (!search) {
+            return data.slice().reverse();
+        }
+        const regex = new RegExp(search, 'i');
+        return data
+            .filter(item =>
+                regex.test(item.name) ||
+                regex.test(item.category) ||
+                regex.test(item.subcategory) ||
+                regex.test(item.location) ||
+                regex.test(item.note)
+            )
+            .reverse();
+    }, [data, deferredSearch]);
+
+    const blockAlterProps = useMemo(() => ({
         showDate,
         showNote,
         showColorOnly,
         showSubcategory,
-    };
-
-    const handleToggle = (key) => {
-        if (key === "showDate") setShowDate(v => !v);
-        else if (key === "showNote") setShowNote(v => !v);
-        else if (key === "showColorOnly") setShowColorOnly(v => !v);
-        else if (key === "showSubcategory") setShowSubcategory(v => !v);
-    };
-
-    const filteredData = useMemo(() => {
-        if (searchTerm) {
-            return data.filter(item => {
-                const search = searchTerm.trim();
-                const regex = new RegExp(search, 'i');
-                return (
-                    regex.test(item.name) ||
-                    regex.test(item.category) ||
-                    regex.test(item.subcategory) ||
-                    regex.test(item.location) ||
-                    regex.test(item.note)
-                );
-            });
-        }
-
-        return data;
-    }, [data, searchTerm]);
-
-    const blockAlterProps = {
-        showDate: showDate,
-        showNote: showNote,
-        showColorOnly: showColorOnly,
-        showSubcategory: showSubcategory,
-    };
+    }), [showDate, showNote, showColorOnly, showSubcategory]);
 
     const sharedProps = {
         blockProps: blockAlterProps,
@@ -85,6 +71,23 @@ export const BlocksList = ({
         data: filteredData,
         onBlockClick: onBlockClick,
     };
+
+    const listContainerVariants = useMemo(
+        () => buildListContainerVariants(filteredData.length),
+        [filteredData.length]
+    );
+
+    const handleToggle = useCallback((key) => {
+        if (key === "showDate") setShowDate(v => !v);
+        else if (key === "showNote") setShowNote(v => !v);
+        else if (key === "showColorOnly") setShowColorOnly(v => !v);
+        else if (key === "showSubcategory") setShowSubcategory(v => !v);
+    }, []);
+
+    const handleSearchChange = useCallback((input) => {
+        setSearchTerm(input);
+        if (input.length > 0) onViewChange("list");
+    }, [onViewChange]);
 
     const renderView = () => {
         if (view === 'week') {
@@ -100,16 +103,15 @@ export const BlocksList = ({
         }
 
         return (
-            <motion.ul
+            <m.ul
                 className={classNames('flex flex-wrap', {
                     "gap-2": !showColorOnly
                 })}
                 variants={listContainerVariants}
                 initial="hidden"
                 animate="visible"
-                key={`list-${filteredData.length}-${searchTerm}`}
             >
-                {filteredData.reverse().map(item =>
+                {filteredData.map(item =>
                     <Block
                         variant="list"
                         key={item.date + item.name}
@@ -118,7 +120,7 @@ export const BlocksList = ({
                         {...blockAlterProps}
                     />
                 )}
-            </motion.ul>
+            </m.ul>
         )
     }
 
@@ -138,7 +140,7 @@ export const BlocksList = ({
                     </div>
                 )}
                 <div className='spacy-y-4'>
-                    <motion.h1
+                    <m.h1
                         className='text-2xl merriweather-900'
                         key={title}
                         initial={{ opacity: 0, y: -8 }}
@@ -146,7 +148,7 @@ export const BlocksList = ({
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                     >
                         {title}
-                    </motion.h1>
+                    </m.h1>
                     <h2 className='text-gray-400 text-xs'>
                         {MonthNotes[format(currentDate, 'yyyy-MM')]}
                     </h2>
@@ -155,10 +157,7 @@ export const BlocksList = ({
             <Search
                 value={searchTerm}
                 autoHide={false}
-                onInputChange={input => {
-                    setSearchTerm(input);
-                    if (input.length > 0) onViewChange("list");
-                }} />
+                onInputChange={handleSearchChange} />
             <BlocksToolbar
                 view={view}
                 onViewChange={onViewChange}
@@ -166,11 +165,11 @@ export const BlocksList = ({
                 onCategoryChange={onCategoryChange}
                 listScope={listScope}
                 onListScopeChange={onListScopeChange}
-                toggles={toggles}
+                toggles={blockAlterProps}
                 onToggle={handleToggle}
             />
-            <AnimatePresence mode="wait">
-                <motion.div
+            <AnimatePresence>
+                <m.div
                     key={view}
                     className="space-grotesk-400"
                     initial={{ opacity: 0, x: 20 }}
@@ -179,7 +178,7 @@ export const BlocksList = ({
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 >
                     {renderView()}
-                </motion.div>
+                </m.div>
             </AnimatePresence>
         </div>
     )

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { format, isSameYear, isSameMonth, isSameWeek, isSameDay, addWeeks, addYears, addMonths, startOfDay } from 'date-fns';
 // import { MonthNotes, Scopes } from './constants';
 import { BlocksList } from "./BlocksList";
@@ -13,7 +13,7 @@ import { CategoryDetailView } from './CategoryDetailView';
 import { InsightsView } from './InsightsView';
 import { NavMenu } from './NavMenu';
 import classNames from 'classnames';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 
 const Views = ["week", "list", "year"];
 
@@ -32,28 +32,36 @@ function App() {
   const [listScope, setListScope] = useState("all");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleBlockClick = (item) => {
+  const handleBlockClick = useCallback((item) => {
     setSelectedLog(item);
     setIsDialogOpen(true);
-  };
+  }, []);
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     setIsDialogOpen(false);
     setSelectedLog(null);
     setDefaultDialogDate(null);
-  };
+  }, []);
 
-  const handleOpenAddDialog = () => {
+  const handleOpenAddDialog = useCallback(() => {
     setSelectedLog(null);
     setDefaultDialogDate(null);
     setIsDialogOpen(true);
-  };
+  }, []);
 
-  const handleOpenAddDialogForDay = (day) => {
+  const handleOpenAddDialogForDay = useCallback((day) => {
     setSelectedLog(null);
     setDefaultDialogDate(format(startOfDay(day), "yyyy-MM-dd'T'HH:mm"));
     setIsDialogOpen(true);
-  };
+  }, []);
+
+  const handleListScopeChange = useCallback((scope) => {
+    setListScope(scope);
+    setDateOffset(0);
+  }, []);
+
+  const handleNextDate = useCallback(() => setDateOffset(prev => prev + 1), []);
+  const handlePrevDate = useCallback(() => setDateOffset(prev => prev - 1), []);
 
   const currentDate = useMemo(() => {
     const now = new Date();
@@ -145,7 +153,7 @@ function App() {
             onEdit={editLog}
             onDelete={deleteLog}
           />
-          <motion.button
+          <m.button
             type="button"
             aria-label="Open navigation menu"
             aria-expanded={isMenuOpen}
@@ -169,8 +177,8 @@ function App() {
               <line x1="4" y1="12" x2="20" y2="12" />
               <line x1="4" y1="17" x2="20" y2="17" />
             </svg>
-          </motion.button>
-          <motion.button
+          </m.button>
+          <m.button
             type="button"
             aria-label="Add block"
             onClick={handleOpenAddDialog}
@@ -191,7 +199,7 @@ function App() {
           >
             <span className="text-xl leading-none">+</span>
             Add block
-          </motion.button>
+          </m.button>
           <NavMenu
             isOpen={isMenuOpen}
             onClose={() => setIsMenuOpen(false)}
@@ -205,7 +213,7 @@ function App() {
           <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden pb-24'>
             <AnimatePresence mode="wait">
               {page === "blockDetail" && selectedBlock ? (
-                <motion.div
+                <m.div
                   key="blockDetail"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -220,9 +228,9 @@ function App() {
                       setPage(blockDetailPreviousPage);
                     }}
                   />
-                </motion.div>
+                </m.div>
               ) : page === "categoryDetail" && selectedCategory ? (
-                <motion.div
+                <m.div
                   key="categoryDetail"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -242,9 +250,9 @@ function App() {
                       setPage("blockDetail");
                     }}
                   />
-                </motion.div>
+                </m.div>
               ) : page === "insights" ? (
-                <motion.div
+                <m.div
                   key="insights"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -263,9 +271,9 @@ function App() {
                       setPage("categoryDetail");
                     }}
                   />
-                </motion.div>
+                </m.div>
               ) : page === "blocksData" ? (
-                <motion.div
+                <m.div
                   key="blocksData"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -284,9 +292,9 @@ function App() {
                       setPage("categoryDetail");
                     }}
                   />
-                </motion.div>
+                </m.div>
               ) : (
-                <motion.div
+                <m.div
                   key="blocks"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -297,8 +305,8 @@ function App() {
                     view={viewName}
                     title={title}
                     onViewChange={setViewName}
-                    onNextDate={() => setDateOffset(prev => prev + 1)}
-                    onPrevDate={() => setDateOffset(prev => prev - 1)}
+                    onNextDate={handleNextDate}
+                    onPrevDate={handlePrevDate}
                     currentDate={currentDate}
                     data={filteredData}
                     category={category}
@@ -306,11 +314,8 @@ function App() {
                     onBlockClick={handleBlockClick}
                     onAddBlock={handleOpenAddDialogForDay}
                     listScope={listScope}
-                    onListScopeChange={(scope) => {
-                      setListScope(scope);
-                      setDateOffset(0);
-                    }} />
-                </motion.div>
+                    onListScopeChange={handleListScopeChange} />
+                </m.div>
               )}
             </AnimatePresence>
           </div>
