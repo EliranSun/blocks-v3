@@ -3,9 +3,9 @@ import { YearView } from "./YearView";
 import { Block } from "./Block";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from './Search';
-import { RectangleButton, Button } from "./Button";
+import { Button } from "./Button";
 import { format } from "date-fns";
-import { Categories, MonthNotes } from './constants';
+import { MonthNotes } from './constants';
 import classNames from "classnames";
 import { m, AnimatePresence } from "framer-motion";
 
@@ -157,6 +157,20 @@ export const BlocksList = ({
     const [showSubcategory, setShowSubcategory] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const deferredSearch = useDeferredValue(searchTerm);
+
+    const toggles = {
+        showDate,
+        showNote,
+        showColorOnly,
+        showSubcategory,
+    };
+
+    const handleToggle = (key) => {
+        if (key === "showDate") setShowDate(v => !v);
+        else if (key === "showNote") setShowNote(v => !v);
+        else if (key === "showColorOnly") setShowColorOnly(v => !v);
+        else if (key === "showSubcategory") setShowSubcategory(v => !v);
+    };
 
     const filteredData = useMemo(() => {
         const search = deferredSearch.trim();
