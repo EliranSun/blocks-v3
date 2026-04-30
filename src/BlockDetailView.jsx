@@ -1,6 +1,7 @@
+import { memo, useMemo } from "react";
 import classNames from "classnames";
 import { format, formatDistanceToNow, subMonths, startOfMonth } from "date-fns";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
     BarChart,
     Bar,
@@ -69,33 +70,76 @@ const CustomTooltip = ({ active, payload, label }) => {
     return null;
 };
 
-const rowVariants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: (i) => ({
-        opacity: 1,
-        x: 0,
-        transition: {
-            delay: i * 0.025,
-            type: "spring",
-            damping: 20,
-            stiffness: 300,
-        },
-    }),
+const buildRowVariants = (count) => {
+    const perItem = Math.min(0.025, 0.5 / Math.max(count, 1));
+    return {
+        hidden: { opacity: 0, x: -10 },
+        visible: (i) => ({
+            opacity: 1,
+            x: 0,
+            transition: {
+                delay: i * perItem,
+                type: "spring",
+                damping: 20,
+                stiffness: 300,
+            },
+        }),
+    };
 };
 
+const LogRow = memo(({ log, index, variants }) => (
+    <m.div
+        custom={index}
+        variants={variants}
+        initial="hidden"
+        animate="visible"
+        className="flex items-start gap-3 py-2 border-b border-neutral-800"
+        style={{ contentVisibility: "auto", containIntrinsicSize: "60px 400px" }}
+    >
+        <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
+            {format(new Date(log.date), "dd MMM yyyy")}
+        </span>
+        <div className="flex flex-col min-w-0">
+            {log.name && log.name !== log.subcategory && (
+                <span className="text-sm merriweather-400 truncate">
+                    {log.note || log.name}
+                </span>
+            )}
+            {(log.name || log.subcategory || log.location) && (
+                <span className="text-xs text-neutral-400 space-grotesk-400">
+                    {[log.name, log.subcategory, log.location].filter(Boolean).join(" · ")}
+                </span>
+            )}
+            {log.thought && (
+                <span className="text-xs text-neutral-500 space-grotesk-400 mt-1 whitespace-pre-wrap">
+                    {log.thought}
+                </span>
+            )}
+        </div>
+    </m.div>
+));
+
 export const BlockDetailView = ({ block, data = [], onBack }) => {
-    const logs = getBlockLogs(data, block);
-    const monthlyData = getMonthlyData(logs);
-    const category = findCategory(block);
+    const { logs, monthlyData, sortedLogs, category } = useMemo(() => {
+        const logs = getBlockLogs(data, block);
+        const monthlyData = getMonthlyData(logs);
+        const category = findCategory(block);
+        const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+        return { logs, monthlyData, sortedLogs, category };
+    }, [data, block]);
+
     const colorClass = category?.color ?? "text-neutral-400";
     const maxCount = Math.max(...monthlyData.map(d => d.count), 1);
 
-    const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const rowVariants = useMemo(
+        () => buildRowVariants(sortedLogs.length),
+        [sortedLogs.length]
+    );
 
     return (
         <div className="pb-40 space-y-6">
             {/* Header */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
@@ -107,9 +151,9 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                 >
                     ← Data
                 </button>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300, delay: 0.05 }}
@@ -122,10 +166,10 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                         {category.name}
                     </p>
                 )}
-            </motion.div>
+            </m.div>
 
             {/* Stats row */}
-            <motion.div
+            <m.div
                 className="flex gap-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -143,10 +187,10 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                         <p className="text-xs text-neutral-400 uppercase tracking-wide">Last entry</p>
                     </div>
                 )}
-            </motion.div>
+            </m.div>
 
             {/* Chart */}
-            <motion.div
+            <m.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15, type: "spring", damping: 20, stiffness: 300 }}
@@ -173,7 +217,7 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                         />
                         <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
                         <Bar dataKey="count" radius={[3, 3, 0, 0]} maxBarSize={24}>
-                            {monthlyData.map((entry, index) => (
+                            {monthlyData.map((entry) => (
                                 <Cell
                                     key={entry.key}
                                     fill={entry.count > 0 ? (CATEGORY_HEX[category?.name] ?? "#a3a3a3") : "#262626"}
@@ -184,11 +228,11 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                     </BarChart>
                 </ResponsiveContainer>
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Log entries */}
             {sortedLogs.length > 0 && (
-                <motion.div
+                <m.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
@@ -197,53 +241,27 @@ export const BlockDetailView = ({ block, data = [], onBack }) => {
                         All entries
                     </h2>
                     <div className="space-y-1">
-                        {sortedLogs.map((log, i) => {
-                            console.log({ log });
-                            return (
-                                <motion.div
-                                    key={log.id ?? `${log.date}-${i}`}
-                                    custom={i}
-                                    variants={rowVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    className="flex items-start gap-3 py-2 border-b border-neutral-800"
-                                >
-                                    <span className="text-neutral-400 text-sm space-grotesk-400 w-24 shrink-0">
-                                        {format(new Date(log.date), "dd MMM yyyy")}
-                                    </span>
-                                    <div className="flex flex-col min-w-0">
-                                        {log.name && log.name !== log.subcategory && (
-                                            <span className="text-sm merriweather-400 truncate">
-                                                {log.note || log.name}
-                                            </span>
-                                        )}
-                                        {(log.name || log.subcategory || log.location) && (
-                                            <span className="text-xs text-neutral-400 space-grotesk-400">
-                                                {[log.name, log.subcategory, log.location].filter(Boolean).join(" · ")}
-                                            </span>
-                                        )}
-                                        {log.thought && (
-                                            <span className="text-xs text-neutral-500 space-grotesk-400 mt-1 whitespace-pre-wrap">
-                                                {log.thought}
-                                            </span>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            )
-                        })}
+                        {sortedLogs.map((log, i) => (
+                            <LogRow
+                                key={log.id ?? `${log.date}-${i}`}
+                                log={log}
+                                index={i}
+                                variants={rowVariants}
+                            />
+                        ))}
                     </div>
-                </motion.div>
+                </m.div>
             )}
 
             {sortedLogs.length === 0 && (
-                <motion.p
+                <m.p
                     className="text-neutral-500 text-sm merriweather-400"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                 >
                     No entries found.
-                </motion.p>
+                </m.p>
             )}
         </div>
     );

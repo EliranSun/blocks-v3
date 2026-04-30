@@ -1,13 +1,13 @@
 import { WeekView } from "./WeekView";
 import { YearView } from "./YearView";
 import { Block } from "./Block";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from './Search';
 import { RectangleButton, Button } from "./Button";
 import { format } from "date-fns";
 import { Categories, MonthNotes } from './constants';
 import classNames from "classnames";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 const categoryList = Object.values(Categories);
 
@@ -47,14 +47,14 @@ const dropdownItemVariants = {
     visible: { opacity: 1, x: 0 },
 };
 
-const listContainerVariants = {
+const buildListContainerVariants = (count) => ({
     hidden: {},
     visible: {
         transition: {
-            staggerChildren: 0.025,
+            staggerChildren: Math.min(0.025, 0.5 / Math.max(count, 1)),
         },
     },
-};
+});
 
 const ToolbarPopover = ({ label, isActive, children }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +69,7 @@ const ToolbarPopover = ({ label, isActive, children }) => {
 
     return (
         <div className="relative" ref={popoverRef}>
-            <motion.button
+            <m.button
                 whileTap={{ scale: 0.93 }}
                 whileHover={{ scale: 1.04 }}
                 transition={{ type: "spring", stiffness: 500, damping: 15 }}
@@ -84,17 +84,17 @@ const ToolbarPopover = ({ label, isActive, children }) => {
                 )}
             >
                 {label}
-                <motion.span
+                <m.span
                     className="text-[10px]"
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                     ▾
-                </motion.span>
-            </motion.button>
+                </m.span>
+            </m.button>
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
+                    <m.div
                         variants={dropdownVariants}
                         initial="hidden"
                         animate="visible"
@@ -106,7 +106,7 @@ const ToolbarPopover = ({ label, isActive, children }) => {
                         )}
                     >
                         {children}
-                    </motion.div>
+                    </m.div>
                 )}
             </AnimatePresence>
         </div>
@@ -114,7 +114,7 @@ const ToolbarPopover = ({ label, isActive, children }) => {
 };
 
 const PopoverItem = ({ icon, label, isActive, onClick }) => (
-    <motion.button
+    <m.button
         variants={dropdownItemVariants}
         whileHover={{ x: 3, backgroundColor: "rgba(128,128,128,0.08)" }}
         whileTap={{ scale: 0.97 }}
@@ -126,7 +126,7 @@ const PopoverItem = ({ icon, label, isActive, onClick }) => (
         )}
     >
         <span>{icon}</span> <span>{label}</span>
-    </motion.button>
+    </m.button>
 );
 
 const listScopeOptions = [
@@ -156,31 +156,31 @@ export const BlocksList = ({
     const [showNote, setShowNote] = useState(false);
     const [showSubcategory, setShowSubcategory] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const deferredSearch = useDeferredValue(searchTerm);
 
     const filteredData = useMemo(() => {
-        if (searchTerm) {
-            return data.filter(item => {
-                const search = searchTerm.trim();
-                const regex = new RegExp(search, 'i');
-                return (
-                    regex.test(item.name) ||
-                    regex.test(item.category) ||
-                    regex.test(item.subcategory) ||
-                    regex.test(item.location) ||
-                    regex.test(item.note)
-                );
-            });
+        const search = deferredSearch.trim();
+        if (!search) {
+            return data.slice().reverse();
         }
+        const regex = new RegExp(search, 'i');
+        return data
+            .filter(item =>
+                regex.test(item.name) ||
+                regex.test(item.category) ||
+                regex.test(item.subcategory) ||
+                regex.test(item.location) ||
+                regex.test(item.note)
+            )
+            .reverse();
+    }, [data, deferredSearch]);
 
-        return data;
-    }, [data, searchTerm]);
-
-    const blockAlterProps = {
-        showDate: showDate,
-        showNote: showNote,
-        showColorOnly: showColorOnly,
-        showSubcategory: showSubcategory,
-    };
+    const blockAlterProps = useMemo(() => ({
+        showDate,
+        showNote,
+        showColorOnly,
+        showSubcategory,
+    }), [showDate, showNote, showColorOnly, showSubcategory]);
 
     const sharedProps = {
         blockProps: blockAlterProps,
@@ -188,6 +188,21 @@ export const BlocksList = ({
         data: filteredData,
         onBlockClick: onBlockClick,
     };
+
+    const listContainerVariants = useMemo(
+        () => buildListContainerVariants(filteredData.length),
+        [filteredData.length]
+    );
+
+    const toggleShowDate = useCallback(() => setShowDate(v => !v), []);
+    const toggleShowNote = useCallback(() => setShowNote(v => !v), []);
+    const toggleShowColorOnly = useCallback(() => setShowColorOnly(v => !v), []);
+    const toggleShowSubcategory = useCallback(() => setShowSubcategory(v => !v), []);
+
+    const handleSearchChange = useCallback((input) => {
+        setSearchTerm(input);
+        if (input.length > 0) onViewChange("list");
+    }, [onViewChange]);
 
     const renderView = () => {
         if (view === 'week') {
@@ -203,16 +218,15 @@ export const BlocksList = ({
         }
 
         return (
-            <motion.ul
+            <m.ul
                 className={classNames('flex flex-wrap', {
                     "gap-2": !showColorOnly
                 })}
                 variants={listContainerVariants}
                 initial="hidden"
                 animate="visible"
-                key={`list-${filteredData.length}-${searchTerm}`}
             >
-                {filteredData.reverse().map(item =>
+                {filteredData.map(item =>
                     <Block
                         variant="list"
                         key={item.date + item.name}
@@ -221,7 +235,7 @@ export const BlocksList = ({
                         {...blockAlterProps}
                     />
                 )}
-            </motion.ul>
+            </m.ul>
         )
     }
 
@@ -241,7 +255,7 @@ export const BlocksList = ({
                     </div>
                 )}
                 <div className='spacy-y-4'>
-                    <motion.h1
+                    <m.h1
                         className='text-2xl merriweather-900'
                         key={title}
                         initial={{ opacity: 0, y: -8 }}
@@ -249,7 +263,7 @@ export const BlocksList = ({
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                     >
                         {title}
-                    </motion.h1>
+                    </m.h1>
                     <h2 className='text-gray-400 text-xs'>
                         {MonthNotes[format(currentDate, 'yyyy-MM')]}
                     </h2>
@@ -258,7 +272,7 @@ export const BlocksList = ({
             {view === 'list' && (
                 <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
                     {listScopeOptions.map(({ key, label }) => (
-                        <motion.button
+                        <m.button
                             key={key}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => onListScopeChange(key)}
@@ -270,17 +284,14 @@ export const BlocksList = ({
                             )}
                         >
                             {label}
-                        </motion.button>
+                        </m.button>
                     ))}
                 </div>
             )}
             <Search
                 value={searchTerm}
                 autoHide={false}
-                onInputChange={input => {
-                    setSearchTerm(input);
-                    if (input.length > 0) onViewChange("list");
-                }} />
+                onInputChange={handleSearchChange} />
             <div className="flex gap-2 items-center">
                 <div className="flex gap-2 items-center">
                     <ToolbarPopover
@@ -325,28 +336,28 @@ export const BlocksList = ({
                 <div className="flex gap-1 p-1 rounded-md bg-neutral-100 dark:bg-neutral-800/60">
                     <RectangleButton
                         isActive={showDate}
-                        onClick={() => setShowDate(!showDate)}>
+                        onClick={toggleShowDate}>
                         📆
                     </RectangleButton>
                     <RectangleButton
                         isActive={showNote}
-                        onClick={() => setShowNote(!showNote)}>
+                        onClick={toggleShowNote}>
                         📒
                     </RectangleButton>
                     <RectangleButton
                         isActive={showColorOnly}
-                        onClick={() => setShowColorOnly(!showColorOnly)}>
+                        onClick={toggleShowColorOnly}>
                         🦄
                     </RectangleButton>
                     <RectangleButton
                         isActive={showSubcategory}
-                        onClick={() => setShowSubcategory(!showSubcategory)}>
+                        onClick={toggleShowSubcategory}>
                         📁
                     </RectangleButton>
                 </div>
             </div>
-            <AnimatePresence mode="wait">
-                <motion.div
+            <AnimatePresence>
+                <m.div
                     key={view}
                     className="space-grotesk-400"
                     initial={{ opacity: 0, x: 20 }}
@@ -355,7 +366,7 @@ export const BlocksList = ({
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 >
                     {renderView()}
-                </motion.div>
+                </m.div>
             </AnimatePresence>
         </div>
     )

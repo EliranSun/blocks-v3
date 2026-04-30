@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
+    "@tanstack/react-virtual": "^3.13.24",
     "canvas-confetti": "^1.9.4",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
