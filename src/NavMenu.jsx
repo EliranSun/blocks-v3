@@ -1,11 +1,12 @@
 import classNames from "classnames";
 import { motion } from "framer-motion";
+import { X, LayoutGrid, Database, TrendingUp } from "lucide-react";
 import { Popover } from "./Popover";
 
 const NAV_ITEMS = [
-    { key: "", label: "Blocks", icon: "▦" },
-    { key: "blocksData", label: "Data", icon: "≡" },
-    { key: "insights", label: "Insights", icon: "✦" },
+    { key: "",           label: "Blocks",   icon: LayoutGrid },
+    { key: "blocksData", label: "Data",     icon: Database },
+    { key: "insights",   label: "Insights", icon: TrendingUp },
 ];
 
 const isActiveKey = (currentPage, key) => {
@@ -19,12 +20,6 @@ const isActiveKey = (currentPage, key) => {
     return currentPage === key;
 };
 
-const IconX = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-        <line x1="6" y1="6" x2="18" y2="18" />
-        <line x1="18" y1="6" x2="6" y2="18" />
-    </svg>
-);
 
 const NEO_NAV_TILE = classNames(
     "relative w-full select-none cursor-pointer rounded-sm",
@@ -54,14 +49,14 @@ export const NavMenu = ({ isOpen, onClose, currentPage, onNavigate }) => (
                         "transition-[transform,box-shadow] duration-75",
                     )}
                 >
-                    <IconX />
+                    <X size={20} strokeWidth={3} />
                 </motion.button>
             </div>
             <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight space-grotesk-600 leading-none mb-6 pr-12">
                 Navigate
             </h2>
             <div className="flex flex-col gap-4">
-                {NAV_ITEMS.map(({ key, label, icon }) => {
+                {NAV_ITEMS.map(({ key, label, icon: NavIcon }) => {
                     const active = isActiveKey(currentPage, key);
                     return (
                         <motion.button
@@ -81,7 +76,7 @@ export const NavMenu = ({ isOpen, onClose, currentPage, onNavigate }) => (
                             aria-current={active ? "page" : undefined}
                         >
                             <span className="flex items-center gap-3">
-                                <span className="text-2xl leading-none">{icon}</span>
+                                <NavIcon size={24} strokeWidth={2.5} />
                                 <span>{label}</span>
                             </span>
                             {active && (

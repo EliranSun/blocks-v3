@@ -90,6 +90,7 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
             </m.h1>
             {categoryEntries.map(({ category, perBlock }, catIndex) => {
                 const blockListVariants = buildBlockListVariants(perBlock.length);
+                const CatIcon = category.icon;
                 return (
                     <m.div
                         key={category.name}
@@ -104,7 +105,7 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
                             transition={{ type: "spring", stiffness: 400, damping: 20 }}
                             onClick={() => onCategoryClick?.(category.name)}
                         >
-                            <span className="text-base">{category.icon}</span>
+                            <CatIcon size={18} strokeWidth={2.5} />
                             <h2 className={classNames("text-lg uppercase font-bold underline merriweather-500", category.color)}>
                                 {category.name}
                             </h2>

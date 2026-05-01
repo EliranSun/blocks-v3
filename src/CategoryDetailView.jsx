@@ -195,7 +195,7 @@ export const CategoryDetailView = ({ categoryName, data = [], onBack, onBlockCli
                 transition={{ type: "spring", damping: 20, stiffness: 300, delay: 0.05 }}
             >
                 <div className="flex items-center gap-2">
-                    <span className="text-2xl">{category?.icon}</span>
+                    {category?.icon && (() => { const I = category.icon; return <I size={22} strokeWidth={2.5} />; })()}
                     <h1 className={classNames("text-2xl uppercase font-bold merriweather-900", category?.color)}>
                         {categoryName}
                     </h1>

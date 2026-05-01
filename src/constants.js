@@ -1,4 +1,6 @@
 
+import { Brain, Heart, Palette, Activity, Home, Sun, Users, Ban } from 'lucide-react';
+
 export const Scopes = [
     { name: "year", maxValue: 0, minValue: 3 },
     { name: "month", maxValue: 4, minValue: 6 },
@@ -82,7 +84,7 @@ export const Blocks = {
 export const Categories = {
     Mood: {
         name: "mood",
-        icon: "🧐",
+        icon: Brain,
         bgColor: "bg-black",
         color: "text-black",
         subcategories: [],
@@ -96,7 +98,7 @@ export const Categories = {
     },
     Wife: {
         name: "wife",
-        icon: "❤️",
+        icon: Heart,
         bgColor: "bg-violet-600",
         color: "text-violet-600",
         subcategories: [],
@@ -110,7 +112,7 @@ export const Categories = {
     },
     Creative: {
         name: "creative",
-        icon: "🎨",
+        icon: Palette,
         bgColor: "bg-amber-400",
         color: "text-amber-400",
         subcategories: [],
@@ -125,7 +127,7 @@ export const Categories = {
     },
     Health: {
         name: "health",
-        icon: "🧘‍♂️",
+        icon: Activity,
         bgColor: "bg-lime-500",
         color: "text-lime-500",
         subcategories: [],
@@ -143,7 +145,7 @@ export const Categories = {
     },
     Household: {
         name: "household",
-        icon: "🏠",
+        icon: Home,
         bgColor: "bg-orange-700",
         color: "text-orange-700",
         subcategories: [],
@@ -161,7 +163,7 @@ export const Categories = {
     },
     Family: {
         name: "family",
-        icon: "☀️",
+        icon: Sun,
         bgColor: "bg-rose-600",
         color: "text-rose-600",
         subcategories: ["WhatsApp", "call", "meet", "date"],
@@ -180,7 +182,7 @@ export const Categories = {
     },
     Friends: {
         name: "friends",
-        icon: "🌳",
+        icon: Users,
         bgColor: "bg-sky-500",
         color: "text-sky-500",
         subcategories: ["WhatsApp", "call", "meet", "date"],
@@ -197,7 +199,7 @@ export const Categories = {
     },
     Avoid: {
         name: "avoid",
-        icon: "🚫",
+        icon: Ban,
         bgColor: "bg-zinc-500",
         color: "text-zinc-500",
         blocks: [Blocks.DOOM_SCROLL, Blocks.SICK, Blocks.PORN, Blocks.GRUNT],
