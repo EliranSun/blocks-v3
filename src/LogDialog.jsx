@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
+import { X, Trash2, ChevronRight } from "lucide-react";
 
 import { Popover } from "./Popover";
 import { Categories } from "./constants";
@@ -56,27 +57,6 @@ const stepFade = {
     transition: { duration: 0.12, ease: "easeOut" },
 };
 
-const IconX = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-        <line x1="6" y1="6" x2="18" y2="18" />
-        <line x1="18" y1="6" x2="6" y2="18" />
-    </svg>
-);
-
-const IconTrash = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-        <path d="M10 11v6M14 11v6" />
-        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-    </svg>
-);
-
-const IconChevron = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="9 18 15 12 9 6" />
-    </svg>
-);
 
 const StepHeading = ({ children }) => (
     <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight space-grotesk-600 leading-none mb-5">
@@ -116,7 +96,7 @@ const Chip = ({ onClick, color = "bg-white", children, label }) => (
     >
         {label && <span className="text-[10px] uppercase tracking-widest opacity-80">{label}</span>}
         <span className="uppercase tracking-tight">{children}</span>
-        <IconChevron />
+        <ChevronRight size={14} strokeWidth={3} />
     </button>
 );
 
@@ -274,7 +254,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                         color={selectedCategory.bgColor}
                         onClick={() => setStep("category")}
                     >
-                        {selectedCategory.icon} {selectedCategory.name}
+                        {(() => { const I = selectedCategory.icon; return <I size={14} strokeWidth={2.5} className="inline" />; })()} {selectedCategory.name}
                     </Chip>
                 )}
                 {step !== "block" && blockName && (
@@ -296,11 +276,11 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                 <div className="absolute top-0 right-0 flex gap-2 z-10">
                     {isEditMode && (
                         <IconButton color="bg-red-400" ariaLabel="Delete block" onClick={handleDelete}>
-                            <IconTrash />
+                            <Trash2 size={20} strokeWidth={2.5} />
                         </IconButton>
                     )}
                     <IconButton ariaLabel="Close dialog" onClick={onClose}>
-                        <IconX />
+                        <X size={20} strokeWidth={3} />
                     </IconButton>
                 </div>
 
@@ -321,7 +301,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                                                 pulse={pulseKey === `cat-${key}`}
                                                 onClick={() => handleCategoryPick(key, category)}
                                             >
-                                                <span className="text-4xl mb-1">{category.icon}</span>
+                                                <span className="mb-1">{(() => { const I = category.icon; return <I size={32} strokeWidth={2} />; })()}</span>
                                                 <span className="text-xs">{key}</span>
                                             </Tile>
                                         );

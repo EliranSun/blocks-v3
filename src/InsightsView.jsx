@@ -347,8 +347,9 @@ export function InsightsView({ data, onBlockClick, onCategoryClick }) {
         className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
         {...anim(0.05)}
       >
-        {categoryDefs.map((cat) => (
-          <motion.button
+        {categoryDefs.map((cat) => {
+          const CatIcon = cat.icon;
+          return (<motion.button
             key={cat.name}
             whileTap={{ scale: 0.92 }}
             className={classNames(
@@ -359,9 +360,10 @@ export function InsightsView({ data, onBlockClick, onCategoryClick }) {
             )}
             onClick={() => toggleCategory(cat.name)}
           >
-            {cat.icon} {cat.name}
+            <CatIcon size={14} strokeWidth={2.5} className="inline shrink-0" /> {cat.name}
           </motion.button>
-        ))}
+          );
+        })}
       </motion.div>
 
       {/* Block filter */}
@@ -566,14 +568,15 @@ export function InsightsView({ data, onBlockClick, onCategoryClick }) {
               const catDef = Object.values(Categories).find(
                 (c) => c.name === m.category
               );
+              const CatDefIcon = catDef?.icon ?? null;
               return (
                 <button
                   key={m.category}
                   className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 cursor-pointer"
                   onClick={() => onCategoryClick?.(m.category)}
                 >
-                  <span className="text-sm dark:text-neutral-200">
-                    {catDef?.icon} {m.category}
+                  <span className="flex items-center gap-1 text-sm dark:text-neutral-200">
+                    {CatDefIcon && <CatDefIcon size={14} strokeWidth={2.5} />} {m.category}
                   </span>
                   <div className="flex items-center gap-3 text-sm">
                     <span className="text-neutral-500 dark:text-neutral-400">

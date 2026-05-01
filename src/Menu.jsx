@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { useState } from "react";
 import { Button } from "./Button";
 import { motion, AnimatePresence } from "framer-motion";
+import { Menu as MenuIcon } from "lucide-react";
 
 const menuVariants = {
     hidden: {
@@ -46,7 +47,7 @@ export const Menu = ({ items = [], showSelectedItem, selectedItem, onItemClick =
                     "size-12": !label,
                     "h-12 w-24": label
                 })}>
-                {showSelectedItem ? selectedItemLabel.slice(0, 2).trim() : (label || "≡")}
+                {showSelectedItem ? selectedItemLabel.slice(0, 2).trim() : (label || <MenuIcon size={20} strokeWidth={3} />)}
             </Button>
             <AnimatePresence>
                 {isOpen && (

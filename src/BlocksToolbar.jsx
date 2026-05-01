@@ -1,15 +1,16 @@
 import { useState } from "react";
 import classNames from "classnames";
 import { motion } from "framer-motion";
+import { X, List, Calendar, CalendarDays, CalendarRange, FileText, Layers, FolderOpen, Settings2 } from "lucide-react";
 import { Popover } from "./Popover";
 import { Categories } from "./constants";
 
 const categoryList = Object.values(Categories);
 
 const viewOptions = [
-    { key: "list", icon: "📃", label: "List" },
-    { key: "year", icon: "📅", label: "Year" },
-    { key: "week", icon: "7️⃣", label: "Week" },
+    { key: "list", icon: List, label: "List" },
+    { key: "year", icon: Calendar, label: "Year" },
+    { key: "week", icon: CalendarDays, label: "Week" },
 ];
 
 const listScopeOptions = [
@@ -20,10 +21,10 @@ const listScopeOptions = [
 ];
 
 const toggleOptions = [
-    { key: "showDate", icon: "📆", label: "Dates" },
-    { key: "showNote", icon: "📒", label: "Notes" },
-    { key: "showColorOnly", icon: "🦄", label: "Color only" },
-    { key: "showSubcategory", icon: "📁", label: "Subcategory" },
+    { key: "showDate",        icon: CalendarRange, label: "Dates" },
+    { key: "showNote",        icon: FileText,      label: "Notes" },
+    { key: "showColorOnly",   icon: Layers,        label: "Color only" },
+    { key: "showSubcategory", icon: FolderOpen,    label: "Subcategory" },
 ];
 
 const NEO_TILE = classNames(
@@ -59,12 +60,6 @@ const NEO_TRIGGER = classNames(
     "font-black uppercase tracking-tight space-grotesk-600 text-sm",
 );
 
-const IconX = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-        <line x1="6" y1="6" x2="18" y2="18" />
-        <line x1="18" y1="6" x2="6" y2="18" />
-    </svg>
-);
 
 const ModalShell = ({ title, onClose, children }) => (
     <div className="flex flex-col h-full relative">
@@ -82,7 +77,7 @@ const ModalShell = ({ title, onClose, children }) => (
                     "transition-[transform,box-shadow] duration-75",
                 )}
             >
-                <IconX />
+                <X size={20} strokeWidth={3} />
             </motion.button>
         </div>
         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight space-grotesk-600 leading-none mb-6 pr-12">
@@ -115,7 +110,7 @@ const ViewModal = ({ isOpen, onClose, view, onViewChange, listScope, onListScope
     <Popover isOpen={isOpen}>
         <ModalShell title="View" onClose={onClose}>
             <div className="flex flex-col gap-4">
-                {viewOptions.map(({ key, icon, label }) => {
+                {viewOptions.map(({ key, icon: ViewIcon, label }) => {
                     const active = view === key;
                     return (
                         <Tile
@@ -128,7 +123,7 @@ const ViewModal = ({ isOpen, onClose, view, onViewChange, listScope, onListScope
                             }}
                         >
                             <span className="flex items-center gap-3">
-                                <span className="text-2xl leading-none">{icon}</span>
+                                <ViewIcon size={22} strokeWidth={2.5} />
                                 <span>{label}</span>
                             </span>
                             {active && (
@@ -198,7 +193,7 @@ const CategoryModal = ({ isOpen, onClose, category, onCategoryChange }) => (
                         </span>
                     )}
                 </Tile>
-                {categoryList.map(({ name, icon }) => {
+                {categoryList.map(({ name, icon: CatIcon }) => {
                     const active = category === name;
                     return (
                         <Tile
@@ -211,7 +206,7 @@ const CategoryModal = ({ isOpen, onClose, category, onCategoryChange }) => (
                             }}
                         >
                             <span className="flex items-center gap-3">
-                                <span className="text-2xl leading-none">{icon}</span>
+                                <CatIcon size={22} strokeWidth={2.5} />
                                 <span>{name}</span>
                             </span>
                             {active && (
@@ -231,7 +226,7 @@ const DisplayModal = ({ isOpen, onClose, toggles, onToggle }) => (
     <Popover isOpen={isOpen}>
         <ModalShell title="Display" onClose={onClose}>
             <div className="flex flex-col gap-3">
-                {toggleOptions.map(({ key, icon, label }) => {
+                {toggleOptions.map(({ key, icon: ToggleIcon, label }) => {
                     const active = !!toggles[key];
                     return (
                         <Tile
@@ -241,7 +236,7 @@ const DisplayModal = ({ isOpen, onClose, toggles, onToggle }) => (
                             onClick={() => onToggle(key)}
                         >
                             <span className="flex items-center gap-3">
-                                <span className="text-2xl leading-none">{icon}</span>
+                                <ToggleIcon size={22} strokeWidth={2.5} />
                                 <span>{label}</span>
                             </span>
                             <span
@@ -295,6 +290,9 @@ export const BlocksToolbar = ({
         : null;
     const activeToggleKeys = toggleOptions.filter(t => toggles[t.key]);
 
+    const ActiveViewIcon = activeView?.icon ?? List;
+    const ActiveCatIcon = activeCategory?.icon ?? null;
+
     return (
         <>
             <div className="flex gap-3 items-center flex-wrap">
@@ -302,14 +300,14 @@ export const BlocksToolbar = ({
                     active={false}
                     onClick={() => setOpenModal("view")}
                 >
-                    <span className="text-lg leading-none">{activeView?.icon ?? "📃"}</span>
+                    <ActiveViewIcon size={18} strokeWidth={2.5} />
                     <span>{activeView?.label ?? "View"}</span>
                 </TriggerButton>
                 <TriggerButton
                     active={!!category}
                     onClick={() => setOpenModal("category")}
                 >
-                    <span className="text-lg leading-none">{activeCategory?.icon ?? "*"}</span>
+                    {ActiveCatIcon ? <ActiveCatIcon size={18} strokeWidth={2.5} /> : <span>*</span>}
                     <span>{activeCategory?.name ?? "All"}</span>
                 </TriggerButton>
                 <TriggerButton
@@ -317,14 +315,15 @@ export const BlocksToolbar = ({
                     onClick={() => setOpenModal("display")}
                 >
                     {activeToggleKeys.length > 0 ? (
-                        <span className="flex items-center gap-1 text-lg leading-none">
-                            {activeToggleKeys.map(t => (
-                                <span key={t.key}>{t.icon}</span>
-                            ))}
+                        <span className="flex items-center gap-1">
+                            {activeToggleKeys.map(t => {
+                                const TIcon = t.icon;
+                                return <TIcon key={t.key} size={18} strokeWidth={2.5} />;
+                            })}
                         </span>
                     ) : (
                         <>
-                            <span className="text-lg leading-none">⚙</span>
+                            <Settings2 size={18} strokeWidth={2.5} />
                             <span>Display</span>
                         </>
                     )}

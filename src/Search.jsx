@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Search as SearchIcon, X } from 'lucide-react';
 
 const NEO_BUTTON = classNames(
     "shrink-0 w-11 h-11 flex items-center justify-center rounded-sm",
@@ -42,22 +43,12 @@ export const Search = ({
                 aria-label="Toggle search"
                 className={NEO_BUTTON}
             >
-                <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
+                <motion.div
                     animate={{ rotate: isOpen ? 0 : -90 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                </motion.svg>
+                    <SearchIcon size={20} strokeWidth={3} />
+                </motion.div>
             </motion.button>
             <motion.div
                 className={classNames(
@@ -107,20 +98,7 @@ export const Search = ({
                                 "bg-amber-400 text-black",
                             )}
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={3}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
+                            <X size={16} strokeWidth={3} />
                         </motion.button>
                     )}
                 </AnimatePresence>
