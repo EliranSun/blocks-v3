@@ -30,8 +30,10 @@ const containerStagger = {
 };
 
 const STRIPED_BG =
-    "bg-[repeating-linear-gradient(45deg,#e5e5e5_0_2px,transparent_2px_6px)] " +
-    "dark:bg-[repeating-linear-gradient(45deg,#404040_0_2px,transparent_2px_6px)]";
+    "bg-[repeating-linear-gradient(45deg,#d4d4d4_0_2px,#fafafa_2px_6px)] " +
+    "dark:bg-[repeating-linear-gradient(45deg,#525252_0_2px,#171717_2px_6px)]";
+
+const CELL_SIZE = "clamp(12px, calc((100dvh - 14rem) / 31), 40px)";
 
 const dominantCategory = (byCategory) => {
     let best = null;
@@ -178,82 +180,88 @@ export const YearPixelView = ({
             </div>
             <div
                 className={classNames(
-                    "flex-1 min-h-0 rounded-sm bg-white dark:bg-neutral-900 p-2",
-                    "border-[3px] border-black dark:border-white",
-                    "shadow-[5px_5px_0_0_#000] dark:shadow-[5px_5px_0_0_#fff]",
+                    "flex-1 min-h-0 flex items-start justify-center overflow-hidden",
                 )}
             >
-                <m.div
-                    variants={containerStagger}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid gap-px h-full w-full"
-                    style={{
-                        gridTemplateColumns: "1.5rem repeat(12, minmax(0, 1fr))",
-                        gridTemplateRows: "1rem repeat(31, minmax(0, 1fr))",
-                    }}
+                <div
+                    className={classNames(
+                        "rounded-sm bg-black dark:bg-white p-[2px] inline-block",
+                        "border-[3px] border-black dark:border-white",
+                        "shadow-[5px_5px_0_0_#000] dark:shadow-[5px_5px_0_0_#fff]",
+                    )}
                 >
-                    <div />
-                    {MONTH_LETTERS.map((letter, idx) => (
-                        <div
-                            key={`hdr-${idx}`}
-                            className="text-center text-[11px] leading-none font-black uppercase tracking-tight space-grotesk-600 text-black dark:text-white flex items-center justify-center"
-                        >
-                            {letter}
-                        </div>
-                    ))}
-                    {Array.from({ length: 31 }, (_, dayIdx) => {
-                        const day = dayIdx + 1;
-                        return (
-                            <Fragment key={`row-${day}`}>
-                                <div className="text-right text-[10px] leading-none font-black space-grotesk-600 text-black dark:text-white flex items-center justify-end pr-1">
-                                    {day}
-                                </div>
-                                {MONTH_LETTERS.map((_, monthIdx) => {
-                                    const exists = day <= daysInMonthCache[monthIdx];
-                                    const key = `${monthIdx}-${day}`;
-                                    const dayData = dayMap[key];
+                    <m.div
+                        variants={containerStagger}
+                        initial="hidden"
+                        animate="visible"
+                        className="grid gap-[2px]"
+                        style={{
+                            gridTemplateColumns: `1.5rem repeat(12, ${CELL_SIZE})`,
+                            gridTemplateRows: `1rem repeat(31, ${CELL_SIZE})`,
+                        }}
+                    >
+                        <div className="bg-white dark:bg-neutral-900" />
+                        {MONTH_LETTERS.map((letter, idx) => (
+                            <div
+                                key={`hdr-${idx}`}
+                                className="bg-white dark:bg-neutral-900 text-center text-[11px] leading-none font-black uppercase tracking-tight space-grotesk-600 text-black dark:text-white flex items-center justify-center"
+                            >
+                                {letter}
+                            </div>
+                        ))}
+                        {Array.from({ length: 31 }, (_, dayIdx) => {
+                            const day = dayIdx + 1;
+                            return (
+                                <Fragment key={`row-${day}`}>
+                                    <div className="bg-white dark:bg-neutral-900 text-right text-[10px] leading-none font-black space-grotesk-600 text-black dark:text-white flex items-center justify-end pr-1">
+                                        {day}
+                                    </div>
+                                    {MONTH_LETTERS.map((_, monthIdx) => {
+                                        const exists = day <= daysInMonthCache[monthIdx];
+                                        const key = `${monthIdx}-${day}`;
+                                        const dayData = dayMap[key];
 
-                                    let fillClass;
-                                    if (!exists) {
-                                        fillClass = STRIPED_BG;
-                                    } else if (dayData) {
-                                        const dominant = category
-                                            ? (dayData.byCategory[category] ? category : null)
-                                            : dominantCategory(dayData.byCategory);
-                                        fillClass = dominant
-                                            ? CategoryBgColors[dominant] ?? "bg-neutral-400"
-                                            : "bg-white dark:bg-neutral-900";
-                                    } else {
-                                        fillClass = "bg-white dark:bg-neutral-900";
-                                    }
+                                        let fillClass;
+                                        if (!exists) {
+                                            fillClass = STRIPED_BG;
+                                        } else if (dayData) {
+                                            const dominant = category
+                                                ? (dayData.byCategory[category] ? category : null)
+                                                : dominantCategory(dayData.byCategory);
+                                            fillClass = dominant
+                                                ? CategoryBgColors[dominant] ?? "bg-neutral-400"
+                                                : "bg-white dark:bg-neutral-900";
+                                        } else {
+                                            fillClass = "bg-white dark:bg-neutral-900";
+                                        }
 
-                                    const cellDate = exists ? new Date(year, monthIdx, day) : null;
-                                    const isToday = cellDate && isSameDay(cellDate, today);
+                                        const cellDate = exists ? new Date(year, monthIdx, day) : null;
+                                        const isToday = cellDate && isSameDay(cellDate, today);
 
-                                    return (
-                                        <m.button
-                                            key={key}
-                                            type="button"
-                                            variants={cellAnimation}
-                                            disabled={!exists}
-                                            onClick={(e) =>
-                                                exists && handleCellClick(e, cellDate, dayData?.items)
-                                            }
-                                            aria-label={cellDate ? format(cellDate, "MMM d") : undefined}
-                                            className={classNames(
-                                                "min-w-0 min-h-0 border border-neutral-300 dark:border-neutral-700",
-                                                fillClass,
-                                                isToday && "ring-2 ring-black dark:ring-white ring-inset z-10",
-                                                exists ? "cursor-pointer" : "cursor-default",
-                                            )}
-                                        />
-                                    );
-                                })}
-                            </Fragment>
-                        );
-                    })}
-                </m.div>
+                                        return (
+                                            <m.button
+                                                key={key}
+                                                type="button"
+                                                variants={cellAnimation}
+                                                disabled={!exists}
+                                                onClick={(e) =>
+                                                    exists && handleCellClick(e, cellDate, dayData?.items)
+                                                }
+                                                aria-label={cellDate ? format(cellDate, "MMM d") : undefined}
+                                                className={classNames(
+                                                    "min-w-0 min-h-0",
+                                                    fillClass,
+                                                    isToday && "ring-2 ring-amber-400 ring-inset z-10",
+                                                    exists ? "cursor-pointer" : "cursor-default",
+                                                )}
+                                            />
+                                        );
+                                    })}
+                                </Fragment>
+                            );
+                        })}
+                    </m.div>
+                </div>
             </div>
             {tooltip && (
                 <div
