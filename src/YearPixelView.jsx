@@ -34,7 +34,7 @@ const STRIPED_BG =
     "bg-[repeating-linear-gradient(45deg,#d4d4d4_0_2px,#fafafa_2px_6px)] " +
     "dark:bg-[repeating-linear-gradient(45deg,#525252_0_2px,#171717_2px_6px)]";
 
-const CELL_SIZE = "clamp(12px, calc((100dvh - 14rem) / 31), 40px)";
+const CELL_SIZE = "clamp(8px, calc((100cqh - 88px) / 31), 36px)";
 
 const BlockFilterModal = ({ isOpen, onClose, categoryName, block, onBlockChange }) => {
     const cat = categoryName
@@ -263,9 +263,8 @@ export const YearPixelView = ({
                 </div>
             </div>
             <div
-                className={classNames(
-                    "flex-1 min-h-0 flex items-start justify-center overflow-hidden",
-                )}
+                className="flex-1 min-h-0 flex items-start justify-center overflow-hidden"
+                style={{ containerType: "size" }}
             >
                 <div
                     className={classNames(
