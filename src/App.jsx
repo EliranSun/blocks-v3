@@ -11,6 +11,7 @@ import { BlocksDataView } from './BlocksDataView';
 import { BlockDetailView } from './BlockDetailView';
 import { CategoryDetailView } from './CategoryDetailView';
 import { InsightsView } from './InsightsView';
+import { YearPixelView } from './YearPixelView';
 import { NavMenu } from './NavMenu';
 import classNames from 'classnames';
 import { m, AnimatePresence } from 'framer-motion';
@@ -66,6 +67,10 @@ function App() {
   const currentDate = useMemo(() => {
     const now = new Date();
 
+    if (page === 'yearPixel') {
+      return addYears(now, dateOffset);
+    }
+
     switch (viewName) {
       case 'year':
         return addYears(now, dateOffset);
@@ -82,7 +87,7 @@ function App() {
       default:
         return now;
     }
-  }, [viewName, dateOffset, listScope]);
+  }, [page, viewName, dateOffset, listScope]);
 
   const title = useMemo(() => {
     switch (viewName) {
@@ -208,6 +213,7 @@ function App() {
               setPage(key);
               setSelectedBlock(null);
               setSelectedCategory(null);
+              if (key === "yearPixel") setDateOffset(0);
             }}
           />
           <div className='w-full md:w-2/3 mx-auto h-full overflow-y-auto overflow-x-hidden pb-24'>
@@ -270,6 +276,24 @@ function App() {
                       setSelectedCategory(categoryName);
                       setPage("categoryDetail");
                     }}
+                  />
+                </m.div>
+              ) : page === "yearPixel" ? (
+                <m.div
+                  key="yearPixel"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  className="h-full"
+                >
+                  <YearPixelView
+                    currentDate={currentDate}
+                    data={logs}
+                    category={category}
+                    onCategoryChange={setCategory}
+                    onNextYear={handleNextDate}
+                    onPrevYear={handlePrevDate}
                   />
                 </m.div>
               ) : page === "blocksData" ? (
