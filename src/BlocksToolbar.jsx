@@ -171,7 +171,7 @@ const ViewModal = ({ isOpen, onClose, view, onViewChange, listScope, onListScope
     </Popover>
 );
 
-const CategoryModal = ({ isOpen, onClose, category, onCategoryChange }) => (
+export const CategoryModal = ({ isOpen, onClose, category, onCategoryChange }) => (
     <Popover isOpen={isOpen}>
         <ModalShell title="Category" onClose={onClose}>
             <div className="flex flex-col gap-3">

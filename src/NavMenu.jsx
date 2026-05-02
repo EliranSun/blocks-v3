@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { X, LayoutGrid, Database, TrendingUp } from "lucide-react";
+import { X, LayoutGrid, Database, TrendingUp, Grid3x3 } from "lucide-react";
 import { Popover } from "./Popover";
 
 const NAV_ITEMS = [
-    { key: "",           label: "Blocks",   icon: LayoutGrid },
-    { key: "blocksData", label: "Data",     icon: Database },
-    { key: "insights",   label: "Insights", icon: TrendingUp },
+    { key: "",           label: "Blocks",      icon: LayoutGrid },
+    { key: "blocksData", label: "Data",        icon: Database },
+    { key: "insights",   label: "Insights",    icon: TrendingUp },
+    { key: "yearPixel",  label: "Year Pixel",  icon: Grid3x3 },
 ];
 
 const isActiveKey = (currentPage, key) => {
