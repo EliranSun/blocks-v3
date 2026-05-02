@@ -2,9 +2,10 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { format, getDaysInMonth, isSameDay } from "date-fns";
 import classNames from "classnames";
 import { motion, m } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Layers } from "lucide-react";
+import { Popover } from "./Popover";
 import { Categories, CategoryBgColors } from "./constants";
-import { CategoryModal } from "./BlocksToolbar";
+import { CategoryModal, ModalShell, Tile } from "./BlocksToolbar";
 
 const MONTH_LETTERS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
@@ -35,6 +36,62 @@ const STRIPED_BG =
 
 const CELL_SIZE = "clamp(12px, calc((100dvh - 14rem) / 31), 40px)";
 
+const BlockFilterModal = ({ isOpen, onClose, categoryName, block, onBlockChange }) => {
+    const cat = categoryName
+        ? Object.values(Categories).find((c) => c.name === categoryName)
+        : null;
+    const blocks = cat?.blocks ?? [];
+    return (
+        <Popover isOpen={isOpen}>
+            <ModalShell title={cat ? `${cat.name} block` : "Block"} onClose={onClose}>
+                <div className="flex flex-col gap-3">
+                    <Tile
+                        active={!block}
+                        ariaCurrent={!block ? "true" : undefined}
+                        onClick={() => {
+                            onBlockChange(null);
+                            onClose();
+                        }}
+                    >
+                        <span className="flex items-center gap-3">
+                            <span className="text-2xl leading-none">*</span>
+                            <span>All</span>
+                        </span>
+                        {!block && (
+                            <span className="text-[10px] tracking-widest font-bold border-[2px] border-black px-2 py-1 rounded-sm">
+                                CURRENT
+                            </span>
+                        )}
+                    </Tile>
+                    {blocks.map((blockName) => {
+                        const active = block === blockName;
+                        return (
+                            <Tile
+                                key={blockName}
+                                active={active}
+                                ariaCurrent={active ? "true" : undefined}
+                                onClick={() => {
+                                    onBlockChange(active ? null : blockName);
+                                    onClose();
+                                }}
+                            >
+                                <span className="flex items-center gap-3">
+                                    <span>{blockName}</span>
+                                </span>
+                                {active && (
+                                    <span className="text-[10px] tracking-widest font-bold border-[2px] border-black px-2 py-1 rounded-sm">
+                                        CURRENT
+                                    </span>
+                                )}
+                            </Tile>
+                        );
+                    })}
+                </div>
+            </ModalShell>
+        </Popover>
+    );
+};
+
 const dominantCategory = (byCategory) => {
     let best = null;
     for (const [name, info] of Object.entries(byCategory)) {
@@ -58,7 +115,13 @@ export const YearPixelView = ({
     onPrevYear,
 }) => {
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+    const [isBlockOpen, setIsBlockOpen] = useState(false);
+    const [block, setBlock] = useState(null);
     const [tooltip, setTooltip] = useState(null);
+
+    useEffect(() => {
+        setBlock(null);
+    }, [category]);
 
     const year = currentDate.getFullYear();
     const today = new Date();
@@ -156,27 +219,48 @@ export const YearPixelView = ({
                         <ChevronRight size={18} strokeWidth={3} />
                     </motion.button>
                 </div>
-                <motion.button
-                    type="button"
-                    whileHover={{ translateX: -1, translateY: -1 }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsCategoryOpen(true);
-                    }}
-                    className={classNames(
-                        NEO_TRIGGER,
-                        category
-                            ? `${activeCategory.bgColor} text-black`
-                            : "bg-white text-black dark:bg-neutral-800 dark:text-white",
+                <div className="flex items-center gap-3 flex-wrap">
+                    <motion.button
+                        type="button"
+                        whileHover={{ translateX: -1, translateY: -1 }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsCategoryOpen(true);
+                        }}
+                        className={classNames(
+                            NEO_TRIGGER,
+                            category
+                                ? `${activeCategory.bgColor} text-black`
+                                : "bg-white text-black dark:bg-neutral-800 dark:text-white",
+                        )}
+                    >
+                        {ActiveCatIcon ? (
+                            <ActiveCatIcon size={18} strokeWidth={2.5} />
+                        ) : (
+                            <span>*</span>
+                        )}
+                        <span>{activeCategory?.name ?? "All"}</span>
+                    </motion.button>
+                    {category && (
+                        <motion.button
+                            type="button"
+                            whileHover={{ translateX: -1, translateY: -1 }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsBlockOpen(true);
+                            }}
+                            className={classNames(
+                                NEO_TRIGGER,
+                                block
+                                    ? "bg-amber-400 text-black"
+                                    : "bg-white text-black dark:bg-neutral-800 dark:text-white",
+                            )}
+                        >
+                            <Layers size={18} strokeWidth={2.5} />
+                            <span>{block ?? "All blocks"}</span>
+                        </motion.button>
                     )}
-                >
-                    {ActiveCatIcon ? (
-                        <ActiveCatIcon size={18} strokeWidth={2.5} />
-                    ) : (
-                        <span>*</span>
-                    )}
-                    <span>{activeCategory?.name ?? "All"}</span>
-                </motion.button>
+                </div>
             </div>
             <div
                 className={classNames(
@@ -225,9 +309,17 @@ export const YearPixelView = ({
                                         if (!exists) {
                                             fillClass = STRIPED_BG;
                                         } else if (dayData) {
-                                            const dominant = category
-                                                ? (dayData.byCategory[category] ? category : null)
-                                                : dominantCategory(dayData.byCategory);
+                                            let dominant;
+                                            if (block) {
+                                                const matched = dayData.items.find(
+                                                    (it) => it.name?.toLowerCase() === block.toLowerCase(),
+                                                );
+                                                dominant = matched?.category?.toLowerCase() ?? null;
+                                            } else if (category) {
+                                                dominant = dayData.byCategory[category] ? category : null;
+                                            } else {
+                                                dominant = dominantCategory(dayData.byCategory);
+                                            }
                                             fillClass = dominant
                                                 ? CategoryBgColors[dominant] ?? "bg-neutral-400"
                                                 : "bg-white dark:bg-neutral-900";
@@ -307,6 +399,13 @@ export const YearPixelView = ({
                 onClose={() => setIsCategoryOpen(false)}
                 category={category}
                 onCategoryChange={onCategoryChange}
+            />
+            <BlockFilterModal
+                isOpen={isBlockOpen}
+                onClose={() => setIsBlockOpen(false)}
+                categoryName={category}
+                block={block}
+                onBlockChange={setBlock}
             />
         </div>
     );

@@ -61,7 +61,7 @@ const NEO_TRIGGER = classNames(
 );
 
 
-const ModalShell = ({ title, onClose, children }) => (
+export const ModalShell = ({ title, onClose, children }) => (
     <div className="flex flex-col h-full relative">
         <div className="absolute top-0 right-0 z-10">
             <motion.button
@@ -89,7 +89,7 @@ const ModalShell = ({ title, onClose, children }) => (
     </div>
 );
 
-const Tile = ({ active, onClick, children, ariaCurrent }) => (
+export const Tile = ({ active, onClick, children, ariaCurrent }) => (
     <motion.button
         type="button"
         whileHover={{ translateX: -1, translateY: -1 }}
