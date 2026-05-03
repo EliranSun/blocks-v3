@@ -52,9 +52,18 @@ function App() {
 
   const handleOpenAddDialogForDay = useCallback((day) => {
     setSelectedLog(null);
-    setDefaultDialogDate(format(startOfDay(day), "yyyy-MM-dd'T'HH:mm"));
+    const dayBlocks = (logs || []).filter(log => isSameDay(new Date(log.date), day));
+    const lastBlock = dayBlocks.reduce((latest, current) => {
+      if (!latest) return current;
+      return new Date(current.date) > new Date(latest.date) ? current : latest;
+    }, null);
+    setDefaultDialogDate(
+      lastBlock
+        ? lastBlock.date
+        : format(startOfDay(day), "yyyy-MM-dd'T'HH:mm")
+    );
     setIsDialogOpen(true);
-  }, []);
+  }, [logs]);
 
   const handleListScopeChange = useCallback((scope) => {
     setListScope(scope);
