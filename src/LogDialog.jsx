@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
 import { X, Trash2, ChevronRight } from "lucide-react";
+import { format } from "date-fns";
 
 import { Popover } from "./Popover";
 import { Categories } from "./constants";
@@ -43,11 +44,9 @@ const fireConfetti = () => {
 };
 
 const formatDateForInput = (value) => {
-    if (!value) return new Date().toISOString().slice(0, 16);
-    const date = new Date(value);
+    const date = value ? new Date(value) : new Date();
     if (Number.isNaN(date.getTime())) return value;
-    date.setHours(date.getHours() + 4);
-    return date.toISOString().slice(0, 16);
+    return format(date, "yyyy-MM-dd'T'HH:mm");
 };
 
 const stepFade = {
