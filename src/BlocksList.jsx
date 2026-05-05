@@ -114,7 +114,7 @@ export const BlocksList = ({
 
         return (
             <m.ul
-                className={classNames('flex flex-wrap', {
+                className={classNames('flex flex-wrap my-4', {
                     "gap-2": !showColorOnly
                 })}
                 variants={listContainerVariants}

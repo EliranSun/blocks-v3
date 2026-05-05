@@ -38,7 +38,8 @@ const variantClasses = {
             "active:translate-x-[2px] active:translate-y-[2px] " +
             "hover:-translate-y-[2px] active:scale-[0.97] " +
             "transition-[transform,box-shadow] duration-75 " +
-            "font-bold uppercase tracking-tight space-grotesk-600 text-[10px] text-white dark:text-black",
+            "font-bold uppercase tracking-tight space-grotesk-600 text-sm " +
+            "text-white dark:text-black",
         useBackground: true,
     },
 };
