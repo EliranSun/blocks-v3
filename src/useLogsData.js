@@ -8,13 +8,35 @@ export const useLogsData = () => {
     const { showError } = useToast();
 
     useEffect(() => {
+        let response;
         fetch(API_URL)
             .then(res => {
-                if (!res.ok) throw new Error("Failed to load logs");
+                response = res;
+                if (!res.ok) {
+                    return res.text().then(body => {
+                        const err = new Error(`Failed to load logs: ${res.status} ${res.statusText}`);
+                        err.status = res.status;
+                        err.statusText = res.statusText;
+                        err.body = body;
+                        err.url = res.url;
+                        throw err;
+                    });
+                }
                 return res.json();
             })
             .then(setLogs)
-            .catch(() => showError("Couldn't load your blocks.", { reloadable: true }));
+            .catch(err => {
+                const details = {
+                    url: err.url || API_URL,
+                    status: err.status ?? response?.status ?? "—",
+                    statusText: err.statusText ?? response?.statusText ?? "—",
+                    name: err.name,
+                    message: err.message,
+                    body: err.body,
+                    timestamp: new Date().toISOString(),
+                };
+                showError("Couldn't load your blocks.", { reloadable: true, details });
+            });
     }, [showError]);
 
     const addLog = useCallback(data => {

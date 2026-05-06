@@ -32,8 +32,8 @@ export const ToastProvider = ({ children }) => {
         const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
         const variant = toast.variant || "error";
         const action = toast.reloadable ? reloadAction : toast.action;
-        const duration = toast.duration ?? (action ? 0 : DEFAULT_DURATION[variant]);
-        const next = { id, message: toast.message, variant, action };
+        const duration = toast.duration ?? (action || toast.details ? 0 : DEFAULT_DURATION[variant]);
+        const next = { id, message: toast.message, variant, action, details: toast.details };
 
         setToasts((prev) => [...prev, next]);
 
@@ -90,6 +90,7 @@ export const ToastProvider = ({ children }) => {
                             key={t.id}
                             message={t.message}
                             variant={t.variant}
+                            details={t.details}
                             action={
                                 t.action && {
                                     label: t.action.label,
