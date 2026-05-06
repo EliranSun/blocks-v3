@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
-import { X, Trash2, ChevronRight } from "lucide-react";
+import { X, Trash2, ChevronRight, Database } from "lucide-react";
 import { format } from "date-fns";
 
 import { Popover } from "./Popover";
@@ -116,7 +116,7 @@ const IconButton = ({ onClick, color = "bg-white", ariaLabel, children }) => (
     </motion.button>
 );
 
-const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) => {
+const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete, onViewData }) => {
     const isEditMode = Boolean(log?._id);
     const [selectedCategory, setSelectedCategory] = useState(() => getInitialCategory(log));
     const [blockName, setBlockName] = useState(log?.name?.toLowerCase() || "");
@@ -241,6 +241,15 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
         }
     };
 
+    const handleViewData = () => {
+        if (!isEditMode || !onViewData) return;
+        const target = blockName || log?.name;
+        if (!target) return;
+        clearTimeout(debounceRef.current);
+        onViewData(target);
+        onClose();
+    };
+
     const accent = selectedCategory?.bgColor || "bg-yellow-300";
 
     const breadcrumb = useMemo(() => {
@@ -362,6 +371,23 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
                                 <p className="text-xs uppercase tracking-widest font-bold text-neutral-700 dark:text-neutral-300 mt-6">
                                     Tap any chip above to change. Edits save automatically.
                                 </p>
+                                {onViewData && (blockName || log?.name) && (
+                                    <button
+                                        type="button"
+                                        onClick={handleViewData}
+                                        className={classNames(
+                                            "mt-6 inline-flex items-center gap-2 px-4 py-2.5 rounded-sm",
+                                            "border-[3px] border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-bold uppercase text-xs tracking-widest",
+                                            "shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff]",
+                                            "active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff]",
+                                            "active:translate-x-[3px] active:translate-y-[3px] transition-[transform,box-shadow] duration-75"
+                                        )}
+                                    >
+                                        <Database size={16} strokeWidth={2.5} />
+                                        View data
+                                        <ChevronRight size={14} strokeWidth={3} />
+                                    </button>
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -436,7 +462,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
     );
 };
 
-export const LogDialog = ({ log, defaultDate, isOpen, onClose, onAdd, onEdit, onDelete }) => (
+export const LogDialog = ({ log, defaultDate, isOpen, onClose, onAdd, onEdit, onDelete, onViewData }) => (
     <Popover isOpen={isOpen}>
         <LogDialogInner
             key={log?._id || defaultDate || "new"}
@@ -446,6 +472,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onClose, onAdd, onEdit, on
             onAdd={onAdd}
             onEdit={onEdit}
             onDelete={onDelete}
+            onViewData={onViewData}
         />
     </Popover>
 );

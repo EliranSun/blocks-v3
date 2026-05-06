@@ -44,6 +44,13 @@ function App() {
     setDefaultDialogDate(null);
   }, []);
 
+  const handleViewBlockData = useCallback((blockName) => {
+    if (!blockName) return;
+    setSelectedBlock(blockName);
+    setBlockDetailPreviousPage(page || "");
+    setPage("blockDetail");
+  }, [page]);
+
   const handleOpenAddDialog = useCallback(() => {
     setSelectedLog(null);
     setDefaultDialogDate(null);
@@ -166,6 +173,7 @@ function App() {
             onAdd={addLog}
             onEdit={editLog}
             onDelete={deleteLog}
+            onViewData={handleViewBlockData}
           />
           <m.button
             type="button"
