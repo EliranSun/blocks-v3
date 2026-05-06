@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
-import { X, Trash2, ChevronRight } from "lucide-react";
+import { X, Trash2, ChevronRight, Database } from "lucide-react";
 import { format } from "date-fns";
 
 import { Popover } from "./Popover";
@@ -63,6 +63,16 @@ const StepHeading = ({ children }) => (
     </h2>
 );
 
+const SectionLabel = ({ children }) => (
+    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-3">
+        {children}
+    </p>
+);
+
+const SectionDivider = () => (
+    <div className="my-6 border-t-2 border-dashed border-black/30 dark:border-white/30" />
+);
+
 const Tile = ({ onClick, selected, color, children, size = "md", pulse }) => {
     const sizeClass = size === "lg" ? "h-28 text-base px-3" : "h-20 text-sm px-3";
     const bg = selected ? color : "bg-white dark:bg-neutral-800";
@@ -116,7 +126,7 @@ const IconButton = ({ onClick, color = "bg-white", ariaLabel, children }) => (
     </motion.button>
 );
 
-const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) => {
+const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete, onViewData }) => {
     const isEditMode = Boolean(log?._id);
     const [selectedCategory, setSelectedCategory] = useState(() => getInitialCategory(log));
     const [blockName, setBlockName] = useState(log?.name?.toLowerCase() || "");
@@ -241,6 +251,15 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
         }
     };
 
+    const handleViewData = () => {
+        if (!isEditMode || !onViewData) return;
+        const target = blockName || log?.name;
+        if (!target) return;
+        clearTimeout(debounceRef.current);
+        onViewData(target);
+        onClose();
+    };
+
     const accent = selectedCategory?.bgColor || "bg-yellow-300";
 
     const breadcrumb = useMemo(() => {
@@ -357,27 +376,61 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
 
                         {step === "review" && isEditMode && (
                             <motion.div key="step-review" {...stepFade}>
-                                <StepHeading>Edit block</StepHeading>
+                                <StepHeading>Block</StepHeading>
+
+                                <SectionLabel>Selection</SectionLabel>
                                 {breadcrumb}
-                                <p className="text-xs uppercase tracking-widest font-bold text-neutral-700 dark:text-neutral-300 mt-6">
-                                    Tap any chip above to change. Edits save automatically.
+                                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 italic mt-1">
+                                    Tap a chip to change. Edits save automatically.
                                 </p>
+
+                                {onViewData && (blockName || log?.name) && (
+                                    <>
+                                        <SectionDivider />
+                                        <SectionLabel>Data</SectionLabel>
+                                        <button
+                                            type="button"
+                                            onClick={handleViewData}
+                                            className={classNames(
+                                                "w-full flex items-center justify-between gap-2 px-4 py-3 rounded-sm",
+                                                "border-[3px] border-black dark:border-white",
+                                                "bg-black text-white dark:bg-white dark:text-black",
+                                                "font-black uppercase text-sm tracking-tight",
+                                                "shadow-[5px_5px_0_0_#000] dark:shadow-[5px_5px_0_0_#fff]",
+                                                "active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff]",
+                                                "active:translate-x-[4px] active:translate-y-[4px] transition-[transform,box-shadow] duration-75"
+                                            )}
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                <Database size={18} strokeWidth={2.5} />
+                                                View block data
+                                            </span>
+                                            <ChevronRight size={18} strokeWidth={3} />
+                                        </button>
+                                    </>
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>
 
                     <div className="mt-8">
+                        <SectionDivider />
+                        <SectionLabel>Details</SectionLabel>
                         <button
                             type="button"
                             onClick={() => setShowOptional(v => !v)}
+                            aria-expanded={showOptional}
                             className={classNames(
-                                "inline-flex items-center gap-2 px-3 py-2 rounded-sm",
-                                "border-[3px] border-black dark:border-white bg-white dark:bg-neutral-800 text-black dark:text-white font-bold uppercase text-xs tracking-widest",
-                                "shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff] active:shadow-[1px_1px_0_0_#000] dark:active:shadow-[1px_1px_0_0_#fff] active:translate-x-[3px] active:translate-y-[3px] transition-[transform,box-shadow] duration-75"
+                                "w-full flex items-center justify-between gap-2 px-3 py-2 rounded-sm",
+                                "border-2 border-dashed border-black/40 dark:border-white/40",
+                                "bg-transparent text-black dark:text-white font-bold uppercase text-xs tracking-widest",
+                                "hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-100"
                             )}
                         >
-                            <span className="text-base leading-none">{showOptional ? "−" : "+"}</span>
-                            More options
+                            <span className="flex items-center gap-2">
+                                <span className="text-base leading-none">{showOptional ? "−" : "+"}</span>
+                                {showOptional ? "Hide" : "Note, thought, date"}
+                            </span>
                         </button>
 
                         <AnimatePresence initial={false}>
@@ -436,7 +489,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete }) 
     );
 };
 
-export const LogDialog = ({ log, defaultDate, isOpen, onClose, onAdd, onEdit, onDelete }) => (
+export const LogDialog = ({ log, defaultDate, isOpen, onClose, onAdd, onEdit, onDelete, onViewData }) => (
     <Popover isOpen={isOpen}>
         <LogDialogInner
             key={log?._id || defaultDate || "new"}
@@ -446,6 +499,7 @@ export const LogDialog = ({ log, defaultDate, isOpen, onClose, onAdd, onEdit, on
             onAdd={onAdd}
             onEdit={onEdit}
             onDelete={onDelete}
+            onViewData={onViewData}
         />
     </Popover>
 );
