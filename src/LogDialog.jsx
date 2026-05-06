@@ -376,7 +376,7 @@ const LogDialogInner = ({ log, defaultDate, onClose, onAdd, onEdit, onDelete, on
 
                         {step === "review" && isEditMode && (
                             <motion.div key="step-review" {...stepFade}>
-                                <StepHeading>Edit block</StepHeading>
+                                <StepHeading>Block</StepHeading>
 
                                 <SectionLabel>Selection</SectionLabel>
                                 {breadcrumb}
