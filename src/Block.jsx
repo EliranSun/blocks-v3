@@ -53,6 +53,7 @@ const BlockComponent = ({
     item,
     showDate = false,
     showNote = false,
+    showNoteAndType = false,
     showSubcategory = false,
     showColorOnly = false,
     variant = "list",
@@ -63,6 +64,9 @@ const BlockComponent = ({
         ? CategoryBgColors[item.category?.toLowerCase()]
         : CategoryColors[item.category?.toLowerCase()];
 
+    const hasNoteOrType = item.note || item.subcategory;
+    const expanded = showNoteAndType && hasNoteOrType && !showColorOnly;
+
     return (
         <m.li
             variants={blockItemVariants}
@@ -70,15 +74,37 @@ const BlockComponent = ({
                 config.base,
                 colorClass,
                 onClick && "cursor-pointer",
-                showColorOnly && "text-[0px] h-2 border-none shadow-none"
+                showColorOnly && "text-[0px] h-2 border-none shadow-none",
+                expanded && "flex flex-col items-start gap-1 whitespace-normal overflow-visible min-h-[64px]"
             )}
             style={cvStyle}
             onClick={() => onClick?.(item)}
         >
-            {item.name}
-            {showDate && ` - ${format(item.date, "d.M.yy")}`}
-            {showSubcategory && item.subcategory ? ` - ${item.subcategory}` : ""}
-            {showNote && item.note ? ` - ${item.note}` : ""}
+            {expanded ? (
+                <>
+                    <span className="font-bold">
+                        {item.name}
+                        {showDate && ` - ${format(item.date, "d.M.yy")}`}
+                    </span>
+                    {item.subcategory && (
+                        <span className="text-[10px] uppercase tracking-wider opacity-80">
+                            {item.subcategory}
+                        </span>
+                    )}
+                    {item.note && (
+                        <span className="text-[11px] normal-case tracking-normal font-normal opacity-90 break-words">
+                            {item.note}
+                        </span>
+                    )}
+                </>
+            ) : (
+                <>
+                    {item.name}
+                    {showDate && ` - ${format(item.date, "d.M.yy")}`}
+                    {showSubcategory && item.subcategory ? ` - ${item.subcategory}` : ""}
+                    {showNote && item.note ? ` - ${item.note}` : ""}
+                </>
+            )}
         </m.li>
     );
 };

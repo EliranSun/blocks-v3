@@ -1,7 +1,7 @@
 import { useState } from "react";
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { X, List, Calendar, CalendarDays, CalendarRange, FileText, Layers, FolderOpen, Settings2 } from "lucide-react";
+import { X, List, Calendar, CalendarDays, CalendarRange, FileText, Layers, FolderOpen, Settings2, StickyNote } from "lucide-react";
 import { Popover } from "./Popover";
 import { Categories } from "./constants";
 
@@ -23,6 +23,7 @@ const listScopeOptions = [
 const toggleOptions = [
     { key: "showDate",        icon: CalendarRange, label: "Dates" },
     { key: "showNote",        icon: FileText,      label: "Notes" },
+    { key: "showNoteAndType", icon: StickyNote,    label: "Note + Type" },
     { key: "showColorOnly",   icon: Layers,        label: "Color only" },
     { key: "showSubcategory", icon: FolderOpen,    label: "Subcategory" },
 ];
