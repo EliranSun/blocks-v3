@@ -47,6 +47,7 @@ export const BlocksList = ({
     const [showDate, setShowDate] = useState(false);
     const [showColorOnly, setShowColorOnly] = useState(false);
     const [showNote, setShowNote] = useState(false);
+    const [showNoteAndType, setShowNoteAndType] = useState(false);
     const [showSubcategory, setShowSubcategory] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const deferredSearch = useDeferredValue(searchTerm);
@@ -71,9 +72,10 @@ export const BlocksList = ({
     const blockAlterProps = useMemo(() => ({
         showDate,
         showNote,
+        showNoteAndType,
         showColorOnly,
         showSubcategory,
-    }), [showDate, showNote, showColorOnly, showSubcategory]);
+    }), [showDate, showNote, showNoteAndType, showColorOnly, showSubcategory]);
 
     const sharedProps = {
         blockProps: blockAlterProps,
@@ -90,6 +92,7 @@ export const BlocksList = ({
     const handleToggle = useCallback((key) => {
         if (key === "showDate") setShowDate(v => !v);
         else if (key === "showNote") setShowNote(v => !v);
+        else if (key === "showNoteAndType") setShowNoteAndType(v => !v);
         else if (key === "showColorOnly") setShowColorOnly(v => !v);
         else if (key === "showSubcategory") setShowSubcategory(v => !v);
     }, []);
