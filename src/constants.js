@@ -23,6 +23,7 @@ export const Blocks = {
     WATCH: "watch",
     DRAW: "draw",
     CSS: "css",
+    WRITE: "write",
 
     // health
     FAT: "fat",
@@ -122,7 +123,8 @@ export const Categories = {
             Blocks.CODE,
             Blocks.WATCH,
             Blocks.DRAW,
-            Blocks.CSS
+            Blocks.CSS,
+            Blocks.WRITE
         ],
     },
     Health: {
