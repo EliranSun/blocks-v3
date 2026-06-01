@@ -1,8 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import classNames from "classnames";
 import { Categories } from "./constants";
 import { formatDistanceToNow } from 'date-fns';
 import { m } from "framer-motion";
+import { useToast } from "./ToastContext.jsx";
+import {
+    buildTagJournalExport,
+    defaultExportFilename,
+    fetchAllLogs,
+    triggerDownload,
+} from "./exportTagJournal";
 
 const timeAgo = date => {
     if (!date) return "None";
@@ -58,6 +65,35 @@ const buildBlockListVariants = (count) => ({
 });
 
 export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => {
+    const { showError, showToast } = useToast();
+    const [exporting, setExporting] = useState(false);
+
+    const handleExport = async () => {
+        if (exporting) return;
+        setExporting(true);
+        try {
+            const logs = await fetchAllLogs();
+            const payload = buildTagJournalExport(logs);
+            triggerDownload(payload, defaultExportFilename());
+            const count = Object.keys(payload.logs).length;
+            showToast({
+                message: `Exported ${logs.length} blocks across ${count} days.`,
+                variant: "success",
+            });
+        } catch (err) {
+            showError("Export failed.", {
+                details: {
+                    message: err?.message,
+                    status: err?.status,
+                    body: err?.body,
+                    timestamp: new Date().toISOString(),
+                },
+            });
+        } finally {
+            setExporting(false);
+        }
+    };
+
     const categorySectionVariants = useMemo(
         () => buildCategorySectionVariants(categoryCount),
         []
@@ -88,6 +124,17 @@ export const BlocksDataView = ({ data = [], onBlockClick, onCategoryClick }) => 
             >
                 BLOCKS DATA
             </m.h1>
+            <button
+                type="button"
+                onClick={handleExport}
+                disabled={exporting}
+                className={classNames(
+                    "space-grotesk-600 text-sm uppercase font-bold border border-current px-3 py-2 cursor-pointer",
+                    exporting && "opacity-50 cursor-not-allowed"
+                )}
+            >
+                {exporting ? "Exporting…" : "Export to TagJournal"}
+            </button>
             {categoryEntries.map(({ category, perBlock }, catIndex) => {
                 const blockListVariants = buildBlockListVariants(perBlock.length);
                 const CatIcon = category.icon;
